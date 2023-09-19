@@ -5,9 +5,9 @@ Repositorio para el proyecto de Void Finder de la materia de Desarrollo de Softw
 El presente trabajo consiste en un algoritmo que tiene como proposito tomar puntos de catalogos sinteticos de galaxias para encontrar regiones de baja densidad (Cosmic Voids).
 
 Para ello se plantea implementar una pipeline de tres pasos , modulariazada y flexible que consite en un **input**, area de **procesamiento** y **output**.
-```css
-<div style='color:red'>Input</div>
-```
+
+**INPUT**
+
 El input es un conjunto de puntos (Trazadores) con las siguientes caracteristicas
 
 - Posicion (En 3D)
@@ -15,9 +15,9 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
 - Masa # No es indispensable
 - Densidad Maxima de los Voids
 
-<div style='color:blue'>Procesamiento</div>
+**PROCESAMIENTO**
 
-<div style='color:green'>Output</div>
+**OUTPUT**
 
 ## Diagrama de componentes
 
