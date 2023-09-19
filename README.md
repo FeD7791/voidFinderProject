@@ -22,7 +22,40 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
 
 
 ```mermaid
-  graph TD;
-      Input(INPUT)-->Procesamiento(PROCESAMIENTO);
-      Procesamiento-->Output(OUTPUT);
+  stateDiagram-v2
+    
+
+   Input --> Procesamiento
+        state Input {
+            [*]-->Posicion
+            [*]-->Velocidad
+            [*]-->Masa
+            [*]-->Delta 
+        }
+
+        state Procesamiento {
+            Element1: Set Global Parameters
+            Element2: Centering
+            Element3: Redshift-Space Distortions
+            Element4: Geometrical Distortions
+            Element5: Void Profiles
+            Element6: Void Velocity
+            
+            [*] --> Element1
+            [*] --> Element2
+            [*] --> Element3
+            [*] --> Element4
+            [*] --> Element5
+            [*] --> Element6
+
+            
+        }
+    
+    Procesamiento --> Output
+        state Output {
+                Save: Guardar Archivo
+                Grafico: Graficador
+                [*] --> Save
+                [*] --> Grafico
+            }
 ```
