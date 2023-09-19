@@ -23,6 +23,6 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
 
 ```mermaid
   graph TD;
-      Input(Round Rect)-->Procesamiento(Round Rect);
-      Procesamiento-->Output(Round Rect);
+      Input(INPUT)-->Procesamiento(PROCESAMIENTO);
+      Procesamiento-->Output(OUTPUT);
 ```
