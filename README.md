@@ -17,3 +17,10 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
 2. <div style='color:red;'>Procesamiento</div>
 
 3. <div style='color:red;'>Output</div>
+
+## Diagrama de componentes
+```mermaid
+  graph TD;
+      Input(Round Rect)-->Procesamiento(Round Rect);
+      Procesamiento-->Output(Round Rect);
+```
