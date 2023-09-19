@@ -6,7 +6,7 @@ El presente trabajo consiste en un algoritmo que tiene como proposito tomar punt
 
 Para ello se plantea implementar una pipeline de tres pasos , modulariazada y flexible que consite en un **input**, area de **procesamiento** y **output**.
 
-<div style='color:red;'>Input</div>
+<div style='color:red'>Input</div>
 El input es un conjunto de puntos (Trazadores) con las siguientes caracteristicas
 
 - Posicion (En 3D)
@@ -14,9 +14,9 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
 - Masa # No es indispensable
 - Densidad Maxima de los Voids
 
-<div style='color:blue;'>Procesamiento</div>
+<div style='color:blue'>Procesamiento</div>
 
-<div style='color:green;'>Output</div>
+<div style='color:green'>Output</div>
 
 ## Diagrama de componentes
 
