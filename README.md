@@ -59,3 +59,18 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
                 [*] --> Grafico
             }
 ```
+
+```mermaid
+  timeline
+    title Tiempo de Elaboracion del proyecto (250 Hrs)
+    section 19/09/2023 to 22/09/2023 
+        19/09/2023 : Elaboracion GitHub
+    section 19/09/2023 to 19/10/2023  
+        30/09/2023: Elaboracion Procesamiento
+        10/10/2023: Global Parameters Module
+        19/10/2023: Centering Module
+        30/10/2023: Void Profiles
+    section 30/10/2023 to 10/11/2023 
+        10/11/2023: Elaboracion Modulo Input
+        25/11/2023: Elaboracion Modulo Output
+```
