@@ -8,16 +8,34 @@ Para ello se plantea implementar una pipeline de tres pasos , modulariazada y fl
 
 **INPUT**
 
-El input es un conjunto de puntos (Trazadores) con las siguientes caracteristicas
+
+En principio como input se utiliza un dataset sintetico con las siguientes caracteristicas:
 
 - Posicion (En 3D)
 - Velocidad (En 3D)
 - Masa # No es indispensable
 - Densidad Maxima de los Voids
 
+De momento se plantea utilizar como input datasets correspondientes a catalogos sinteticos de galaxias dado que los mismos cuentan con las caracteristicas anteriores y no asi los catalogos observacionales. 
+
+Concretamente cada punto en el dataset se corresponde con una galaxia.
+
+Es posible que se agregue una seccion de preprocesamiento para el input dependiendo del catalogo sintetetico a utilizar.
+
 **PROCESAMIENTO**
 
+Para el procesamiento se utiliza como base un algoritmo escrito en C/C++ y que hay que refactorizar. Internamente el mismo consta de 6 partes (Ver diagrama de componentes), las cuales hay que modulariazar en primera instancia. Elementos como **Redshift-Space Distortions** y **Geometrical Distortions** son pertinentes a catalogos observacionales con los que no se trabajara aqui, sin embargo se mantendran dichos modulos para futuras aplicaciones. El modulo de **Void Velocity** es secundario.
+
+Se buscara agregar alternativas a los otros modulos para darle flexibilidad al algoritmo segun los requerimientos del usuario.
+
 **OUTPUT**
+
+El output principalmente consiste de dos elementos que son cruciales para caracterizar a un *Void* como estructura, el **centro** del *void* y el **radio** del mismo.
+
+Se utilizaran criterios distintos para definir estos parametros de salida en la seccion de **PROCESAMIENTO** como por ejemplo el numero de trazadores existentes a un determinado radio.
+
+Los datos de salidas se guardaran en archivos, con extensiones diversas y habra posibilidad de graficar la salida en 3D.
+
 
 ## Diagrama de componentes
 
@@ -54,24 +72,36 @@ El input es un conjunto de puntos (Trazadores) con las siguientes caracteristica
     
     Procesamiento --> Output
         state Output {
-                Save: Guardar Archivo
-                Grafico: Graficador
-                [*] --> Save
-                [*] --> Grafico
+                centro: Centro
+                radio: Radio
+                save: Guardar datos
+                graph: Grafico de la estructura
+                [*] --> centro
+                [*] --> radio
+                centro --> save
+                radio --> save
+                save --> graph
             }
 ```
 
 ```mermaid
   timeline
-    title Tiempo de Elaboracion del proyecto (250 Hrs)
+    title Tiempo de Elaboracion del proyecto (400 Hrs)
     section 19/09/2023 to 22/09/2023 
         19/09/2023 : Elaboracion GitHub
     section 19/09/2023 to 19/10/2023  
-        30/09/2023: Elaboracion Procesamiento
-        10/10/2023: Global Parameters Module
-        19/10/2023: Centering Module
-        30/10/2023: Void Profiles
+        30/09/2023: Estudio Procesamiento
+        10/10/2023: Modularizacion Global Parameters 
+                  : Agregar alternativas para el Modulo
+        19/10/2023: Modularizacion Centering
+                  : Agregar alternativas para el Modulo 
+        30/10/2023: Modularizacion Void Profiles
+                  : Agregar alternativas para el Modulo 
     section 30/10/2023 to 10/11/2023 
-        10/11/2023: Elaboracion Modulo Input
+        10/11/2023: Elaboracion Modulo Input para dataset simple
+                  : Inclusion de otros dataset como input
         25/11/2023: Elaboracion Modulo Output
+                  : Elaboracion del modulo de archivos de Salida
+                  : Elaboracion del modulo para graficar los archivos de salida
+    
 ```
