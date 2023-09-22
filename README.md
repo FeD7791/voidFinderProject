@@ -59,6 +59,7 @@ Los datos de salidas se guardaran en archivos, con extensiones diversas y habra 
             Element4: Geometrical Distortions
             Element5: Void Profiles
             Element6: Void Velocity
+            post: Post-Procesamiento (Dar formato a los datos)
             
             [*] --> Element1
             [*] --> Element2
@@ -66,6 +67,18 @@ Los datos de salidas se guardaran en archivos, con extensiones diversas y habra 
             [*] --> Element4
             [*] --> Element5
             [*] --> Element6
+
+            Element1 --> post
+            Element2 --> post
+            Element3 --> post
+            Element4 --> post
+            Element5 --> post
+            Element6 --> post
+
+            
+
+
+
 
             
         }
