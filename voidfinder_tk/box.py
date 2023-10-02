@@ -1,5 +1,6 @@
 # box.py
 
+
 class Box:
     def __init__(self, x, y, z, vx, vy, vz):
         self.x = x

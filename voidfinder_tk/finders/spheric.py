@@ -1,5 +1,6 @@
 # finders/spheric.py
 
+
 class Spheric:
     def __init__(self, mesh="voronoi"):
         self.mesh = mesh
