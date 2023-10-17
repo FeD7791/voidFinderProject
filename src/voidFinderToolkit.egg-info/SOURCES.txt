@@ -1,7 +1,10 @@
 MANIFEST.in
+README.md
 pyproject.toml
 setup.cfg
 src/voidFinderToolkit/__init__.py
+src/voidFinderToolkit/box.py
+src/voidFinderToolkit/tools.py
 src/voidFinderToolkit.egg-info/PKG-INFO
 src/voidFinderToolkit.egg-info/SOURCES.txt
 src/voidFinderToolkit.egg-info/dependency_links.txt
