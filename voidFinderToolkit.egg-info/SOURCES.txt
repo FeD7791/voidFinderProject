@@ -1,0 +1,6 @@
+pyproject.toml
+setup.cfg
+voidFinderToolkit.egg-info/PKG-INFO
+voidFinderToolkit.egg-info/SOURCES.txt
+voidFinderToolkit.egg-info/dependency_links.txt
+voidFinderToolkit.egg-info/top_level.txt

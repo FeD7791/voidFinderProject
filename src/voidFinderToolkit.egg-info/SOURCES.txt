@@ -1,0 +1,8 @@
+MANIFEST.in
+pyproject.toml
+setup.cfg
+src/voidFinderToolkit/__init__.py
+src/voidFinderToolkit.egg-info/PKG-INFO
+src/voidFinderToolkit.egg-info/SOURCES.txt
+src/voidFinderToolkit.egg-info/dependency_links.txt
+src/voidFinderToolkit.egg-info/top_level.txt
