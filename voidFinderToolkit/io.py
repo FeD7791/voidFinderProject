@@ -30,6 +30,3 @@ def box_builder(input_path, data_cols):
     )
     return box
 
-
-box1 = box_builder('../Tools/dataset.txt',[0,1,2,3,4,5,6])
-print(box1)
