@@ -18,7 +18,7 @@ def read_table(input_path, *args, **kwargs):
         List of [x,y,z,vx,vy,vz,m] that references to columns with the 
         needed input
     """
-    path = rf"{input_path}"
+    path = f"{input_path}"
     data = pd.read_table(path, sep="\s+")
     data_cols = [0,1,2,3,4,5,6]
 
