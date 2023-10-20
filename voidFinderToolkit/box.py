@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 import uttr
-from Tools.box_tools import slicer
+from ..Tools.box_tools import slicer
 
 
 @uttr.s
