@@ -1,5 +1,5 @@
 import pandas as pd
-from box import Box
+from .box import Box
 
 
 def box_builder(input_path, data_cols):
