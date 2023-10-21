@@ -20,7 +20,6 @@ def read_table(input_path,**kwargs):
         needed input
     """
     path = f"{input_path}"
-    data = pd.read_table(path, sep="\s+")
     keys_set = {'x','y','z','vx','vy','vz','m'}
 
    
@@ -34,6 +33,7 @@ def read_table(input_path,**kwargs):
                 kwargs['x'],kwargs['y'],kwargs['z'],
                 kwargs['vx'],kwargs['vy'],kwargs['vz'],
                 kwargs['m'] ]
+            data = pd.read_table(path, sep="\s+",usecols=data_cols)
             box = Box(
             data.iloc[:, data_cols[0]],
             data.iloc[:, data_cols[1]],
@@ -49,6 +49,7 @@ def read_table(input_path,**kwargs):
             print(error)
     else:
         data_cols = [0,1,2,3,4,5,6]
+        data = pd.read_table(path, sep="\s+",usecols=data_cols)
         box = Box(
         data.iloc[:, data_cols[0]],
         data.iloc[:, data_cols[1]],
