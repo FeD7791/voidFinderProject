@@ -1,8 +1,9 @@
 import pandas as pd
 from .box import Box
+from Tools.classes import MissingValuesError
 
 
-def read_table(input_path, *args, **kwargs):
+def read_table(input_path,**kwargs):
     """
     Builds a Box objects based on the specified columns of an input
     If *args or **kwargs specified takes the first 7 columns of the
@@ -20,20 +21,35 @@ def read_table(input_path, *args, **kwargs):
     """
     path = f"{input_path}"
     data = pd.read_table(path, sep="\s+")
-    data_cols = [0,1,2,3,4,5,6]
+    keys_set = {'x','y','z','vx','vy','vz','m'}
 
-    if args and not kwargs:
-        data_cols = list(args)[0:7]
-    elif kwargs and not args:
-        if  'x' in kwargs: data_cols[0] = kwargs['x'] 
-        if  'y' in kwargs: data_cols[1] = kwargs['y']
-        if  'z' in kwargs: data_cols[2] = kwargs['z']
-        if  'vx' in kwargs: data_cols[3] = kwargs['vx']
-        if  'vy' in kwargs: data_cols[4] = kwargs['vy']
-        if  'vz' in kwargs: data_cols[5] = kwargs['vz']
-        if  'm' in kwargs: data_cols[6] = kwargs['m']    
-        
-    box = Box(
+   
+    if kwargs:
+        try:
+            if ('x' and 'y' and 'z'and 'vx' 
+                and 'vy' and 'vz' and 'm' not in kwargs):
+                missing_variables = keys_set.difference(set(kwargs.keys()))
+                raise MissingValuesError('Missing the following values:',missing_variables)
+            data_cols = [
+                kwargs['x'],kwargs['y'],kwargs['z'],
+                kwargs['vx'],kwargs['vy'],kwargs['vz'],
+                kwargs['m'] ]
+            box = Box(
+            data.iloc[:, data_cols[0]],
+            data.iloc[:, data_cols[1]],
+            data.iloc[:, data_cols[2]],
+            data.iloc[:, data_cols[3]],
+            data.iloc[:, data_cols[4]],
+            data.iloc[:, data_cols[5]],
+            data.iloc[:, data_cols[6]],
+            )
+            return box
+        except MissingValuesError as error:
+            print('MissingValuesError:')
+            print(error)
+    else:
+        data_cols = [0,1,2,3,4,5,6]
+        box = Box(
         data.iloc[:, data_cols[0]],
         data.iloc[:, data_cols[1]],
         data.iloc[:, data_cols[2]],
@@ -41,6 +57,9 @@ def read_table(input_path, *args, **kwargs):
         data.iloc[:, data_cols[4]],
         data.iloc[:, data_cols[5]],
         data.iloc[:, data_cols[6]],
-    )
-    return box
+        )
+        return box
+        
+
+    
 
