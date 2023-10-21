@@ -35,13 +35,13 @@ def read_table(input_path,**kwargs):
                 kwargs['m'] ]
             data = pd.read_table(path, sep="\s+",usecols=data_cols)
             box = Box(
-            data.iloc[:, data_cols[0]],
-            data.iloc[:, data_cols[1]],
-            data.iloc[:, data_cols[2]],
-            data.iloc[:, data_cols[3]],
-            data.iloc[:, data_cols[4]],
-            data.iloc[:, data_cols[5]],
-            data.iloc[:, data_cols[6]],
+            data.iloc[:,0],
+            data.iloc[:,1],
+            data.iloc[:,2],
+            data.iloc[:,3],
+            data.iloc[:,4],
+            data.iloc[:,5],
+            data.iloc[:,6]
             )
             return box
         except MissingValuesError as error:
@@ -51,13 +51,13 @@ def read_table(input_path,**kwargs):
         data_cols = [0,1,2,3,4,5,6]
         data = pd.read_table(path, sep="\s+",usecols=data_cols)
         box = Box(
-        data.iloc[:, data_cols[0]],
-        data.iloc[:, data_cols[1]],
-        data.iloc[:, data_cols[2]],
-        data.iloc[:, data_cols[3]],
-        data.iloc[:, data_cols[4]],
-        data.iloc[:, data_cols[5]],
-        data.iloc[:, data_cols[6]],
+        data.iloc[:,0],
+            data.iloc[:,1],
+            data.iloc[:,2],
+            data.iloc[:,3],
+            data.iloc[:,4],
+            data.iloc[:,5],
+            data.iloc[:,6]
         )
         return box
         
