@@ -13,8 +13,6 @@ def read_table(input_path,**kwargs):
     ----------
     input_path : str
         path of the file
-    *args : int
-        List of integers that references to columns with the needed input
     **kwargs : int
         List of [x,y,z,vx,vy,vz,m] that references to columns with the 
         needed input
@@ -24,29 +22,30 @@ def read_table(input_path,**kwargs):
 
    
     if kwargs:
-        try:
-            if ('x' and 'y' and 'z'and 'vx' 
-                and 'vy' and 'vz' and 'm' not in kwargs):
-                missing_variables = keys_set.difference(set(kwargs.keys()))
-                raise MissingValuesError('Missing the following values:',missing_variables)
+        if ('x' or 'y' or 'z'or 'vx' 
+            or 'vy' or 'vz' or 'm' not in kwargs):
+            
+            missing_variables = keys_set.difference(set(kwargs.keys()))
+            raise MissingValuesError('Missing the following values:',missing_variables) 
+        else:
             data_cols = [
-                kwargs['x'],kwargs['y'],kwargs['z'],
-                kwargs['vx'],kwargs['vy'],kwargs['vz'],
-                kwargs['m'] ]
-            data = pd.read_table(path, sep="\s+",usecols=data_cols)
-            box = Box(
-            data.iloc[:,0],
-            data.iloc[:,1],
-            data.iloc[:,2],
-            data.iloc[:,3],
-            data.iloc[:,4],
-            data.iloc[:,5],
-            data.iloc[:,6]
-            )
-            return box
-        except MissingValuesError as error:
-            print('MissingValuesError:')
-            print(error)
+            kwargs['x'],kwargs['y'],kwargs['z'],
+            kwargs['vx'],kwargs['vy'],kwargs['vz'],
+            kwargs['m'] ]
+        
+        
+        data = pd.read_table(path, sep="\s+",usecols=data_cols)
+        box = Box(
+        data.iloc[:,0],
+        data.iloc[:,1],
+        data.iloc[:,2],
+        data.iloc[:,3],
+        data.iloc[:,4],
+        data.iloc[:,5],
+        data.iloc[:,6]
+        )
+        return box
+        
     else:
         data_cols = [0,1,2,3,4,5,6]
         data = pd.read_table(path, sep="\s+",usecols=data_cols)
