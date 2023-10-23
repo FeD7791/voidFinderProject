@@ -38,7 +38,7 @@ class Box:
     m = uttr.ib(converter=np.array, unit=u.M_sun)
 
     def __attrs_post_init__(self):
-        try:
+        
             length_set = {
                 len(self.x),
                 len(self.y),
@@ -49,17 +49,12 @@ class Box:
                 len(self.m),
             }
             if len(length_set) != 1:
-                raise ValueError('Arrays should have the same size')
-        except ValueError as error:
-            print(error)
-            print('Arrays sizes were:',
-            len(self.x),
-            len(self.y),
-            len(self.z),
-            len(self.vx),
-            len(self.vy),
-            len(self.vz),
-            len(self.m))
+               
+               raise ValueError("Arrays don't have the same size, sizes are:",
+                                dict(tuple(zip({'x','y','z','vx','vy','vz','m'},length_set)))
+                                )
+
+        
 
     def slice(self, n, parameter):
         """
