@@ -1,10 +1,9 @@
-import numpy as np
-from astropy import units as u
+
 import uttr
-from tools.box_tools import slicer
 
+from astropy import units as u
 
-@uttr.s
+@uttr.s(repr=False, frozen=True)
 class Box:
     """
     Class used to describe a set of points (x,y,z) alongside with its
@@ -20,76 +19,45 @@ class Box:
     vy : numpy.ndarray
     vz : numpy.ndarray
         (vx,vy,vz) array of velocity elements
-    m : numpy.ndarray
 
     Methods
     -------
+    build_df(self)
+        Transforms the set into a pandas dataframe
+
+    _check_length(self)
+        Verifies that the lenght of the inputs are the same
 
     slice(self,n,parameter)
         Calls the function Slicer to slice the set in n parts
     """
 
-    x = uttr.ib(converter=np.array, unit=u.Mpc)
-    y = uttr.ib(converter=np.array, unit=u.Mpc)
-    z = uttr.ib(converter=np.array, unit=u.Mpc)
-    vx = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
-    vy = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
-    vz = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
-    m = uttr.ib(converter=np.array, unit=u.M_sun)
+    x = uttr.ib(unit=u.Mpc)
+    y = uttr.ib(unit=u.Mpc)
+    z = uttr.ib(unit=u.Mpc)
+    vx = uttr.ib(unit=u.Mpc)
+    vy = uttr.ib(unit=u.Mpc)
+    vz = uttr.ib(unit=u.Mpc)
+    m = uttr.ib(unit=u.M_sun)
+
+    _len = uttr.ib(init=False)
 
     def __attrs_post_init__(self):
-        
-            length_set = {
-                len(self.x),
-                len(self.y),
-                len(self.z),
-                len(self.vx),
-                len(self.vy),
-                len(self.vz),
-                len(self.m),
-            }
-            if len(length_set) != 1:
-               
-               raise ValueError("Arrays don't have the same size, sizes are:",
-                                dict(tuple(zip({'x','y','z','vx','vy','vz','m'},length_set)))
-                                )
+        lengths = {
+            len(e) for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)
+        }
 
-        
+        if len(lengths) != 1:
+            raise ValueError("Arrays should be of the same size")
 
-    def slice(self, n, parameter):
-        """
-        Calls the function Slicer to divide the dataset in n parts by
-        classifying the points based on the distance to the origin
-        (0,0,0)
+        super().__setattr__("_len", lengths.pop())
 
-        Parameters
-        ----------
+    def __len__(self):
+        return self._len
 
-        n : int
-            Number of divitions of each axis
-        parameter : str {'position','velocity'}
-            'position' divides the dataset based on the (x,y,z)
-            coordinates of the dot cloud
-            'velocity' divides the dataset based on the (vx,vy,vz)
-            coordinates of the dot cloud
-        """
-        if parameter == "position":
-            columns = ["x", "z", "y", "distance"]
-            slices = slicer(
-                self.x / u.Mpc, self.y / u.Mpc, 
-                self.z / u.Mpc, n, columns
-                )
-            slices = map(np.array, slices)
-            slices = map(lambda a: a * u.Mpc, slices)
-        elif parameter == "velocity":
-            columns = ["vx", "vz", "vy", "v_modulus"]
-            slices = slicer(
-                self.vx * u.h / u.Mpc,
-                self.vy * u.h / u.Mpc,
-                self.vz * u.h / u.Mpc,
-                n,
-                columns,
-            )
-            slices = map(np.array, slices)
-            slices = map(lambda a: a * u.Mpc / u.h, slices)
-        return list(slices)
+    def __repr__(self):
+        cls_name = type(self).__name__
+        length = len(self)
+        return f"<{cls_name} size={length}>"
+
+

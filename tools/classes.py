@@ -1,7 +1,6 @@
-import attrs 
+import attrs
 
-@attrs.define 
-
+@attrs.define
 class MissingValuesError(TypeError):
-    message : str 
-    a: set 
+    message : str
+    a: set

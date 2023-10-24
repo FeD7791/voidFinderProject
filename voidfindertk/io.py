@@ -1,52 +1,31 @@
+
 import pandas as pd
-from .box import Box
-from tools.classes import MissingValuesError
 
+from . import box
 
-def read_table(input_path,**kwargs):
-    """
-    Builds a Box objects based on the specified columns of an input
-    If *args or **kwargs specified takes the first 7 columns of the
-    input
+# 300 lineas
 
-    Parameters
-    ----------
-    input_path : str
-        path of the file
-    **kwargs : int
-        List of [x,y,z,vx,vy,vz,m] that references to columns with the 
-        needed input
-    """
-    path = input_path
-    keys_set = {'x','y','z','vx','vy','vz','m'}
+def read_table(path_or_buffer, **kwargs):
 
-   
-    if kwargs:
-        if (not (all(key in kwargs for key in keys_set))): 
-            
-            missing_variables = keys_set.difference(set(kwargs.keys()))
-            raise MissingValuesError('Missing the following values:',missing_variables) 
-        
-        data_cols = [
-        kwargs['x'],kwargs['y'],kwargs['z'],
-        kwargs['vx'],kwargs['vy'],kwargs['vz'],
-        kwargs['m'] ]
-        
-    else:
-        data_cols = [0,1,2,3,4,5,6]
-        
-    data = pd.read_table(path, sep="\s+",usecols=data_cols) 
-    box = Box(
-        data.iloc[:,0],
-        data.iloc[:,1],
-        data.iloc[:,2],
-        data.iloc[:,3],
-        data.iloc[:,4],
-        data.iloc[:,5],
-        data.iloc[:,6]
-        )
-    return box
-        
+    kwargs.setdefault("sep", r"\s+")
+    kwargs.setdefault("usecols", [0, 1, 2, 3, 4, 5, 6])
 
-    
+    data = pd.read_csv(path_or_buffer, **kwargs)
 
+    col_number = len(data.columns)
+    if col_number != 7:
+        raise ValueError(
+            "There are not enough columns to create the coordinates of a box. "
+            f"Found {col_number} expected 7"
+            )
+
+    the_box = box.Box(
+        x=data.iloc[:, 0],
+        y=data.iloc[:, 1],
+        z=data.iloc[:, 2],
+        vx=data.iloc[:, 3],
+        vy=data.iloc[:, 4],
+        vz=data.iloc[:, 5],
+        m =data.iloc[:, 6],
+    )
+    return the_box
