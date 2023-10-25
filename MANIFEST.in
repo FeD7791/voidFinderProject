@@ -1,0 +1,6 @@
+graft voidfindertk
+recursive-exclude __pycache__ *.py[cod]
+include LICENSE.txt
+include README.md
+exclude tox.ini
+exclude pyproject.toml
