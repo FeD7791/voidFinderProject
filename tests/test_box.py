@@ -5,23 +5,31 @@ from voidfindertk.box import Box
 
 @pytest.fixture
 def box_of_randoms(xyz_size=500,vxyz_size=220,m_size=12,n=1000):
-    x = np.random.normal(0,xyz_size,size=n)
-    y = np.random.normal(0,xyz_size,size=n)
-    z = np.random.normal(0,xyz_size,size=n)
-    vx = np.random.normal(0,vxyz_size,size=n)
-    vy = np.random.normal(0,vxyz_size,size=n)
-    vz = np.random.normal(0,vxyz_size,size=n)
-    m = np.random.normal(0,m_size,size=n)
+    rng = np.random.default_rng(seed=42)
+    x = xyz_size*rng.random(n)
+    y = xyz_size*rng.random(n)
+    z = xyz_size*rng.random(n)
+    vx = vxyz_size*rng.random(n)
+    vy = vxyz_size*rng.random(n)
+    vz = vxyz_size*rng.random(n)
+    m = m_size*rng.random(n)
     return Box(x,y,z,vx,vy,vz,m)
     
 
+def test_box_properties(box_of_randoms):
+    box = box_of_randoms
+    
+    units = [
+    box.x.unit == u.Mpc,
+    box.y.unit == u.Mpc,
+    box.z.unit == u.Mpc,
+    box.vx.unit == u.Mpc/u.h,
+    box.vy.unit == u.Mpc/u.h,
+    box.vz.unit == u.Mpc/u.h,
+    box.m.unit == u.M_sun]
+    assert(all(units))
+    
 
-
-
-
-## Verifica que un objeto sea clase box
-def test_box(box_of_randoms):
-    assert isinstance(box_of_randoms,Box)
      
 
 # Nuestro objeto debe fallar cuando le entregamos un vector de distinto rango
