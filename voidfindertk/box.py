@@ -1,7 +1,7 @@
-
 import uttr
 
 from astropy import units as u
+
 
 @uttr.s(repr=False, frozen=True)
 class Box:
@@ -35,17 +35,15 @@ class Box:
     x = uttr.ib(unit=u.Mpc)
     y = uttr.ib(unit=u.Mpc)
     z = uttr.ib(unit=u.Mpc)
-    vx = uttr.ib(unit=u.Mpc/u.h)
-    vy = uttr.ib(unit=u.Mpc/u.h)
-    vz = uttr.ib(unit=u.Mpc/u.h)
+    vx = uttr.ib(unit=u.Mpc / u.h)
+    vy = uttr.ib(unit=u.Mpc / u.h)
+    vz = uttr.ib(unit=u.Mpc / u.h)
     m = uttr.ib(unit=u.M_sun)
 
     _len = uttr.ib(init=False)
 
     def __attrs_post_init__(self):
-        lengths = {
-            len(e) for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)
-        }
+        lengths = {len(e) for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)}
 
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
@@ -59,5 +57,3 @@ class Box:
         cls_name = type(self).__name__
         length = len(self)
         return f"<{cls_name} size={length}>"
-
-
