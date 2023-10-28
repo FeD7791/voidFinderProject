@@ -35,9 +35,9 @@ class Box:
     x = uttr.ib(unit=u.Mpc)
     y = uttr.ib(unit=u.Mpc)
     z = uttr.ib(unit=u.Mpc)
-    vx = uttr.ib(unit=u.Mpc)
-    vy = uttr.ib(unit=u.Mpc)
-    vz = uttr.ib(unit=u.Mpc)
+    vx = uttr.ib(unit=u.Mpc/u.h)
+    vy = uttr.ib(unit=u.Mpc/u.h)
+    vz = uttr.ib(unit=u.Mpc/u.h)
     m = uttr.ib(unit=u.M_sun)
 
     _len = uttr.ib(init=False)
