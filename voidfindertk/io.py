@@ -3,7 +3,6 @@ import pandas as pd
 
 from . import box
 
-# 300 lineas
 
 def read_table(path_or_buffer, **kwargs):
 
