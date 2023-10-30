@@ -56,3 +56,4 @@ docs/_build/
 voidFinderProject/
 main.py
 *.so
+.flake8

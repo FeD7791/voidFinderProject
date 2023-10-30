@@ -1,5 +1,7 @@
 graft voidfindertk
-recursive-exclude __pycache__ *.py[cod]
+global-exclude */__pycache__/*
+global-exclude *.pyc
+recursive-exclude tests *
 include LICENSE.txt
 include README.md
 exclude tox.ini
