@@ -1,11 +1,13 @@
-import uttr
-
+"""Class Box object constructor."""
 from astropy import units as u
+
+import uttr
 
 
 @uttr.s(repr=False, frozen=True)
 class Box:
-    """
+    """Box Class.
+
     Class used to describe a set of points (x,y,z) alongside with its
     velocities (vx,vy,vz)
 
@@ -43,7 +45,13 @@ class Box:
     _len = uttr.ib(init=False)
 
     def __attrs_post_init__(self):
-        lengths = {len(e) for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)}
+        """Post init method.
+
+        Checks that the lenght of the inputs are the same
+        """
+        lengths = {
+            len(e) for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)
+        }
 
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
@@ -51,9 +59,23 @@ class Box:
         super().__setattr__("_len", lengths.pop())
 
     def __len__(self):
+        """Length method.
+
+        Returns
+        -------
+            int
+                the number of elements in the box
+        """
         return self._len
 
     def __repr__(self):
+        """Representation method.
+
+        Returns
+        -------
+            str
+                Name plus number of points in the box
+        """
         cls_name = type(self).__name__
         length = len(self)
         return f"<{cls_name} size={length}>"

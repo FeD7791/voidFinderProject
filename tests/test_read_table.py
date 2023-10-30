@@ -1,10 +1,15 @@
-from voidfindertk import read_table, box
 import numpy as np
+
 import pandas as pd
+
 import pytest
 
+from voidfindertk import box, read_table
 
-def make_dataset(xyz_size=500, vxyz_size=220, m_size=12, n=1000, random_seed=42):
+
+def make_dataset(
+    xyz_size=500, vxyz_size=220, m_size=12, n=1000, random_seed=42
+):
     rng = np.random.default_rng(seed=random_seed)
     dataset = pd.DataFrame(
         {
@@ -21,12 +26,12 @@ def make_dataset(xyz_size=500, vxyz_size=220, m_size=12, n=1000, random_seed=42)
         dataset.to_string(f, col_space=10)
 
 
-## Verifica que la salida sea clase box
 def test_read_table_type_output():
-    assert isinstance(read_table("./tests/datasets/data_random_1.txt"), box.Box)
+    assert isinstance(
+        read_table("./tests/datasets/data_random_1.txt"), box.Box
+    )
 
 
-## Verifica que no se puede progresar con columnas de nan values
 def test_nullvalues_on_read():
     with pytest.raises(TypeError):
         read_table("./tests/datasets/data_random_2.txt")
