@@ -39,4 +39,4 @@ def test_nullvalues_on_read():
 
 def test_number_of_columns():
     with pytest.raises(ValueError):
-        read_table("./tests/datasets/data_random_3.txt")
+        read_table("./tests/datasets/data_random_1.txt", usecols=[1, 2, 3])

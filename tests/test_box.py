@@ -21,7 +21,7 @@ def box_of_randoms(xyz_size=500, vxyz_size=220, m_size=12, n=1000):
     return Box(x, y, z, vx, vy, vz, m)
 
 
-def test_box_properties(box_of_randoms):
+def test_box_inicialization(box_of_randoms):
     box = box_of_randoms
 
     units = [
@@ -34,6 +34,8 @@ def test_box_properties(box_of_randoms):
         box.m.unit == u.M_sun,
     ]
     assert all(units)
+    assert isinstance(len(box), int)
+    assert repr(box) == f'<Box size={len(box.x)}>'
 
 
 def test_box_inputlength():
