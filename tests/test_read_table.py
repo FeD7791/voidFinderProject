@@ -7,9 +7,7 @@ import pytest
 from voidfindertk import box, read_table
 
 
-def make_dataset(
-    xyz_size=500, vxyz_size=220, m_size=12, n=1000, random_seed=42
-):
+def make_dataset(xyz_size=500, vxyz_size=220, m_size=12, n=1000, random_seed=42):
     rng = np.random.default_rng(seed=random_seed)
     dataset = pd.DataFrame(
         {
@@ -27,9 +25,7 @@ def make_dataset(
 
 
 def test_read_table_type_output():
-    assert isinstance(
-        read_table("./tests/datasets/data_random_1.txt"), box.Box
-    )
+    assert isinstance(read_table("./tests/datasets/data_random_1.txt"), box.Box)
 
 
 def test_nullvalues_on_read():
