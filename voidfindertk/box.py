@@ -1,4 +1,6 @@
 """Class Box object constructor."""
+import numpy as np
+
 from astropy import units as u
 
 import uttr
@@ -34,13 +36,13 @@ class Box:
         Calls the function Slicer to slice the set in n parts
     """
 
-    x = uttr.ib(unit=u.Mpc)
-    y = uttr.ib(unit=u.Mpc)
-    z = uttr.ib(unit=u.Mpc)
-    vx = uttr.ib(unit=u.Mpc / u.h)
-    vy = uttr.ib(unit=u.Mpc / u.h)
-    vz = uttr.ib(unit=u.Mpc / u.h)
-    m = uttr.ib(unit=u.M_sun)
+    x = uttr.ib(converter=np.array, unit=u.Mpc)
+    y = uttr.ib(converter=np.array, unit=u.Mpc)
+    z = uttr.ib(converter=np.array, unit=u.Mpc)
+    vx = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
+    vy = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
+    vz = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
+    m = uttr.ib(converter=np.array, unit=u.M_sun)
 
     _len = uttr.ib(init=False)
 
