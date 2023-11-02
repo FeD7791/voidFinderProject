@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 """Module for cration of a box object."""
 from .box import Box
 from .io import read_table
