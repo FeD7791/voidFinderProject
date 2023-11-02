@@ -57,3 +57,4 @@ voidFinderProject/
 main.py
 *.so
 .flake8
+.black
