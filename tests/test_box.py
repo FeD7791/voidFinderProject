@@ -19,7 +19,7 @@ def test_Box_initialization(mkbox):
     assert box.vz.unit == u.Mpc / u.h
     assert box.m.unit == u.M_sun
     assert len(box) == 1000
-    assert repr(box) == f"<Box size=1000>"
+    assert repr(box) == "<Box size=1000>"
 
 
 def test_Box_different_length_for_some_dimension(mkbox_params):
