@@ -19,7 +19,6 @@ def mkbox_params():
         mass_scale=12,
         size=1000,
     ):
-
         rng = np.random.default_rng(seed=seed)
         params = {
             "x": coordinates_scale * rng.random(size=size),
@@ -43,9 +42,10 @@ def mkbox(mkbox_params):
 
     return _maker
 
+
 @pytest.fixture()
 def buffer():
-    data = np.random.random((100,7))
+    data = np.random.random((100, 7))
     df = pd.DataFrame(data)
     src = df.to_csv(sep=" ", index=False, float_format="%.5f", header=False)
     buff = io.StringIO(src)

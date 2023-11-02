@@ -1,14 +1,11 @@
 from astropy import units as u
 
-import numpy as np
-
 import pytest
 
 from voidfindertk.box import Box
 
 
 def test_Box_initialization(mkbox):
-
     box = mkbox(seed=42, size=1000)
 
     assert box.x.unit == u.Mpc

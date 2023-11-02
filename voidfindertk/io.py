@@ -38,14 +38,15 @@ def read_table(path_or_buffer, **kwargs):
 
     if col_number != 7:
         raise ValueError(
-            "There are not enough columns to create the coordinates of a box. "
+            "There are not enough columns to create the coordinates of a box."
             f"Found {col_number} expected 7"
         )
 
     check_values = data.notnull().values.all()
     if not check_values:
         raise TypeError(
-            f"There are:" f"{data.isnull().sum().sum()} null or missing values"
+            f"There are:"
+            f"{data.isnull().sum().sum()} null or missing values"
         )
 
     the_box = box.Box(
