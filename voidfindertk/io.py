@@ -33,7 +33,7 @@ def read_table(path_or_buffer, **kwargs):
     """
     kwargs.setdefault("sep", r"\s+")
     kwargs.setdefault("usecols", [0, 1, 2, 3, 4, 5, 6])
-    data = pd.read_csv(path_or_buffer, **kwargs)
+    data = pd.read_csv(path_or_buffer, **kwargs, header=None)
     col_number = len(data.columns)
 
     if col_number != 7:
