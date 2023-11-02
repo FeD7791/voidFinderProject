@@ -1,6 +1,10 @@
+import io
+
 import pytest
 
 import numpy as np
+
+import pandas as pd
 
 from voidfindertk.box import Box
 
@@ -38,3 +42,11 @@ def mkbox(mkbox_params):
         return Box(**params)
 
     return _maker
+
+@pytest.fixture()
+def buffer():
+    data = np.random.random((100,7))
+    df = pd.DataFrame(data)
+    src = df.to_csv(sep=" ", index=False, float_format="%.5f", header=False)
+    buff = io.StringIO(src)
+    return buff
