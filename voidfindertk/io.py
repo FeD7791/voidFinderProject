@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 """Table reader module."""
 import pandas as pd
 
@@ -23,7 +29,6 @@ def read_table(path_or_buffer, **kwargs):
     Parameters
     ----------
         path_or_buffer: The path to the file or buffer containing the table.
-
         **kwargs: Keyword arguments to be passed to `pandas.read_csv()`.
 
     Returns

@@ -1,10 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 import io
-
-import pytest
 
 import numpy as np
 
 import pandas as pd
+
+import pytest
 
 from voidfindertk.box import Box
 
