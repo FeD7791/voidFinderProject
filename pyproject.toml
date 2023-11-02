@@ -8,7 +8,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "voidfindertk"
 version = "0.0.1"
-authors = [{name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"}]
+authors = [
+    {name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"},
+    {name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar"}]
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 description = "A void finder algorithm that can implement disctinct void finder methods."
