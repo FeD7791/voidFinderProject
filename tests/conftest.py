@@ -49,10 +49,20 @@ def mkbox(mkbox_params):
     return _maker
 
 
-@pytest.fixture()
-def buffer():
-    data = np.random.random((100, 7))
-    df = pd.DataFrame(data)
-    src = df.to_csv(sep=" ", index=False, float_format="%.5f", header=False)
-    buff = io.StringIO(src)
-    return buff
+@pytest.fixture(scope="session")
+def random_buffer():
+    def _maker(*, empty_row=False, sp_characters=None):
+        data = np.random.random((100, 7))
+        df = pd.DataFrame(data)
+        n = 0
+        if empty_row:
+            df.loc[100] = [np.nan]*7
+            n = 1
+        elif sp_characters:
+            for i in np.arange(len(sp_characters)):
+                df.loc[100 + n + i] = [sp_characters[i]]*7
+        src = df.to_csv(sep=" ", index=False, float_format="%.5f", header=False, na_rep=np.nan)
+        buff = io.StringIO(src)
+        return buff
+    
+    return _maker
