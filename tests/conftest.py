@@ -56,13 +56,19 @@ def random_buffer():
         df = pd.DataFrame(data)
         n = 0
         if empty_row:
-            df.loc[100] = [np.nan]*7
+            df.loc[100] = [np.nan] * 7
             n = 1
         elif sp_characters:
             for i in np.arange(len(sp_characters)):
-                df.loc[100 + n + i] = [sp_characters[i]]*7
-        src = df.to_csv(sep=" ", index=False, float_format="%.5f", header=False, na_rep=np.nan)
+                df.loc[100 + n + i] = [sp_characters[i]] * 7
+        src = df.to_csv(
+            sep=" ",
+            index=False,
+            float_format="%.5f",
+            header=False,
+            na_rep=np.nan,
+        )
         buff = io.StringIO(src)
         return buff
-    
+
     return _maker
