@@ -12,7 +12,7 @@ import numpy as np
 import uttr
 
 
-@uttr.s(repr=False, frozen=True)
+@uttr.s(repr=False, frozen=True, cmp=False)
 class Box:
     """Box Class.
 
@@ -76,6 +76,35 @@ class Box:
                 the number of elements in the box
         """
         return self._len
+
+    def __eq__(self, other):
+        """
+        Return True if the two objects are equal, False otherwise.
+
+        Objects are considered equal if their `x`, `y`, `z`, `vx`, `vy`, `vz`,
+        and `m` attributes are all equal.
+
+        Parameters
+        ----------
+        other : object
+            The other object to compare to.
+
+        Returns
+        -------
+        bool
+        True if the two objects are equal, False otherwise.
+        """
+        return all(
+            [
+                np.array_equal(self.x, other.x),
+                np.array_equal(self.y, other.y),
+                np.array_equal(self.z, other.z),
+                np.array_equal(self.vx, other.vx),
+                np.array_equal(self.vy, other.vy),
+                np.array_equal(self.vz, other.vz),
+                np.array_equal(self.m, other.m),
+            ]
+        )
 
     def __repr__(self):
         """Representation method.
