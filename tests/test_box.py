@@ -4,6 +4,8 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+import numpy as np
+
 from astropy import units as u
 
 import pytest
@@ -23,6 +25,13 @@ def test_Box_initialization(mkbox):
     assert box.m.unit == u.M_sun
     assert len(box) == 1000
     assert repr(box) == "<Box size=1000>"
+    assert isinstance(box.x, np.ndarray)
+    assert isinstance(box.y, np.ndarray)
+    assert isinstance(box.z, np.ndarray)
+    assert isinstance(box.vx, np.ndarray)
+    assert isinstance(box.vy, np.ndarray)
+    assert isinstance(box.vz, np.ndarray)
+    assert isinstance(box.m, np.ndarray)
 
 
 def test_Box_different_length_for_some_dimension(mkbox_params):
@@ -31,3 +40,13 @@ def test_Box_different_length_for_some_dimension(mkbox_params):
 
     with pytest.raises(ValueError, match="Arrays should be of the same size"):
         Box(**params)
+
+
+def test_box_equality(mkbox):
+    box1 = mkbox(seed=42, size=1000)
+    box2 = mkbox(seed=42, size=1000)
+    box3 = mkbox(seed=43, size=1000)
+    box4 = mkbox(seed=42, size=999)
+    assert box1 == box2
+    assert not box1 == box3
+    assert not box4 == box1
