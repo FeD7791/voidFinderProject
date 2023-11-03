@@ -9,15 +9,18 @@ import pytest
 from voidfindertk import box, read_table
 
 
-def test_read_table_type_output(buffer):
+def test_read_table_type_output(random_buffer):
+    buffer = random_buffer()
     assert isinstance(read_table(buffer), box.Box)
 
 
-def test_nullvalues_on_read():
+def test_nullvalues_on_read(random_buffer):
+    buffer = random_buffer(empty_row=True)
     with pytest.raises(TypeError):
-        read_table("./tests/datasets/data_random_2.txt")
+        read_table(buffer)
 
 
-def test_number_of_columns(buffer):
+def test_number_of_columns(random_buffer):
+    buffer = random_buffer()
     with pytest.raises(ValueError):
         read_table(buffer, usecols=[1, 2, 3])
