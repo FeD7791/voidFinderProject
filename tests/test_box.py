@@ -4,9 +4,9 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-import numpy as np
-
 from astropy import units as u
+
+import numpy as np
 
 import pytest
 
