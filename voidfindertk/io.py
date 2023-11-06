@@ -50,8 +50,8 @@ def read_table(path_or_buffer, **kwargs):
     check_values = data.notnull().values.all()
     if not check_values:
         raise TypeError(
-            f"There are:"
-            f"{data.isnull().sum().sum()} null or missing values"
+            f"There are: {data.isnull().sum().sum()}\
+                  null or missing values"
         )
 
     the_box = box.Box(

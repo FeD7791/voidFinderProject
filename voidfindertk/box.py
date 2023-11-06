@@ -58,8 +58,8 @@ class Box:
         Checks that the lenght of the inputs are the same
         """
         lengths = {
-            len(e)
-            for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz)
+            len(e) for e in (self.x,
+                             self.y, self.z, self.vx, self.vy, self.vz)
         }
 
         if len(lengths) != 1:
