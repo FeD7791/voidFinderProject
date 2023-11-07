@@ -57,10 +57,9 @@ class Box:
 
         Checks that the lenght of the inputs are the same
         """
-        lengths = {
-            len(e) for e in (self.x,
-                             self.y, self.z, self.vx, self.vy, self.vz)
-        }
+        lengths = set(())
+        for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz):
+            lengths.add(len(e))
 
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
