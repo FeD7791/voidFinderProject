@@ -41,7 +41,7 @@ def spherical_void_finder(box):
     
 
     clibrary = ctypes.CDLL(
-        os.path.join(path, "vf_lib.so"),
+        os.path.join(path,"spherical", "vf_lib.so"),
         mode=ctypes.RTLD_GLOBAL,
     )
 
