@@ -37,11 +37,11 @@ def spherical_void_finder(box):
     for details on the returned object's attributes.
     """
     # Import library
-    path = os.getcwd()
-    print(path)
+    path = os.path.dirname(os.path.realpath(__file__))
+    
 
     clibrary = ctypes.CDLL(
-        os.path.join(path, "voidfindertk", "spherical", "vf_lib.so"),
+        os.path.join(path, "vf_lib.so"),
         mode=ctypes.RTLD_GLOBAL,
     )
 
