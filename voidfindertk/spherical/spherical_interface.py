@@ -11,9 +11,9 @@ def spherical_void_finder(box):
 	
 	#Import library
 	path = os.getcwd()
+	print(path)
 	
-	
-	clibrary = ctypes.CDLL(os.path.join(path,'spherical','vf_lib.so'),mode=ctypes.RTLD_GLOBAL) 
+	clibrary = ctypes.CDLL(os.path.join(path,'voidfindertk','spherical','vf_lib.so'),mode=ctypes.RTLD_GLOBAL) 
 	
 
 	#Create Pointer

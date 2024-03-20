@@ -2,8 +2,8 @@ import scipy
 import numpy as np
 import attrs
 from attrs import define
-from tools.box import Box
-from tools.spherical_voids import SphericalVoids
+from .box import Box
+from .spherical_voids import SphericalVoids
 
 @define(repr=False)
 class Box_SphericalVoids_Classifier(Box, SphericalVoids):

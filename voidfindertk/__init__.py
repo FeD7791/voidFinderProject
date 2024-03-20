@@ -5,7 +5,4 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 """Module for cration of a box object."""
-from .box import Box
-from .io import read_table
 
-__all__ = ["Box", "read_table"]
