@@ -1,7 +1,7 @@
 import os
 import ctypes
 import numpy as np
-from .. import spherical_voids
+from . import spherical_voids
 
 
 def spherical_void_finder(box):

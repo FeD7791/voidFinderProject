@@ -14,12 +14,12 @@ class ModelABC(ABC):
         return vb
 
     @abstractmethod
-    def preprocess(databox):
+    def preprocess(self, databox):
         pass
     @abstractmethod
-    def model_find(llbox):
+    def model_find(self, llbox):
         pass
     @abstractmethod
-    def mk_vbox(databox,voids,llbox):
+    def mk_vbox(self, databox,voids,llbox):
         pass
 
