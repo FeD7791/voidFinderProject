@@ -5,19 +5,47 @@ import numpy as np
 import uttr
 
 
-@uttr.s(repr = False) 
+@uttr.s(repr=False)
 class SphericalVoids:
-    rad = uttr.ib(converter=np.array,unit=u.Mpc)
-    x_void = uttr.ib(converter=np.array,unit=u.Mpc)
-    y_void = uttr.ib(converter=np.array,unit=u.Mpc)
-    z_void = uttr.ib(converter=np.array,unit=u.Mpc)
+    """
+    Represents a collection of spherical voids with associated properties.
+
+    Attributes
+    ----------
+    rad : numpy.ndarray
+        Radius of each void in megaparsecs (Mpc).
+    x_void, y_void, z_void : numpy.ndarray
+        Center coordinates of each void in Mpc.
+    vel_x_void, vel_y_void, vel_z_void : numpy.ndarray
+        Velocity components of each void in Mpc/h.
+    delta : numpy.ndarray
+        Density contrast of each void.
+    dtype : numpy.ndarray
+        Data type of the input arrays.
+    poisson : numpy.ndarray
+        Poisson noise for each void.
+    nran : numpy.ndarray
+        Number of random points used for each void.
+
+    Methods
+    -------
+    __len__()
+        Returns the number of voids in the collection.
+
+    __repr__()
+        Returns a string representation of the object."""
+
+    rad = uttr.ib(converter=np.array, unit=u.Mpc)
+    x_void = uttr.ib(converter=np.array, unit=u.Mpc)
+    y_void = uttr.ib(converter=np.array, unit=u.Mpc)
+    z_void = uttr.ib(converter=np.array, unit=u.Mpc)
     vel_x_void = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
     vel_y_void = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
     vel_z_void = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
     delta = uttr.ib(converter=np.array)
     dtype = uttr.ib(converter=np.array)
     poisson = uttr.ib(converter=np.array)
-    #dist4 = uttr.ib(converter=np.array)
+    # dist4 = uttr.ib(converter=np.array)
     nran = uttr.ib(converter=np.array)
     _void_len = uttr.ib(init=False)
 
@@ -28,15 +56,19 @@ class SphericalVoids:
         """
         lengths = set(())
         for e in (
-            self.rad, 
-            self.x_void, self.y_void, 
-            self.z_void, self.vel_x_void, self.vel_y_void, self.vel_z_void,
+            self.rad,
+            self.x_void,
+            self.y_void,
+            self.z_void,
+            self.vel_x_void,
+            self.vel_y_void,
+            self.vel_z_void,
             self.delta,
             self.dtype,
             self.poisson,
-            #self.dist4,
-            self.nran
-            ):
+            # self.dist4,
+            self.nran,
+        ):
             lengths.add(len(e))
 
         if len(lengths) != 1:

@@ -5,4 +5,3 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 """Module for cration of a box object."""
-
