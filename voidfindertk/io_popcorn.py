@@ -131,7 +131,7 @@ def create_sparse_matrix_from_dict(data, num_max_subhalo):
         id_subhalos.append(id_subhalo)
 
     # Crear una matriz numpy con los valores de void_id y ID_subhalo
-    matrix_data = np.zeros((len(id_subhalos), num_max_subhalo), dtype=int)
+    matrix_data = np.zeros((len(id_subhalos), num_max_subhalo), dtype=float)
     #print(matrix_data)
 
     for i, subhalo_indices in enumerate(id_subhalos):
@@ -145,5 +145,5 @@ def create_sparse_matrix_from_dict(data, num_max_subhalo):
 
     # Crear una matriz sparse csr_matrix
     sparse_matrix = scipy.sparse.csr_matrix(matrix_data)
-    
+
     return sparse_matrix
