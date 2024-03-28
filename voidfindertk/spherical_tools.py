@@ -354,6 +354,9 @@ class Classifier(Box, SphericalVoids):
         'm':self.m
         }
 
+    def _get_type(self):
+        return 'SphericalVoids'
+
     def __repr__(self):
         """Representation method.
 
