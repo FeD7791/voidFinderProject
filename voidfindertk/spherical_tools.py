@@ -1,3 +1,4 @@
+import math
 from astropy import units as u
 import numpy as np
 import uttr
@@ -138,7 +139,7 @@ class SphericalVoids:
         length = len(self)
         return f"<{cls_name} size={length}>"
 
-def spherical_void_finder(box):
+def spherical_void_finder(box,**kwargs):
     """Uses an external C library (`vf_lib.so`) to identify spherical voids in
     a simulation box.
 
@@ -170,6 +171,45 @@ def spherical_void_finder(box):
     populates a SphericalVoids object. Refer to the SphericalVoids docstring
     for details on the returned object's attributes.
     """
+
+    # Input params
+    params = {
+    #Double Values
+    "RadIncrement" : 0. ,
+    "BoxSize": math.ceil(np.max(box.x.value)) ,
+    "MaxRadiusSearch": 40.0,
+    "ProxyGridSize": 5.0,
+    "FracRadius" : 0.5 ,
+    "DeltaThreshold": -0.9,  
+    "DeltaSeed": -0.7,
+    "OverlapTol":0,
+    "Redshift" : 0.99 ,
+    "OmegaMatter" : 0.25,
+    "OmegaLambda" : 0.75,
+    "Hubble" : 0.73,
+    "FidOmegaMatter ": 0.2  ,
+    "FidOmegaLambda" : 0.8 ,
+    "FidHubble" : 0.7, 
+    "MinProfileDist ": 0.5,
+    "MaxProfileDist" : 3.0,
+    "ScalePos":1,
+    "ScaleVel" : 1,
+    "InnerShellVel": 0.8,
+    "OuterShellVel": 1.2,
+    #Int Values
+    "FormatTracers":0,
+    "NumFiles":32,
+    "NumRanWalk" : 75 , 
+    "OMPcores":8,
+    "RSDist" : 0,
+    "GDist ": 0,
+    "WriteProfiles" : 0 ,
+    "NumProfileBins" : 100,   
+         
+    }
+    for key,value in kwargs.items():
+        params[key] = value
+
     # Import library
     path = os.path.dirname(os.path.realpath(__file__))
     
@@ -179,7 +219,18 @@ def spherical_void_finder(box):
         mode=ctypes.RTLD_GLOBAL,
     )
 
-    # Create Pointer
+    # Load Input Params
+    params1 = dict(list(params.items())[0:21]) # Params that are double type
+    params2 = dict(list(params.items())[21:29]) # Params that are int type
+
+    # Build ctypes structure for params
+    p1 = [(key,ctypes.c_double) for key,value in params1.items()] 
+    p2 = [(key,ctypes.c_int) for key,value in params2.items()]
+
+    class InputParams(ctypes.Structure):
+        _fields_ = p1 + p2
+
+    # Create Pointer for input box elements
     arr_pointer_x = np.ctypeslib.ndpointer(
         dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
     )
@@ -202,7 +253,7 @@ def spherical_void_finder(box):
         dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
     )
 
-    # Create stucts --> class
+    # Create stucts --> class for output
     class voids(ctypes.Structure):
         _fields_ = [
             ("n_voids", ctypes.c_int),
@@ -232,14 +283,18 @@ def spherical_void_finder(box):
         arr_pointer_vz,
         arr_pointer_m,
         ctypes.c_int,
+        ctypes.POINTER(InputParams) #Input params
+        
     ]
 
     # Declare OUTPUT args
     clibrary.execute_void_finder.restype = ctypes.POINTER(voidArray)
 
-    # Return void array
+    # Call and Return array of voids
     va = clibrary.execute_void_finder(
-        box.x, box.y, box.z, box.vx, box.vy, box.vz, box.m, len(box)
+        box.x, box.y, box.z, 
+        box.vx, box.vy, box.vz, box.m, 
+        len(box), InputParams(**params)
     )
 
     va_arr = np.ctypeslib.as_array(va, shape=(10,))
