@@ -150,53 +150,56 @@ void tracer_verification(std::vector<tracers>&input_Tracer){
 
 
 
-void load_input_file()
+void load_input_file(struct InputParams input)
 {
 
 
 
-  OMPcores= 8;  
-  BoxSize = 500;
-  MaxRadiusSearch = 40.0;
-  ProxyGridSize =     5.0 ;
-  DeltaThreshold =   -0.9 ;
-  DeltaSeed =        -0.7 ;
-  OverlapTol =        0 ;
+  OMPcores= input.OMPcores;  
+  BoxSize = input.BoxSize;
+  MaxRadiusSearch = input.MaxRadiusSearch;
+  ProxyGridSize =    input.ProxyGridSize ;
+  DeltaThreshold =   input.DeltaThreshold ;
+  DeltaSeed =     input.DeltaSeed ;
+  OverlapTol =        input.OverlapTol ;
 
-  FormatTracers=     0 ;
-  NumFiles=          32 ;
+  FormatTracers=  input.FormatTracers ;
+  NumFiles=        input.NumFiles ;
   
   //strcpy(FileTracers, "data/galaxies.dat" );
-  strcpy(FileVoids, "voids_file.dat");
-
-  ScalePos = 1 ;
-  ScaleVel = 1 ;
-
-  FracRadius = 0.5 ;
-  NumRanWalk = 75  ;
-  RadIncrement = 0 ;
-
-  RSDist = 0;
-  Redshift = 0.99   ;
-  OmegaMatter = 0.25;
-  OmegaLambda = 0.75;
-  Hubble = 0.73;
-
-  GDist = 0;
-  FidOmegaMatter = 0.2;  
-  FidOmegaLambda = 0.8 ;
-  FidHubble = 0.7;
-
-  WriteProfiles = 0 ;
-  MinProfileDist = 0.5;
-  MaxProfileDist = 3.0;
-  NumProfileBins = 100;
-  //PathProfiles= "data/profiles/";
-  strcpy(PathProfiles, "data/profiles/");
-
-  InnerShellVel = 0.8;
-  OuterShellVel = 1.2;
   
+
+  ScalePos = input.ScalePos ;
+  ScaleVel = input.ScaleVel ;
+
+  FracRadius = input.FracRadius ;
+  NumRanWalk = input.NumRanWalk  ;
+  RadIncrement = input.RadIncrement ;
+
+  RSDist = input.RSDist;
+  Redshift = input.Redshift   ;
+  OmegaMatter = input.OmegaMatter;
+  OmegaLambda = input.OmegaLambda;
+  Hubble = input.Hubble;
+
+  GDist = input.GDist;
+  FidOmegaMatter = input.FidOmegaMatter;  
+  FidOmegaLambda = input.FidOmegaLambda ;
+  FidHubble = input.FidHubble;
+
+  WriteProfiles = input.WriteProfiles ;
+  MinProfileDist = input.MinProfileDist;
+  MaxProfileDist = input.MaxProfileDist;
+  NumProfileBins = input.NumProfileBins;
+  InnerShellVel = input.InnerShellVel;
+  OuterShellVel = input.OuterShellVel;
+  //PathProfiles= "data/profiles/";
+  
+
+  //Not implemented 
+  
+  strcpy(PathProfiles, "data/profiles/");
+  strcpy(FileVoids, "voids_file.dat");
 }
 
 int ToF_void_counter(int n_void){
@@ -260,14 +263,17 @@ struct voidArray* execute_void_finder(
     double *arr_vx,
     double *arr_vy,
     double *arr_vz,
-    double *arr_m , int size) 
+    double *arr_m , 
+    int size,
+    struct InputParams input
+   ) 
 
 {
 
 clock_t t = clock();
 logfile = fopen("log_file.txt", "a");
 
-   load_input_file();
+   load_input_file(input);
 
 
 

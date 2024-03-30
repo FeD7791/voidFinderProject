@@ -112,3 +112,38 @@ extern vector <voids> Void;
    };
 ///
 
+struct InputParams
+{
+    double RadIncrement;
+    double BoxSize;          
+    double MaxRadiusSearch;  
+    double ProxyGridSize;  
+    double FracRadius;       
+    double DeltaThreshold;   
+    double DeltaSeed;        
+    double OverlapTol;   
+    double Redshift;         
+    double OmegaMatter;
+    double OmegaLambda;
+    double Hubble;  
+    double FidOmegaMatter;        
+    double FidOmegaLambda;        
+    double FidHubble;  
+    double MinProfileDist;   
+    double MaxProfileDist;   
+    double ScalePos;
+    double ScaleVel;
+    double InnerShellVel;  
+    double OuterShellVel; 
+
+    int    FormatTracers;
+    int    NumFiles;
+    int    NumRanWalk;
+    int    OMPcores;         
+    int    RSDist;           
+    int    GDist;                     
+    int    WriteProfiles;        
+    int    NumProfileBins;       
+    //int    RunFlag;
+};
+
