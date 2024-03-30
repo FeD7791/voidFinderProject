@@ -47,6 +47,18 @@ class PopCornVoids:
         """
         return self._void_len
     
+    def _slice(self,min,max):
+        popvoid = {
+            'void_id':self.void_id[min:max],
+            'number_members':self.number_members[min:max],
+            'void_volume':self.void_volume[min:max],
+            'number_subhalos':self.number_subhalos[min:max],
+            'internal_flag':self.internal_flag[min:max],
+            'spheres':self.spheres[min:max],
+            'ID_subhalo':self.ID_subhalo[min:max]
+        }
+        return PopCornVoids(**popvoid)
+    
     def __repr__(self):
         """Representation method.
 

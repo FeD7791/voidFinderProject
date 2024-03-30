@@ -107,6 +107,24 @@ class SphericalVoids:
                 the number of elements in SphericalVoids
         """
         return self._void_len
+    
+    def _slice(self,min:int,max:int):
+        sp_voids = {
+            'rad':self.rad[min:max],
+            'x_void':self.x_void[min:max],
+            'y_void':self.y_void[min:max],
+            'z_void':self.z_void[min:max],
+            'vel_x_void':self.vel_x_void[min:max],
+            'vel_y_void':self.vel_y_void[min:max],
+            'vel_z_void':self.vel_z_void[min:max],
+            'delta':self.delta[min:max],
+            'dtype':self.dtype[min:max],
+            'poisson':self.poisson[min:max],
+            # self.dist4,
+            'nran':self.nran[min:max],
+
+        }
+        return SphericalVoids(**sp_voids)
 
     def __repr__(self):
         """Representation method.
