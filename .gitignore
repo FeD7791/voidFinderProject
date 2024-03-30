@@ -49,12 +49,17 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+
 # Other
 *.pyc
 *.pyo
 *.o
 voidFinderProject/
+datasets/
+examples/
 main.py
 *.so
 .flake8
 .black
+gemini.py 
+pipeline_popcorn.py
