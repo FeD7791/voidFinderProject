@@ -6,32 +6,58 @@ import scipy
 from scipy.sparse import csr_matrix
 
 
+
+def distance_void_tracer_classification(
+		x_tracers,y_tracers,z_tracers,
+		x_voids,y_voids,z_voids,rad_voids
+		):
+	pos_void = np.array([
+				x_voids, 
+				y_voids, 
+				z_voids
+				])
+	pos_void = np.transpose(pos_void)
+	arr = []
+	for i in range(len(x_tracers)):
+		pos_box = np.array(
+			[[x_tracers[i], y_tracers[i], z_tracers[i]]]
+		)
+		d = scipy.spatial.distance.cdist(
+			pos_box, pos_void, metric="euclidean"
+		)  # Calculates the distance from a tracer to each void center
+			# d is voids._void_len	
+		rad_center_distance_comparing = np.greater(rad_voids, d[0]).astype(
+			float
+		)  # Compares radius of a void and distance from the void center to the particle 1 if rad>d # noqa: E501
+		arr.append(rad_center_distance_comparing)
+	# Transform to sparse matrix
+	return csr_matrix(arr)
+
+
+
 def join_box_void(box,voids, **kwargs):
 		
-		params = {'tol':0.0}
+		params = {
+			'tol':0.0,
+			}
 		for key,value in kwargs.items():
 			params[key] = value
-
+		
 		if type(voids).__name__ == 'SphericalVoids':
-
+			
 			tolerance = params['tol'] * np.ones(voids.rad.shape)
-			rad = np.array(voids.rad) + tolerance
-			pos_void = np.array([voids.x_void, voids.y_void, voids.z_void])
-			pos_void = np.transpose(pos_void)
-			arr = []
-			for i in range(box._len):
-				pos_box = np.array(
-					[[box.x[i].value, box.y[i].value, box.z[i].value]]
-				)
-				d = scipy.spatial.distance.cdist(
-					pos_box, pos_void, metric="euclidean"
-				)  # Calculates the distance from a tracer to each void center
-				rad_center_distance_comparing = np.greater(rad, d[0]).astype(
-					float
-				)  # Compares radius of a void and distance from the void center to the particle 1 if rad>d # noqa: E501
-				arr.append(rad_center_distance_comparing)
-			# Transform to sparse matrix
-			output_sparse_matrix = scipy.sparse.csr_matrix(arr)
+			rad = voids.rad.value + tolerance
+
+			output_sparse_matrix = distance_void_tracer_classification(
+				x_tracers=box.x.value,
+				y_tracers=box.y.value,
+				z_tracers=box.z.value,
+				x_voids=voids.x_void.value,
+				y_voids=voids.y_void.value, 
+				z_voids=voids.z_void.value,
+				rad_voids=rad
+
+			)
 
 		if type(voids).__name__ == 'PopCornVoids':
 			n_index =[]
@@ -51,9 +77,8 @@ def join_box_void(box,voids, **kwargs):
 
 
 
-def analysis_voids(box,voids,sparse,n_items): #param: a param like 'rad', 'volume' property of a void
-											#n_items: the most relevant n_items
-
+def analysis_voids(box,voids,sparse,n_items): #n_items: the most relevant n_items
+											
 	df_voids = pd.DataFrame(voids.__dict__)
 	df_box = pd.DataFrame(box.__dict__)
 	
@@ -69,7 +94,10 @@ def analysis_voids(box,voids,sparse,n_items): #param: a param like 'rad', 'volum
 	for i in df_filtered_index_cut:
 		tracer_indexes = list(sparse.getcol(i).tocoo().row) 
 		parameter_voids['void_number'].append(i)
-		parameter_voids['velocity_norm'].append(np.linalg.norm(df_box.loc[tracer_indexes,['vx','vy','vz']].sum(axis=0))/len(tracer_indexes))
+		parameter_voids['velocity_norm'].append(
+			np.linalg.norm(
+				df_box.loc[
+					tracer_indexes,['vx','vy','vz']].sum(axis=0))/len(tracer_indexes))
 		parameter_voids['n_tracers'].append(len(tracer_indexes))
 	return parameter_voids
 
