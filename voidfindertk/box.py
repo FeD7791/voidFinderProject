@@ -5,6 +5,8 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 """Class Box object constructor."""
+import math
+
 from astropy import units as u
 
 import numpy as np
@@ -66,6 +68,14 @@ class Box:
 
         super().__setattr__("_len", lengths.pop())
 
+        #check if the box is a cube
+        box_side = set(math.ceil(np.max(self.x.value)),
+                       math.ceil(np.max(self.y.value)),
+                       math.ceil(np.max(self.z.value))
+                       )
+        if len(box_side) != 1:
+            raise ValueError("Box side lengths are not the same, not a cube")
+
     def __len__(self):
         """Length method.
 
@@ -116,3 +126,4 @@ class Box:
         cls_name = type(self).__name__
         length = len(self)
         return f"<{cls_name} size={length}>"
+    
