@@ -325,19 +325,34 @@ int main(int argc,char **argv) {
 
 
   zon = fopen(zonfile,"w");
+  //custom txt output
+  FILE *fptr = fopen("zonfile.txt", "w");
+  //
   if (zon == NULL) {
     printf("Problem opening zonefile %s.\n\n",zonfile);
     exit(0);
   }
   fwrite(&np,1,sizeof(int),zon);
   fwrite(&nzones,1,sizeof(int),zon);
+  //Custom write//
+  fprintf(fptr, "%d np\n",np);
+  fprintf(fptr, "%d nzones\n",nzones);
+  fprintf(fptr, "m zone\n");
+  //
   for (h=0; h<nzones; h++) {
     fwrite(&(z[h].np),1,sizeof(int),zon);
     fwrite(m[h],z[h].np,sizeof(int),zon);
+    //Custom write
+    fprintf(fptr, "%d %d\n", *m[h] ,z[h].np);
+    //
     free(m[h]);
+    
+
   }
   free(m);
   close(zon);
+  //close custom file
+  fclose(fptr);
 
   inyet = (char *)malloc(nzones*sizeof(char));
   inyet2 = (char *)malloc(nzones*sizeof(char));
@@ -362,12 +377,18 @@ int main(int argc,char **argv) {
   printf("Densities range from %e to %e.\n",minvol,maxvol);FF;
 
   zon2 = fopen(zonfile2,"w");
+  //custom txt output
+  FILE *fptr2 = fopen("zonfile2.txt", "w");
+  //
   if (zon2 == NULL) {
     printf("Problem opening zonefile %s.\n\n",zonfile2);
     exit(0);
   }
   fwrite(&nzones,1,sizeof(int),zon2);
-
+  //Custom print
+  fprintf(fptr2, "%d nzones\n",nzones);
+  fprintf(fptr2, "zonelist Number of zones\n");
+  //
   for (h = 0; h<nzones; h++) {
     nhlcount = 0;
     for (hl = 0; hl < nhl; hl++)
@@ -506,8 +527,14 @@ int main(int argc,char **argv) {
 
     fwrite(&nhl,1,sizeof(int),zon2);
     fwrite(zonelist,nhl,sizeof(int),zon2);
+    //Customs file write
+    fprintf(fptr2, "%d %d\n",*zonelist,nhl);
+    //fprintf(fptr2, "%p %d\n",(void *)zonelist,nhl);
+    //
   }
   fclose(zon2);
+  //close custom file
+  fclose(fptr2);
 
   printf("Maxdenscontrast = %g.\n",maxdenscontrast);
 
