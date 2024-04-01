@@ -54,7 +54,8 @@ docs/_build/
 *.pyc
 *.pyo
 *.o
-voidFinderProject/
+voidfindertk/zobov/qhull/
+voidfindertk/zobov/src/
 datasets/
 examples/
 main.py
