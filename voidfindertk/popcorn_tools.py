@@ -2,13 +2,13 @@ import uttr
 import numpy as np
 from .models import ModelABC
 from .analysis_tools import join_box_void
-
+from astropy import units as u
 
 @uttr.s(repr=False)
 class PopCornVoids:
     void_id = uttr.ib()
     number_members = uttr.ib()
-    void_volume = uttr.ib(converter=np.array)
+    void_volume = uttr.ib(converter=np.array,unit=u.Mpc**3)
     number_subhalos = uttr.ib() 
     internal_flag = uttr.ib()
     spheres = uttr.ib()
