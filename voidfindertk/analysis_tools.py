@@ -118,7 +118,7 @@ def analysis_voids(box,voids,sparse,**kwargs): #n_items: the most relevant n_ite
 
 	df_filtered_index_cut = df_filtered_param.index[:params['n_items']]
 
-	parameter_voids = {'void_number':[], 'velocity_norm':[], 'n_tracers':[]}
+	parameter_voids = {'void_number':[], 'velocity_norm':[], 'n_tracers':[], 'type':type(voids).__name__ }
 
 	for i in df_filtered_index_cut:
 		tracer_indexes = list(sparse.getcol(i).tocoo().row) 
