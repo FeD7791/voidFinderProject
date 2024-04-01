@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 import scipy
 from scipy.sparse import csr_matrix
 
+def volume_radii_conversion(volume):
+	#volume must be a np array
+	if type(volume).__name__ != 'ndarray':
+		raise TypeError('volume must be of type ndarray')
+	r = ((3/(4*np.pi))*volume)**(1/3)
+	return r
 
 
 def distance_void_tracer_classification(
@@ -72,6 +78,20 @@ def join_box_void(box,voids, **kwargs):
 			col = np.array(n_index)
 			data = np.ones(row.shape)
 			output_sparse_matrix = csr_matrix((data, (row, col)), shape=(box._len, voids._void_len))
+		
+		if type(voids).__name__ == 'ZobovVoids':
+			rad = volume_radii_conversion(voids.VoidVol.value)
+			centers = find_zobov_void_centers(box=box, zobov_voids=voids)
+			output_sparse_matrix = distance_void_tracer_classification(
+				x_tracers=box.x.value,
+				y_tracers=box.y.value,
+				z_tracers=box.z.value,
+				x_voids=centers['x'],
+				y_voids=centers['y'], 
+				z_voids=centers['z'],
+				rad_voids=rad
+
+			)
 
 		return {'box':box, 'voids':voids, 'sparse':output_sparse_matrix}
 
@@ -86,6 +106,8 @@ def analysis_voids(box,voids,sparse,n_items): #n_items: the most relevant n_item
 		df_filtered_param = df_voids.sort_values(by='rad', ascending=False)
 	if type(voids).__name__  == 'PopCornVoids':
 		df_filtered_param = df_voids.sort_values(by='void_volume', ascending=False)
+	if type(voids).__name__ == 'ZobovVoids':
+		df_filtered_param = df_voids.sort_values(by='rad', ascending=False)
 
 	df_filtered_index_cut = df_filtered_param.index[:n_items]
 
@@ -116,8 +138,9 @@ def void_size_function(box,voids, **kwargs):
 	if type(voids).__name__ == 'SphericalVoids':
 		rad = voids.rad.value
 	if type(voids).__name__ == 'PopCornVoids':
-		popcorn_volume = voids.void_volume
-		rad = ((3/(4*np.pi))*popcorn_volume)**(1/3)
+		rad = volume_radii_conversion(voids.void_volume.value)
+	if type(voids).__name__ == 'ZobovVoids':
+		rad = volume_radii_conversion(voids.VoidVol.value)
 	
 	void_radii = np.array(rad)
 	bins = np.linspace(min(void_radii), max(void_radii), params['n_bins'] )
@@ -152,3 +175,15 @@ def void_size_function(box,voids, **kwargs):
 		plt.show()
 
 	return [mids,normalized_counts]
+
+
+def find_zobov_void_centers(box,zobov_voids):
+    box_df = pd.DataFrame(box.__dict__)
+    zobov_df = pd.DataFrame(zobov_voids.__dict__)
+    zobov_df = zobov_df.sort_values(by='CoreParticle')
+    core_particle_list = list(zobov_df['CoreParticle'])
+    val = box_df.index.isin(core_particle_list)
+    x = list(box_df[val]['x'])
+    y = list(box_df[val]['y'])
+    z = list(box_df[val]['z'])
+    return {'CoreParticle':core_particle_list,'x':x,'y':y,'z':z}
