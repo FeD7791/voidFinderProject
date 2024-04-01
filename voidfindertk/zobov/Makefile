@@ -2,6 +2,10 @@
 all: qhull voboz
 
 .PHONY : qhull voboz examples
+.PHONY : loader
+
+loader:
+	gcc -fPIC -shared -o zobov_loader.so zobov_loader.c
 
 qhull:
 	make -C qhull/src
@@ -18,3 +22,4 @@ clean:
 	make -C qhull/src cleanall
 	make -C examples clean
 	rm -f bin/*
+	rm -f zobov_loader.so
