@@ -97,8 +97,14 @@ def join_box_void(box,voids, **kwargs):
 
 
 
-def analysis_voids(box,voids,sparse,n_items): #n_items: the most relevant n_items
-											
+def analysis_voids(box,voids,sparse,**kwargs): #n_items: the most relevant n_items
+
+	params = {
+		'n_items' : len(voids)
+	}
+	for key,value in kwargs.items():
+		params[key] = value
+										
 	df_voids = pd.DataFrame(voids.__dict__)
 	df_box = pd.DataFrame(box.__dict__)
 	
@@ -107,9 +113,10 @@ def analysis_voids(box,voids,sparse,n_items): #n_items: the most relevant n_item
 	if type(voids).__name__  == 'PopCornVoids':
 		df_filtered_param = df_voids.sort_values(by='void_volume', ascending=False)
 	if type(voids).__name__ == 'ZobovVoids':
-		df_filtered_param = df_voids.sort_values(by='rad', ascending=False)
+		df_filtered_param = df_voids.sort_values(by='VoidVol', ascending=False)
 
-	df_filtered_index_cut = df_filtered_param.index[:n_items]
+
+	df_filtered_index_cut = df_filtered_param.index[:params['n_items']]
 
 	parameter_voids = {'void_number':[], 'velocity_norm':[], 'n_tracers':[]}
 
