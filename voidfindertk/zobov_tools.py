@@ -31,17 +31,17 @@ class ZobovVoids:
         """
         lengths = set(())
         for e in (
-            self.Void_number,
-            self.File_void_number,
-            self.CoreParticle,
-            self.CoreDens,
-            self.ZoneVol,
-            self.Zone_number_part,
-            self.Void_number_Zones,
-            self.VoidVol,
-            self.Void_number_Part,
-            self.VoidDensContrast,
-            self.VoidProb
+            self.Void_number, #Rank of the void, in decreasing order of VoidDensContrast.
+            self.File_void_number, #Number of the void, in previous files
+            self.CoreParticle, # Index --Related to Box-- of the core particle of the void 
+            self.CoreDens, # Density of the core particle
+            self.ZoneVol, # Volume of the central zone of the void
+            self.Zone_number_part, # Number of particles in the central zone of the void
+            self.Void_number_Zones, # Number of zones in the void
+            self.VoidVol, # Volume of the void
+            self.Void_number_Part, # Number of particles in the void
+            self.VoidDensContrast, # Contrast density of the void
+            self.VoidProb # The probability that that DensContrast would arise from Poisson noise
         ):
             lengths.add(len(e))
 
