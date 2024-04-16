@@ -10,7 +10,7 @@ class ModelABC(ABC):
     def find(self,databox):
         llbox = self.preprocess(databox)
         voids = self.model_find(llbox)
-        vb = self.mk_vbox(databox,voids,llbox)
+        vb = self.mk_vbox(voids,llbox)
         return vb
 
     @abstractmethod
@@ -20,6 +20,6 @@ class ModelABC(ABC):
     def model_find(self, llbox):
         pass
     @abstractmethod
-    def mk_vbox(self, databox,voids,llbox):
+    def mk_vbox(self,voids,llbox):
         pass
 
