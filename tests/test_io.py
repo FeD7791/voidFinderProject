@@ -6,7 +6,8 @@
 # All rights reserved.
 import pytest
 
-from voidfindertk import box, read_table
+from voidfindertk.io import read_table
+from voidfindertk import box
 
 
 def test_read_table_type_output(random_buffer):
