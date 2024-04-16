@@ -6,7 +6,7 @@ import os
 import ctypes
 from .models import ModelABC
 from .analysis_tools import join_box_void
-from tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder
+from .tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder
 
 class SphericalVF(ModelABC):
     def __init__(self):
@@ -19,13 +19,13 @@ class SphericalVF(ModelABC):
         sp_void = spherical_void_finder(llbox.box)
         return {'voids':sp_void}
     
-    def mk_vbox(self, databox,voids,sparse,llbox):
+    def mk_vbox(self, voids,llbox):
         voids = voids['voids']
         # databox.box.__dict__.pop('_len')
         # voids.__dict__.pop('_void_len')
         #sparse_m = Classifier(**databox.box.__dict__, **voids.__dict__)._sparse_matrix(0.0)
-        sparse_m = join_box_void(databox,voids,tol=0.0)
-        return sparse_m
+        box_void_sparse = join_box_void(llbox.box, voids, tol=0.0)
+        return box_void_sparse
 
 
 @uttr.s(repr=False)
