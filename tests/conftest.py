@@ -15,8 +15,9 @@ import pytest
 from voidfindertk.box import Box
 
 
+
 @pytest.fixture(scope="session")
-def mkbox_params():
+def mkbox_params(): #aca vas a retornar la funcion maker que la podes modificar
     def _maker(
         *,
         seed=None,
@@ -27,13 +28,13 @@ def mkbox_params():
     ):
         rng = np.random.default_rng(seed=seed)
         params = {
-            "x": coordinates_scale * rng.random(size=size),
-            "y": coordinates_scale * rng.random(size=size),
-            "z": coordinates_scale * rng.random(size=size),
-            "vx": velocity_scale * rng.random(size=size),
-            "vy": velocity_scale * rng.random(size=size),
-            "vz": velocity_scale * rng.random(size=size),
-            "m": mass_scale * rng.random(size=size),
+            "x": rng.uniform(0,coordinates_scale,size=size),
+            "y": rng.uniform(0,coordinates_scale,size=size),
+            "z": rng.uniform(0,coordinates_scale,size=size),
+            "vx": rng.uniform(0,velocity_scale,size=size),
+            "vy": rng.uniform(0,velocity_scale,size=size),
+            "vz": rng.uniform(0,velocity_scale,size=size),
+            "m": rng.uniform(0,mass_scale,size=size)
         }
         return params
 
@@ -72,3 +73,42 @@ def random_buffer():
         return buff
 
     return _maker
+
+@pytest.fixture
+def make_spherical_voids_params():
+    #aca vas a retornar un valor, no una funcion
+    def _maker(**kwargs):
+        params = {
+            'n_voids':1000,
+            'rad_scale': 15,
+            'xyz_void_max_scale':500,
+            'vel_xyz_void_max_scale':200,
+            'min_delta':-0.95,
+            'max_delta':-0.90,
+            'min_poisson':-0.5,
+            'max_poisson':0.5,
+            'dtype': 0.5,
+            'nran': 200,
+            'seed':42
+        }
+        for key,value in kwargs.items():
+            params[key] = value
+
+        rng = np.random.default_rng(seed=params['seed'])
+        void_params = {
+            'rad' : rng.uniform(0,params['rad_scale'],params['n_voids']),
+            'x_void' : rng.uniform(0,params['xyz_void_max_scale'],params['n_voids']),
+            'y_void' : rng.uniform(0,params['xyz_void_max_scale'],params['n_voids']),
+            'z_void' : rng.uniform(0,params['xyz_void_max_scale'],params['n_voids']),
+            'vel_x_void' : rng.uniform(0,params['vel_xyz_void_max_scale'],params['n_voids']),
+            'vel_y_void' : rng.uniform(0,params['vel_xyz_void_max_scale'],params['n_voids']),
+            'vel_z_void' : rng.uniform(0,params['vel_xyz_void_max_scale'],params['n_voids']),
+            'delta' : rng.uniform(params['min_delta'],params['max_delta'],params['n_voids']),
+            'poisson' : rng.uniform(params['min_poisson'], params['max_poisson'],params['n_voids']),
+            'dtype' :  rng.uniform(0, params['dtype'],params['n_voids']),
+            'nran' : rng.uniform(0, params['nran'],params['n_voids'])
+        }
+        return void_params
+    
+    return _maker
+
