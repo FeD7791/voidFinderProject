@@ -6,6 +6,7 @@ import os
 import ctypes
 from .models import ModelABC
 from .analysis_tools import join_box_void
+from tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder
 
 class SphericalVF(ModelABC):
     def __init__(self):
@@ -171,175 +172,37 @@ def spherical_void_finder(box,**kwargs):
     populates a SphericalVoids object. Refer to the SphericalVoids docstring
     for details on the returned object's attributes.
     """
-
-    # Input params
-    params = {
-    #Double Values
-    "RadIncrement" : 0. ,
-    "BoxSize": math.ceil(np.max(box.x.value)) ,
-    "MaxRadiusSearch": 40.0,
-    "ProxyGridSize": 5.0,
-    "FracRadius" : 0.5 ,
-    "DeltaThreshold": -0.9,  
-    "DeltaSeed": -0.7,
-    "OverlapTol":0,
-    "Redshift" : 0.99 ,
-    "OmegaMatter" : 0.25,
-    "OmegaLambda" : 0.75,
-    "Hubble" : 0.73,
-    "FidOmegaMatter ": 0.2  ,
-    "FidOmegaLambda" : 0.8 ,
-    "FidHubble" : 0.7, 
-    "MinProfileDist ": 0.5,
-    "MaxProfileDist" : 3.0,
-    "ScalePos":1,
-    "ScaleVel" : 1,
-    "InnerShellVel": 0.8,
-    "OuterShellVel": 1.2,
-    #Int Values
-    "FormatTracers":0,
-    "NumFiles":32,
-    "NumRanWalk" : 75 , 
-    "OMPcores":8,
-    "RSDist" : 0,
-    "GDist ": 0,
-    "WriteProfiles" : 0 ,
-    "NumProfileBins" : 100,   
-         
-    }
-    for key,value in kwargs.items():
-        params[key] = value
-
+    params = ctypes_input_params_builder('spherical',BoxSize = math.ceil(np.max(box.x.value)),**kwargs)
+    
     # Import library
     path = os.path.dirname(os.path.realpath(__file__))
     
-
     clibrary = ctypes.CDLL(
         os.path.join(path,"spherical", "vf_lib.so"),
         mode=ctypes.RTLD_GLOBAL,
     )
 
-    # Load Input Params
-    params1 = dict(list(params.items())[0:21]) # Params that are double type
-    params2 = dict(list(params.items())[21:29]) # Params that are int type
-
-    # Build ctypes structure for params
-    p1 = [(key,ctypes.c_double) for key,value in params1.items()] 
-    p2 = [(key,ctypes.c_int) for key,value in params2.items()]
-
-    class InputParams(ctypes.Structure):
-        _fields_ = p1 + p2
-
-    # Create Pointer for input box elements
-    arr_pointer_x = np.ctypeslib.ndpointer(
+    arr_pointers = 7*[np.ctypeslib.ndpointer(
         dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_y = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_z = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_vx = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_vy = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_vz = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-    arr_pointer_m = np.ctypeslib.ndpointer(
-        dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )
-
+    )] #pointers for x,y,z,vx,vy,vz,m
+    
     # Create stucts --> class for output
-    class voids(ctypes.Structure):
-        _fields_ = [
-            ("n_voids", ctypes.c_int),
-            ("Rad", ctypes.c_float),
-            # ("Rini", ctypes.c_float),
-            # ("Ini", ctypes.c_float * 1),
-            ("Pos", ctypes.c_float * 3),
-            ("Vel", ctypes.c_float * 3),
-            ("Dtype", ctypes.c_float),
-            ("Delta", ctypes.c_float),
-            ("Poisson", ctypes.c_float),
-            # ("Dist4", ctypes.c_float),
-            # ("ToF", ctypes.c_bool),
-            ("Nran", ctypes.c_int),
-        ]
-
-    class voidArray(ctypes.Structure):
-        _fields_ = [("voids", voids * 1)]
-
+    output_class = ctypes_output_builder('spherical')
+    
     # Declare Input Pointers
-    clibrary.execute_void_finder.argtypes = [
-        arr_pointer_x,
-        arr_pointer_y,
-        arr_pointer_z,
-        arr_pointer_vx,
-        arr_pointer_vy,
-        arr_pointer_vz,
-        arr_pointer_m,
-        ctypes.c_int,
-        ctypes.POINTER(InputParams) #Input params
-        
-    ]
-
+    clibrary.execute_void_finder.argtypes = arr_pointers + [ctypes.c_int, ctypes.POINTER(params['InputParams_class'])]
+    
     # Declare OUTPUT args
-    clibrary.execute_void_finder.restype = ctypes.POINTER(voidArray)
+    clibrary.execute_void_finder.restype = ctypes.POINTER(output_class['voidArray_class'])
 
     # Call and Return array of voids
     va = clibrary.execute_void_finder(
         box.x, box.y, box.z, 
         box.vx, box.vy, box.vz, box.m, 
-        len(box), InputParams(**params)
+        len(box), params['InputParams_class'](**params['params_dict'])
     )
-
-    va_arr = np.ctypeslib.as_array(va, shape=(10,))
-
-    n_voids = va_arr[0][0][0][0] - 1
-
-    full_arr = np.ctypeslib.as_array(va, shape=(n_voids,))
-
-    radius = []
-    x_coord = []
-    y_coord = []
-    z_coord = []
-    vx_coord = []
-    vy_coord = []
-    vz_coord = []
-    dtype = []
-    delta = []
-    poisson = []
-    nran = []
-    for i in range(0, n_voids, 1):
-        radius.append(full_arr[i][0][0][1])
-        x_coord.append(full_arr[i][0][0][2][0])
-        y_coord.append(full_arr[i][0][0][2][1])
-        z_coord.append(full_arr[i][0][0][2][2])
-        vx_coord.append(full_arr[i][0][0][3][0])
-        vy_coord.append(full_arr[i][0][0][3][1])
-        vz_coord.append(full_arr[i][0][0][3][2])
-        dtype.append(full_arr[i][0][0][4])
-        delta.append(full_arr[i][0][0][5])
-        poisson.append(full_arr[i][0][0][6])
-        nran.append(full_arr[i][0][0][7])
-
-    sp_void = SphericalVoids(
-        rad=radius,
-        x_void=x_coord,
-        y_void=y_coord,
-        z_void=z_coord,
-        vel_x_void=vx_coord,
-        vel_y_void=vy_coord,
-        vel_z_void=vz_coord,
-        delta=delta,
-        dtype=dtype,
-        poisson=poisson,
-        nran=nran,
-    )
+    output = process_output_from_finder('spherical', array_of_voids=va)
+    sp_void = SphericalVoids(**output)
 
     return sp_void
 
