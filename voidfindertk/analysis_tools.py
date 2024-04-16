@@ -194,3 +194,61 @@ def find_zobov_void_centers(box,zobov_voids):
     y = list(box_df[val]['y'])
     z = list(box_df[val]['z'])
     return {'CoreParticle':core_particle_list,'x':x,'y':y,'z':z}
+
+
+
+def void_size_function_2(box,voids, **kwargs):
+	params = {
+		'n_bins':50, 
+		}
+	for key,value in kwargs.items():
+		params[key] = value
+
+	#Get radii
+	if type(voids).__name__ == 'SphericalVoids':
+		rad = voids.rad.value
+	if type(voids).__name__ == 'PopCornVoids':
+		rad = volume_radii_conversion(voids.void_volume.value)
+	if type(voids).__name__ == 'ZobovVoids':
+		rad = volume_radii_conversion(voids.VoidVol.value)
+
+	#Vol simulation
+	vol = (math.ceil(np.max(box.x.value)))**3 
+
+	#rho med of tracers
+	rho_med = len(box)/vol
+
+	#Seq
+	n1 = list(np.arange(1,6,1))
+	n2 = list(np.arange(6,11,2))
+	n3 = list(np.arange(12,62,10))
+	n = np.array(n1 + n2 + n3)
+
+	#Delta
+	delta = -0.9
+
+	#scl
+	#scl = np.log10((3/(4*np.pi)*n/rho_med/(1+delta))**(1/3))
+	scl = np.log10((3*n/((1+delta)*(4*np.pi)*rho_med))**(1/3))
+
+	#max log rad
+	mxlg = np.log10(max(rad))
+
+	#breaker br
+	br = np.array(list(scl[1:len(scl)-1]) + list(np.linspace(max(scl),mxlg, params['n_bins'])))
+
+	#x
+	x = rad
+	#histogram
+	counts, bins0 = np.histogram(np.log10(x), bins=br)
+
+	#dlogr
+	dlogr = br[1:len(br)] - br[0:len(br)-1]
+
+	#mids
+	mids = (bins0[1:] + bins0[:-1]) / 2
+
+	#Normalized density
+	#density = counts/dlogr/vol
+	density = counts/(dlogr*vol) 
+	return [10**mids,density]
