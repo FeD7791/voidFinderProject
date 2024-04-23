@@ -189,7 +189,11 @@ def spherical_void_finder(box,**kwargs):
     populates a SphericalVoids object. Refer to the SphericalVoids docstring
     for details on the returned object's attributes.
     """
-    params = ctypes_input_params_builder('spherical',BoxSize = math.ceil(np.max(box.x.value)),**kwargs)
+    params = ctypes_input_params_builder(
+        'spherical',
+        BoxSize = math.ceil(np.max(box.x.value)),
+        **kwargs
+        ) #Build input params for input of finder
     
     # Import library
     path = os.path.dirname(os.path.realpath(__file__))
@@ -197,11 +201,11 @@ def spherical_void_finder(box,**kwargs):
     clibrary = ctypes.CDLL(
         os.path.join(path,"spherical", "vf_lib.so"),
         mode=ctypes.RTLD_GLOBAL,
-    )
+    ) # Path of the library
 
     arr_pointers = 7*[np.ctypeslib.ndpointer(
         dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-    )] #pointers for x,y,z,vx,vy,vz,m
+    )] #pointers for box input x,y,z,vx,vy,vz,m
     
     # Create stucts --> class for output
     output_class = ctypes_output_builder('spherical')
