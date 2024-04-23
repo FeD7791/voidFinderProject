@@ -10,7 +10,7 @@ import pandas as pd
 from . import box, popcorn_tools, spherical_tools, zobov_tools
 
 
-def read_table(path_or_buffer, **kwargs):
+def read_table(path_or_buffer, **kwargs): # names = ['x','y','z','vx','vy','vz','m'] to put column names
     """Input reader.
 
     Read a table from a file or buffer and returns a `box.Box` object.
@@ -38,8 +38,10 @@ def read_table(path_or_buffer, **kwargs):
     """
     kwargs.setdefault("sep", r"\s+")
     kwargs.setdefault("usecols", [0, 1, 2, 3, 4, 5, 6])
+    kwargs.setdefault("names", ['x','y','z','vx','vy','vz','m'])
     data = pd.read_csv(path_or_buffer, **kwargs, header=None)
     col_number = len(data.columns)
+
 
     if col_number != 7:
         raise ValueError(
@@ -55,13 +57,13 @@ def read_table(path_or_buffer, **kwargs):
         )
 
     the_box = box.Box(
-        x=data.iloc[:, 0],
-        y=data.iloc[:, 1],
-        z=data.iloc[:, 2],
-        vx=data.iloc[:, 3],
-        vy=data.iloc[:, 4],
-        vz=data.iloc[:, 5],
-        m=data.iloc[:, 6],
+        x=data.loc[:, 'x'],
+        y=data.loc[:, 'y'],
+        z=data.loc[:, 'z'],
+        vx=data.loc[:, 'vx'],
+        vy=data.loc[:, 'vy'],
+        vz=data.loc[:, 'vz'],
+        m=data.loc[:, 'm'],
     )
     return the_box
 
