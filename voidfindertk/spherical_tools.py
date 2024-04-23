@@ -110,23 +110,40 @@ class SphericalVoids:
         """
         return self._void_len
     
-    def _slice(self,min:int,max:int):
-        sp_voids = {
-            'rad':self.rad[min:max],
-            'x_void':self.x_void[min:max],
-            'y_void':self.y_void[min:max],
-            'z_void':self.z_void[min:max],
-            'vel_x_void':self.vel_x_void[min:max],
-            'vel_y_void':self.vel_y_void[min:max],
-            'vel_z_void':self.vel_z_void[min:max],
-            'delta':self.delta[min:max],
-            'dtype':self.dtype[min:max],
-            'poisson':self.poisson[min:max],
-            # self.dist4,
-            'nran':self.nran[min:max],
+    def __eq__(self, other):
+        return all(
+            [
+                np.array_equal(self.rad, other.rad),
+                np.array_equal(self.x_void, other.x_void),
+                np.array_equal(self.y_void, other.y_void),
+                np.array_equal(self.z_void, other.z_void),
+                np.array_equal(self.vel_x_void, other.vel_x_void),
+                np.array_equal(self.vel_y_void, other.vel_y_void),
+                np.array_equal(self.vel_z_void, other.vel_z_void),
+                np.array_equal(self.delta, other.delta),
+                np.array_equal(self.dtype, other.dtype),
+                np.array_equal(self.poisson, other.poisson),
+                np.array_equal(self.nran, other.nran),
+            ]
+        )
+    
+    # def _slice(self,min:int,max:int):
+    #     sp_voids = {
+    #         'rad':self.rad[min:max],
+    #         'x_void':self.x_void[min:max],
+    #         'y_void':self.y_void[min:max],
+    #         'z_void':self.z_void[min:max],
+    #         'vel_x_void':self.vel_x_void[min:max],
+    #         'vel_y_void':self.vel_y_void[min:max],
+    #         'vel_z_void':self.vel_z_void[min:max],
+    #         'delta':self.delta[min:max],
+    #         'dtype':self.dtype[min:max],
+    #         'poisson':self.poisson[min:max],
+    #         # self.dist4,
+    #         'nran':self.nran[min:max],
 
-        }
-        return SphericalVoids(**sp_voids)
+    #     }
+    #     return SphericalVoids(**sp_voids)
 
     def __repr__(self):
         """Representation method.
