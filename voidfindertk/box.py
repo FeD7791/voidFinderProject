@@ -76,9 +76,9 @@ class Box:
         if len(box_side) != 1:
             raise ValueError(
                 "Not a cube:" +
-                f"xmax:{math.ceil(np.max(self.x.value))}"+
-                f"ymax:{math.ceil(np.max(self.y.value))}"+
-                f"zmax:{math.ceil(np.max(self.z.value))}"
+                f" xmax: {math.ceil(np.max(self.x.value))}"+
+                f" ymax: {math.ceil(np.max(self.y.value))}"+
+                f" zmax: {math.ceil(np.max(self.z.value))}"
                 )
 
     def __len__(self):
