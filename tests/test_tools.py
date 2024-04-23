@@ -1,7 +1,7 @@
 import ctypes
 import numpy as np
 import pytest
-from voidfindertk.tools import ctypes_input_params_builder, ctypes_output_builder
+from voidfindertk.tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder
 
 def test_ctypes_input_params_builder():
     params_list_double = [
@@ -41,3 +41,31 @@ def test_ctypes_output_builder(make_spherical_voids_params):
     voids_output = list(zip(params,ctypes_values))
     output = ctypes_output_builder('spherical')
     assert output['voidArray_class']._fields_[0][1]._type_._fields_ == voids_output   
+
+def test_process_output_from_finder():
+    array_of_voids = [
+        [
+            [
+                [
+                    2,
+                    'rad',
+                    ['x','y','z'],
+                    ['vx','vy','vz'],
+                    'dtype',
+                    'delta',
+                    'poisson',
+                    'nran'
+                    ]]]]
+    output = process_output_from_finder('spherical',np.array(array_of_voids, dtype='object'))
+    assert output['rad'][0] == 'rad'
+    assert output['x_void'][0] == 'x'
+    assert output['y_void'][0] == 'y'
+    assert output['z_void'][0] == 'z'
+    assert output['vel_x_void'][0] == 'vx'
+    assert output['vel_y_void'][0] == 'vy'
+    assert output['vel_z_void'][0] == 'vz'
+    assert output['delta'][0] == 'delta'
+    assert output['dtype'][0] == 'dtype'
+    assert output['poisson'][0] == 'poisson'
+    assert output['nran'][0] == 'nran'
+
