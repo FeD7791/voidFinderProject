@@ -182,20 +182,3 @@ def read_spherical_output(filename):
     spherical = spherical_tools.SphericalVoids(**output.to_dict(orient='list'))
     return spherical
     
-def read_zobov_output(filename):
-    output = pd.read_csv(filename, sep='\s+', skiprows=2)
-    output.columns = [
-        'Void_number',
-        'File_void_number',
-        'CoreParticle',
-        'CoreDens',
-        'ZoneVol',
-        'Zone_number_part',
-        'Void_number_Zones',
-        'VoidVol',
-        'Void_number_Part',
-        'VoidDensContrast',
-        'VoidProb'
-    ]
-    zobov = zobov_tools.ZobovVoids(**output.to_dict(orient='list'))
-    return zobov
