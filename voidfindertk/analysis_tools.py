@@ -49,7 +49,7 @@ def join_box_void(box,voids, **kwargs):
 		for key,value in kwargs.items():
 			params[key] = value
 		
-		if type(voids).__name__ == 'SphericalVoids':
+		if type(voids).__name__ in ['SphericalVoids','SVF']:
 			
 			tolerance = params['tol'] * np.ones(voids.rad.shape)
 			rad = voids.rad.value + tolerance
@@ -205,7 +205,7 @@ def void_size_function_2(box,voids, **kwargs):
 		params[key] = value
 
 	#Get radii
-	if type(voids).__name__ == 'SphericalVoids':
+	if type(voids).__name__ in ['SphericalVoids','SVF']:
 		rad = voids.rad.value
 	if type(voids).__name__ == 'PopCornVoids':
 		rad = volume_radii_conversion(voids.void_volume.value)
