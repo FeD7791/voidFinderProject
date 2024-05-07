@@ -1,5 +1,7 @@
 import numpy as np
 import ctypes
+import pandas as pd
+from . import box, data_box
 
 def ctypes_input_params_builder(finder_type,**kwargs):
     if finder_type == 'spherical':
@@ -7,7 +9,7 @@ def ctypes_input_params_builder(finder_type,**kwargs):
         params = {
         #Double Values
         "RadIncrement" : 0. ,
-        "BoxSize": 500 ,
+        "BoxSize": 1000 ,
         "MaxRadiusSearch": 40.0,
         "ProxyGridSize": 5.0,
         "FracRadius" : 0.5 ,
@@ -118,3 +120,16 @@ def process_output_from_finder(finder_type, array_of_voids):
         'delta':delta, 'dtype':dtype, 'poisson':poisson, 'nran':nran
         }
 
+def preprocess_data_box(databox,**kwargs):
+    kwargs.setdefault('m_min', 0)
+    kwargs.setdefault('m_max', len(databox.box))
+    b = databox.box
+    ##
+    df = pd.DataFrame(b.__dict__)
+    df = df[df['m'] >= kwargs['m_min']]
+    df = df[df['m'] <= kwargs['m_max']]
+    df.reset_index(drop=True,inplace=True)
+    df.drop(columns=['_len'],axis=1,inplace=True)
+    df.drop_duplicates(inplace=True, ignore_index=True) #Drop any remaining duplicates
+    box2 = box.Box(**df.to_dict(orient='list'))
+    return data_box.DataBox(box2)
