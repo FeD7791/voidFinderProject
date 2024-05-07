@@ -5,7 +5,7 @@ from voidfindertk.spherical_tools import SphericalVoids
 import numpy as np
 import pandas as pd
 
-def test_spherical_voids_class(make_spherical_voids_params):
+def test_SphericalVoids(make_spherical_voids_params):
     params = make_spherical_voids_params(n_voids=500)
     spherical_voids = SphericalVoids(**params)
     assert spherical_voids.rad.unit == u.Mpc
