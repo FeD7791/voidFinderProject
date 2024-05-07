@@ -6,17 +6,18 @@ import os
 import ctypes
 from .models import ModelABC
 from .analysis_tools import join_box_void
-from .tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder
+from .tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder, preprocess_data_box
 
 class SphericalVF(ModelABC):
     def __init__(self):
         pass
 
-    def preprocess(self, databox):
+    def preprocess(self, databox, **kwargs):
+        databox = preprocess_data_box(databox=databox, **kwargs)
         return databox
 
-    def model_find(self, llbox):
-        sp_void = spherical_void_finder(llbox.box)
+    def model_find(self, llbox,**kwargs):
+        sp_void = spherical_void_finder(llbox.box,**kwargs)
         return {'voids':sp_void}
     
     def mk_vbox(self, voids,llbox):
