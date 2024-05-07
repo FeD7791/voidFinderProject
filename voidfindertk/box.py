@@ -132,3 +132,6 @@ class Box:
         length = len(self)
         return f"<{cls_name} size={length}>"
     
+    def size(self):
+        size = math.ceil(np.max(self.z.value))
+        return size
