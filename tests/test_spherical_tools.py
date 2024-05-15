@@ -1,7 +1,7 @@
-from voidfindertk import spherical_tools
+from vftkproject2.voidFinderProject.voidfindertk.sphericalvf import spherical_tools
 from astropy import units as u
 import pytest
-from voidfindertk.spherical_tools import SphericalVoids
+from vftkproject2.voidFinderProject.voidfindertk.sphericalvf.spherical_tools import SphericalVoids
 import numpy as np
 import pandas as pd
 
@@ -18,5 +18,4 @@ def test_SphericalVoids(make_spherical_voids_params):
     assert len(spherical_voids) == 500
     assert str(spherical_voids) == "<SphericalVoids size=500>"
     #wont test slice method because i dont know if i will keep it
-
 

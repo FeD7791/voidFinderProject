@@ -1,21 +1,25 @@
-
-from voidfindertk import io
-import pandas as pd
-import numpy as np
-import seaborn as sns
+from vftkproject2.voidFinderProject.voidfindertk.sphericalvf import spherical_tools
+from vftkproject2.voidFinderProject.voidfindertk.zobovvf import zobov_tools
+from voidfindertk import io, data_box
 import matplotlib.pyplot as plt
-from voidfindertk.analysis_tools import analysis_voids,join_box_void
-filename='./clean_popvds.dat'
-void = io.read_popcorn_output(filename)
-box = io.read_table('halos_fede.dat') 
+import seaborn as sns
+import pandas as pd
 
-void_out = join_box_void(box=box,voids=void)
-output = analysis_voids(**void_out,n_items=100)
-print(output.keys())
 
-sns.histplot(data=pd.DataFrame(output), x='velocity_norm', bins=50, kde=True).set(title=f'nvoids:{len(output['velocity_norm'])}')
-#sns.histplot(data=velocity_voids_df, x='n_tracers', bins=50, kde=True).set(title=f'nvoids:{len(velocity_voids)}')
+# box = io.read_table('./datasets/halos_cut_scorpio.dat')
+# #box = io.read_table('./datasets/halos_ascii_1000_1024_npmin_10_z0.51.dat', names = ['m','x','y','z','vx','vy','vz'])
+# d_box = data_box.DataBox(box)
+# model = spherical_tools.SphericalVF() 
+# #model = zobov_tools.ZobovVF() 
+# sparse = model.find(d_box)
+# print(sparse)
 
-# #plt.savefig('popcorn_velocity_hist.jpg')
-# #plt.savefig('popcorn_tracers_hist.jpg')
-plt.show()
+
+# svf con datos de Dante
+box = io.read_table(
+    './datasets/halos_ascii_1000_1024_npmin_10_z0.51.dat', 
+    names = ['m','x','y','z','vx','vy','vz'])
+d_box = data_box.DataBox(box)
+model = spherical_tools.SphericalVF()
+output = model.preprocess(d_box, m_min = 200)
+ou = model.model_find(output)

@@ -8,14 +8,14 @@ def ctypes_input_params_builder(finder_type,**kwargs):
         # Input params
         params = {
         #Double Values
-        "RadIncrement" : 0. ,
+        "RadIncrement" : 0. , #cuanto incrementa la esfera a la hora de buscar con la random walk
         "BoxSize": 1000 ,
-        "MaxRadiusSearch": 40.0,
-        "ProxyGridSize": 5.0,
-        "FracRadius" : 0.5 ,
+        "MaxRadiusSearch": 40.0, #Radio maximo que pienso encontrar en el catalogo de voids, muchas veces te frena la densidad. Tiene asociado un error que implica aumentar el maximo
+        "ProxyGridSize": 5.0, # tamanio de la grilla para identificar vecinos el diametro del void debe ser masomenos el tamanio de la caja 
+        "FracRadius" : 0.5 , # cuanto es el tamanio del salto de la caminata , no tiene un impacto muy fuerte sobre el algoritmo
         "DeltaThreshold": -0.9,  
         "DeltaSeed": -0.7,
-        "OverlapTol":0,
+        "OverlapTol":0,  # Cuanto se permite el overlap de tools , si le aumento la tol y se intersectan 2 los 2 se conservan
         "Redshift" : 0.99 ,
         "OmegaMatter" : 0.25,
         "OmegaLambda" : 0.75,
@@ -123,6 +123,7 @@ def process_output_from_finder(finder_type, array_of_voids):
 def preprocess_data_box(databox,**kwargs):
     kwargs.setdefault('m_min', 0)
     kwargs.setdefault('m_max', len(databox.box))
+    kwargs.setdefault('round_to', 0)
     b = databox.box
     ##
     df = pd.DataFrame(b.__dict__)
@@ -130,6 +131,7 @@ def preprocess_data_box(databox,**kwargs):
     df = df[df['m'] <= kwargs['m_max']]
     df.reset_index(drop=True,inplace=True)
     df.drop(columns=['_len'],axis=1,inplace=True)
+    df = df.round(kwargs['round_to']) #Rounding numbers of dataframe for more or less precision
     df.drop_duplicates(inplace=True, ignore_index=True) #Drop any remaining duplicates
     box2 = box.Box(**df.to_dict(orient='list'))
     return data_box.DataBox(box2)

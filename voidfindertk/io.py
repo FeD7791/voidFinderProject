@@ -7,7 +7,13 @@
 """Table reader module."""
 import pandas as pd
 
-from . import box, popcorn_tools, spherical_tools, zobov_tools
+from .zobovvf import zobov_tools
+
+from .popcornvf import popcorn_tools
+
+from .sphericalvf import spherical_tools
+
+from . import box
 
 
 def read_table(path_or_buffer, **kwargs): # names = ['x','y','z','vx','vy','vz','m'] to put column names

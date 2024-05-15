@@ -49,7 +49,7 @@ def join_box_void(box,voids, **kwargs):
 		for key,value in kwargs.items():
 			params[key] = value
 		
-		if type(voids).__name__ in ['SphericalVoids','SVF']:
+		if type(voids).__name__ in ['SphericalVoids','PopCornSVF']:
 			
 			tolerance = params['tol'] * np.ones(voids.rad.shape)
 			rad = voids.rad.value + tolerance
