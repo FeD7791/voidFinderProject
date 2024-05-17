@@ -1,5 +1,5 @@
 import os
-from vftkproject2.voidFinderProject.voidfindertk.popcorn.popcorn_tools import popcorn_svf_input_data_builder, config_file_maker
+from voidfindertk.popcornvf.popcorn_tools import popcorn_svf_input_data_builder, config_file_maker
 from voidfindertk.io import read_table
 import numpy as np
 

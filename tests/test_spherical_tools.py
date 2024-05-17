@@ -1,7 +1,7 @@
-from vftkproject2.voidFinderProject.voidfindertk.sphericalvf import spherical_tools
+from voidfindertk.sphericalvf import spherical_tools
 from astropy import units as u
 import pytest
-from vftkproject2.voidFinderProject.voidfindertk.sphericalvf.spherical_tools import SphericalVoids
+from voidfindertk.sphericalvf.spherical_tools import SphericalVoids
 import numpy as np
 import pandas as pd
 

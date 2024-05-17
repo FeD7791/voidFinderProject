@@ -1,5 +1,5 @@
 from voidfindertk.data_box import DataBox
-from vftkproject2.voidFinderProject.voidfindertk.sphericalvf.spherical_tools import SphericalVF, spherical_void_finder, SphericalVoids
+from voidfindertk.sphericalvf.spherical_tools import SphericalVF, spherical_void_finder, SphericalVoids
 
 
 def test_sphericalvf_class(mkbox, make_spherical_voids_params):
