@@ -6,6 +6,7 @@ import os
 import ctypes
 import subprocess
 import shutil
+import scipy
 from ..models import ModelABC
 from ..analysis_tools import join_box_void
 
@@ -227,3 +228,21 @@ def zobov_void_finder(box,**kwargs):
     return zobov_voids     
 
 def calculate_tracers_inside_void(box,voids):
+    xyz_tracers = np.array([np.array([box.x.value[i],
+                    box.y.value[i],
+                    box.z.value[i]
+                    ]) for i in range(len(box))])
+    # filter this array based on the ones that are centers according to voids
+    void_centers = [xyz_tracers[i] for i in voids.CoreParticle] #Centers of the void
+    # distance from center to each particle : row[i] = [dist(xyz_void(i),box_xyz(i))] 
+    d = scipy.spatial.distance.cdist(void_centers,xyz_tracers)
+    # asociate index to each particle distances[i] = (i ,dist(xyz_void(i),box_xyz(i)))
+    distances = [list(enumerate(arr)) for arr in d]
+    sorted_distances = [sorted(dist, key=lambda x: x[1]) for dist in distances] #sort the array ascending
+    #get the number of particles in each void
+    n_tracer_in_voids = voids.Void_number_Part
+    # keep the lowest n_tracer_in_voids[i] from sorted_distances
+    sorted_distances = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
+    #Get indexes
+    index = [list(list(zip(*arr))[0]) for arr in sorted_distances]
+    return index
