@@ -13,6 +13,7 @@ import pandas as pd
 import pytest
 
 from voidfindertk.box import Box
+from voidfindertk import data_box
 
 
 
@@ -118,7 +119,7 @@ def make_zobov_voids_params():
         params = {
             'n_voids':3000,#Max value
             'FileVoid#':3300, #Max value
-            'CoreParticle': 100000,#N tracers, not all are centers
+            'CoreParticle': 100000, #should always be equal to len(box)
             'CoreDens':1.5,#Max value
             'ZoneVol':(226.26,292.82), #(Mu,Sigma)
             'Zone#Part':(226.26,243.7),#(Mu,Sigma)
