@@ -7,6 +7,7 @@ import ctypes
 import subprocess
 import shutil
 import scipy
+from ..data_box import DataBox
 from ..models import ModelABC
 from ..analysis_tools import join_box_void
 
@@ -46,30 +47,39 @@ class ZobovVF(ModelABC):
             ctypes.c_int,ctypes.c_char_p, ctypes.c_char_p]
         #Fill Input
         clibrary.c_binary_writter(
-            databox.box.x,
-            databox.box.y,
-            databox.box.z,
-            databox.box.vx,
-            databox.box.vy,
-            databox.box.vz,
-            databox.box.m,
-            len(databox.box),
+            databox.x,
+            databox.y,
+            databox.z,
+            databox.vx,
+            databox.vy,
+            databox.vz,
+            databox.m,
+            len(databox),
             os.path.join(path_zobov,'tracers_zobov.raw').encode('utf-8'),
             os.path.join(path_zobov,'tracers_zobov.txt').encode('utf-8')
                             )
-        return databox
+        return DataBox(databox)
 
     def model_find(self, llbox):
         sp_void = zobov_void_finder(llbox.box)
+        sp_void._tracers_in_void = calculate_tracers_inside_void(llbox.box,sp_void)
         return {'voids':sp_void}
     
-    def mk_vbox(self, voids,llbox):
+    def mk_vbox(self, voids, llbox):
         voids = voids['voids']
-        # databox.box.__dict__.pop('_len')
-        # voids.__dict__.pop('_void_len')
-        #sparse_m = Classifier(**databox.box.__dict__, **voids.__dict__)._sparse_matrix(0.0)
         box_void_sparse = join_box_void(llbox.box, voids, tol=0.0)
         return box_void_sparse
+    
+    def get_void_mass(self, voids, llbox):
+        mass_list = []
+        for i in range(len(voids)):
+            # voids._tracers_in_void[i] = array of indexes of tracers in void
+            mass_list.append(
+                sum(
+                    llbox.box.m.value[
+                        voids._tracers_in_void[i]
+                        ]))
+        return mass_list
 
 @uttr.s(repr=False)
 class ZobovVoids:
@@ -85,6 +95,7 @@ class ZobovVoids:
     VoidDensContrast = uttr.ib(converter=np.array)
     VoidProb = uttr.ib(converter=np.array)
     _void_len = uttr.ib(init=False)
+    _tracers_in_void = uttr.ib(init=False, default=None) #Provide tracers in void
 
     def __attrs_post_init__(self):
         """Post init method.
@@ -243,6 +254,6 @@ def calculate_tracers_inside_void(box,voids):
     n_tracer_in_voids = voids.Void_number_Part
     # keep the lowest n_tracer_in_voids[i] from sorted_distances
     sorted_distances = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
-    #Get indexes
+    #Get indexes, returns list of list of indexes
     index = [list(list(zip(*arr))[0]) for arr in sorted_distances]
     return index
