@@ -65,13 +65,19 @@ def join_box_void(box,voids, **kwargs):
 
 			)
 
-		if type(voids).__name__ == 'PopCornVoids':
+		if type(voids).__name__ in ['PopCornVoids','ZobovVoids']:
+			if type(voids).__name__ == 'PopCornVoids':
+				tracers_in_voids = voids.ID_subhalo
+
+			if type(voids).__name__ == 'ZobovVoids':
+				tracers_in_voids = voids._tracers_in_void 
+
 			n_index =[]
 			tracers = []
 
 			for i in range(0,voids._void_len):
-				n_index = n_index + list(i*np.ones(np.array(voids.ID_subhalo[i]).shape))
-				tracers = tracers + voids.ID_subhalo[i]
+				n_index = n_index + list(i*np.ones(np.array(tracers_in_voids[i]).shape))
+				tracers = tracers + tracers_in_voids[i]
 
 
 			row = np.array(tracers)
@@ -79,21 +85,22 @@ def join_box_void(box,voids, **kwargs):
 			data = np.ones(row.shape)
 			output_sparse_matrix = csr_matrix((data, (row, col)), shape=(box._len, voids._void_len))
 		
-		if type(voids).__name__ == 'ZobovVoids':
-			rad = volume_radii_conversion(voids.VoidVol.value)
-			centers = find_zobov_void_centers(box=box, zobov_voids=voids)
-			output_sparse_matrix = distance_void_tracer_classification(
-				x_tracers=box.x.value,
-				y_tracers=box.y.value,
-				z_tracers=box.z.value,
-				x_voids=centers['x'],
-				y_voids=centers['y'], 
-				z_voids=centers['z'],
-				rad_voids=rad
+		# if type(voids).__name__ == 'ZobovVoids':
 
-			)
+		# 	# rad = volume_radii_conversion(voids.VoidVol.value)
+		# 	# centers = find_zobov_void_centers(box=box, zobov_voids=voids)
+		# 	# output_sparse_matrix = distance_void_tracer_classification(
+		# 	# 	x_tracers=box.x.value,
+		# 	# 	y_tracers=box.y.value,
+		# 	# 	z_tracers=box.z.value,
+		# 	# 	x_voids=centers['x'],
+		# 	# 	y_voids=centers['y'], 
+		# 	# 	z_voids=centers['z'],
+		# 	# 	rad_voids=rad
 
-		return {'box':box, 'voids':voids, 'sparse':output_sparse_matrix}
+		# 	# )
+
+		return output_sparse_matrix
 
 
 
