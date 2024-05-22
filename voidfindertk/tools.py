@@ -1,7 +1,8 @@
 import numpy as np
 import ctypes
 import pandas as pd
-from . import box, data_box
+from . import box
+from .models import DataBox
 
 def ctypes_input_params_builder(finder_type,**kwargs):
     if finder_type == 'spherical':
@@ -134,4 +135,4 @@ def preprocess_data_box(databox,**kwargs):
     df = df.round(kwargs['round_to']) #Rounding numbers of dataframe for more or less precision
     df.drop_duplicates(inplace=True, ignore_index=True) #Drop any remaining duplicates
     box2 = box.Box(**df.to_dict(orient='list'))
-    return data_box.DataBox(box2)
+    return DataBox(box2)
