@@ -1,0 +1,75 @@
+= About =
+
+This package includes VOBOZ (VOronoi BOund Zones), version 1.2, a
+halo-finding algorithm by Mark Neyrinck.  It also includes the
+void-finding algorithm ZOBOV.  Many thanks to Rick Wagner
+(http://lca.ucsd.edu/projects/rpwagner/; rick@ucsd.edu) for doing
+modifications 1-6, bringing VOBOZ to v. 1.2.  This README file is also
+largely copied from him.  Documentation on VOBOZ is at
+
+  http://www.ifa.hawaii.edu/~neyrinck/voboz.  
+
+Rick also put up a nice wiki containing some information about the
+examples he created, and how to run VOBOZ:
+
+  http://lca.ucsd.edu/projects/rpwagner/wiki/VOBOZ
+
+This version contains both the VOBOZ source code, and the Qhull code.
+
+For help in understanding VOBOZ, also see the paper describing it, at
+http://arxiv.org/abs/astro-ph/0402346 (Neyrinck, Gnedin & Hamilton).
+If these resources are insufficient, feel free to email
+Mark.Neyrinck@colorado.edu with questions.
+
+= Modifications =
+
+In version 1.2, VOBOZ has been modified as follows:
+ 1) Accept the precision settings of Qhull.
+ 2) Corrected particle indexing in boz.c.
+ 3) Moved qhull_a.h into voz.h.
+ 4) Moved common defines into voz.h.
+ 5) Fixed first array error in readfiles.c:posread
+ 6) Makefile changes, including clean and install targets.
+
+ 7) voztie.c no longer dies if the volumes measured for a particle differ.
+ 8) ZOBOV and VOBOZ are now in a single package.
+
+Qhull has not been modified, and is included only for convenience.
+
+= Contents =
+
+qhull    - Qhull source code
+voboz    - VOBOZ source code
+bin      - empty, VOBOZ binaries get installed there
+examples - code to generate sample datasets and scripts
+
+= Building = 
+
+To build VOBOZ, modify the Makefiles in src/, qhull/src/ and examples/ for 
+your local machine. Currently, the files are set up to use GCC on generic
+Unix/Linux type operating systems (including OS X).
+
+To build, run `make` from this directory. This will compile qhull and the
+VOBOZ programs, and place the VOBOZ programs in bin/. `make clean` removes
+all binary files, etc.
+
+= Examples =
+
+Running `make examples` will build the sample data in examples/, and run 
+VOBOZ on it. Currently, these examples are mostly for reference on how to run
+the programs, and how data is handled.
+
+= Precision =
+
+The default precision is double (8 byte floats); to change this, edit 
+qhull/src/user.h, and change REALfloat to 1.
+
+= Mini-License =
+
+This is free software.  It may be freely copied, modified, and
+redistributed, as long as the authors are acknowledged.  There is no
+warranty or other guarantee of fitness for VOBOZ or ZOBOV; they are
+provided "as are."  We welcome bug reports (but do not guarantee their
+fixing), which should be sent to Mark.Neyrinck@colorado.edu.
+
+File last modified Jan 16, 2008.
