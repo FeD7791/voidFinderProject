@@ -1,7 +1,7 @@
 import numpy as np
 import scipy as sp
 from voidfindertk.sphericalvf import spherical_tools
-from voidfindertk import comparison_tools
+from voidfindertk import tools
 
 
 ## pytest tests/test_comparison_tools.py -k 'test_find_radius'
@@ -24,7 +24,7 @@ def test_find_radius(mkbox,make_spherical_voids_params):
         spherical_voids.z_void[0].value,
         ])
     max_distance = sp.spatial.distance.pdist([box_0,box_50,void_center]).sort(-1)
-    assert comparison_tools.find_radius(
+    assert tools.find_radius(
         box=box,
         voids=spherical_voids,
         sparse=sparse_matrix)[0] == max_distance[-1]
