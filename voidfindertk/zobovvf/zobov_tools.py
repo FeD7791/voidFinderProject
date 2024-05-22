@@ -7,8 +7,7 @@ import ctypes
 import subprocess
 import shutil
 import scipy
-from ..data_box import DataBox
-from ..models import ModelABC
+from ..models import ModelABC, DataBox
 from ..analysis_tools import join_box_void
 import h5py
 
