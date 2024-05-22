@@ -82,7 +82,7 @@ def test_preprocess_data_box():
         'm':np.arange(0,1000,1),
                   }
     b = box.Box(**input_data) # creating box from input data
-    d_b = data_box.DataBox(b) # creating data_box from box
+    d_b = DataBox(b) # creating data_box from box
     # Test function without keywords
     output = preprocess_data_box(d_b) # m should be bigger than 50, m > 50
     assert len(output.box.m) == len(input_data['m'])
@@ -127,7 +127,7 @@ def test_preprocess_data_box():
         'm':np.array([2,2,2,3,3,3]),
                   }
     b = box.Box(**input_data) # creating box from input data
-    d_b = data_box.DataBox(b) # creating data_box from box
+    d_b = DataBox(b) # creating data_box from box
     output = preprocess_data_box(d_b) 
     assert all(output.box.m.value == np.array([2,3]))
     assert all(output.box.x.value == np.array([2,3]))
