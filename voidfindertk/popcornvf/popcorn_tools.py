@@ -1,7 +1,7 @@
 import uttr
 import numpy as np
 from ..models import ModelABC
-from ..analysis_tools import join_box_void
+from ..tools import join_box_void
 from astropy import units as u
 import os
 import subprocess

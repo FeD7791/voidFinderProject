@@ -8,7 +8,7 @@ import subprocess
 import shutil
 import scipy
 from ..models import ModelABC, DataBox
-from ..analysis_tools import join_box_void
+from ..tools import join_box_void
 import h5py
 
 class ZobovVF(ModelABC):

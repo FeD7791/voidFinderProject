@@ -5,8 +5,7 @@ import uttr
 import os
 import ctypes
 from ..models import ModelABC
-from ..analysis_tools import join_box_void
-from ..tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder, preprocess_data_box
+from ..tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder, preprocess_data_box, join_box_void
 
 class SphericalVF(ModelABC):
     def __init__(self):
