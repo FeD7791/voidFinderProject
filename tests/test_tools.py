@@ -2,7 +2,8 @@ import ctypes
 import numpy as np
 import pytest
 from voidfindertk.tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder, preprocess_data_box
-from voidfindertk import data_box, box
+from voidfindertk import box
+from voidfindertk.models import DataBox
 
 def test_ctypes_input_params_builder():
     params_list_double = [

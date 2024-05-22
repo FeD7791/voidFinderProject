@@ -2,7 +2,7 @@ import numpy as np
 import scipy as sp
 from voidfindertk import box as b
 from voidfindertk.zobovvf.zobov_tools import ZobovVoids,ZobovVF ,calculate_tracers_inside_void
-from voidfindertk import data_box
+from voidfindertk.models import DataBox
 ##Run just one pytest tests/test_zobov_tools.py -k 'test_calculate_tracers_inside_void'
 ##Run just one pytest tests/test_zobov_tools.py -k 'test_ZobovVF'
 
@@ -26,7 +26,7 @@ def test_calculate_tracers_inside_void(mkbox, make_zobov_voids_params):
 def test_ZobovVF(mkbox, make_zobov_voids_params):
     model = ZobovVF()
     box = mkbox(seed=42, size=1000) #Make a box
-    dbox = data_box.DataBox(box)
+    dbox = DataBox(box)
     params = make_zobov_voids_params(n_voids=100,CoreParticle=len(dbox.box)) #Create params for zobov
     
     #model_find step

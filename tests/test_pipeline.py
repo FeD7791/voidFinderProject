@@ -1,4 +1,4 @@
-from voidfindertk.data_box import DataBox
+from voidfindertk.models import DataBox
 from voidfindertk.sphericalvf.spherical_tools import SphericalVF, spherical_void_finder, SphericalVoids
 
 
