@@ -1,7 +1,7 @@
 import abc
 from attrs import define,field
 from abc import abstractmethod, ABC
-from . import data_box
+
 
 @define 
 class VoidMetrics():
@@ -9,6 +9,11 @@ class VoidMetrics():
     void_mass = field(init=False)
     tracers = field(init=False)
     voids = field(init=False)
+
+class DataBox():
+    box = None
+    def __init__(self, aux_box):
+        self.box = aux_box
 
 
 class ModelABC(ABC):
