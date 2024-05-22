@@ -10,6 +10,7 @@ import scipy
 from ..data_box import DataBox
 from ..models import ModelABC
 from ..analysis_tools import join_box_void
+import h5py
 
 class ZobovVF(ModelABC):
     def __init__(self):
@@ -238,22 +239,54 @@ def zobov_void_finder(box,**kwargs):
     zobov_voids = read_zobov_output(os.path.join(path_src,'out_text_file.dat'))   
     return zobov_voids     
 
-def calculate_tracers_inside_void(box,voids):
+def calculate_tracers_inside_void(box,voids,**kwargs):
+    kwargs.setdefault('hdf5',True)
     xyz_tracers = np.array([np.array([box.x.value[i],
                     box.y.value[i],
                     box.z.value[i]
                     ]) for i in range(len(box))])
     # filter this array based on the ones that are centers according to voids
     void_centers = [xyz_tracers[i] for i in voids.CoreParticle] #Centers of the void
-    # distance from center to each particle : row[i] = [dist(xyz_void(i),box_xyz(i))] 
-    d = scipy.spatial.distance.cdist(void_centers,xyz_tracers)
-    # asociate index to each particle distances[i] = (i ,dist(xyz_void(i),box_xyz(i)))
-    distances = [list(enumerate(arr)) for arr in d]
-    sorted_distances = [sorted(dist, key=lambda x: x[1]) for dist in distances] #sort the array ascending
-    #get the number of particles in each void
-    n_tracer_in_voids = voids.Void_number_Part
-    # keep the lowest n_tracer_in_voids[i] from sorted_distances
-    sorted_distances = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
-    #Get indexes, returns list of list of indexes
-    index = [list(list(zip(*arr))[0]) for arr in sorted_distances]
+
+    # remove the void centers from xyz_tracers
+    ##############################################################################
+    # # Reshape filter_arr to match the dimensionality of a for comparison
+    # filter_arr = void_centers.reshape(-1)  # Flatten filter_arr
+
+    # # Use np.in1d to check for membership, ravel to flatten the result
+    # not_in_filter = xyz_tracers.ravel()[~np.in1d(xyz_tracers.ravel(), filter_arr)]
+
+    # # Reshape the result to maintain the original dimensionality
+    # xyz_tracers = not_in_filter.reshape(-1, 3)
+    ##############################################################################
+    if (kwargs['hdf5']):
+        print("ATTEMPTING TO CALCULATE TRACERS")
+        path = os.path.dirname(os.path.realpath(__file__))
+        file = h5py.File(os.path.join(path,'tracers_in_voids.h5'), 'w') #save in zobovvf
+        for i in range(len(void_centers)):
+            # distance from center to each particle : row[i] = [dist(xyz_void(i),box_xyz(i))] 
+            d = scipy.spatial.distance.cdist([void_centers[i]],xyz_tracers)
+            # asociate index to each particle distances[i] = (i ,dist(xyz_void(i),box_xyz(i)))
+            distances = [list(enumerate(arr)) for arr in d]
+            sorted_distances = [sorted(dist, key=lambda x: x[1]) for dist in distances] #sort the array ascending
+            #get the number of particles in each void
+            n_tracer_in_voids = voids.Void_number_Part
+            # keep the lowest n_tracer_in_voids[i] from sorted_distances
+            
+            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
+            sd = [sorted_distances[j][1:n_tracer_in_voids[i]+1] for j in range(len(sorted_distances))]
+          
+            file.create_dataset(f'{i}', data=sd)
+
+        #Get indexes, returns list of list of indexes
+        file.close()
+        file2 = h5py.File(os.path.join(path,'tracers_in_voids.h5'), 'r')
+        
+        index = [list(list(zip(*value[:][0]))[0]) for key,value in dict(file2).items()]
+        index = [list(np.array(arr,dtype=int)) for arr in index] #transform in array of integers
+        
+        file2.close()
+        
+   
+
     return index
