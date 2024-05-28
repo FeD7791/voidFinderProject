@@ -67,3 +67,7 @@ plot_tools.py
 log_file.txt
 main_pipeline.py
 voids_file.dat
+
+# main voidfiles
+zobov/src/src/
+zobov/src/qhull
