@@ -22,14 +22,14 @@ import uttr
 from ..models import DataBox, ModelABC
 from ..tools import join_box_void
 
-
+from pathlib import Path
 class _Paths:
 
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
-    ZOVOV = CURRENT / "src"
-    LOADER_SO = ZOVOV / "zobov_loader.so"
+    ZOBOV = CURRENT / "src"
+    LOADER_SO = ZOBOV / "zobov_loader.so"
 
 
 class ZobovVF(ModelABC):
@@ -87,11 +87,12 @@ class ZobovVF(ModelABC):
 
     def model_find(self, llbox):
         sp_void = zobov_void_finder(llbox.box)
-        sp_void._tracers_in_void = calculate_tracers_inside_void(
-            llbox.box, sp_void
-        )
-        return {"voids": sp_void}
-
+        #sp_void._tracers_in_void = calculate_tracers_inside_void(
+        #    llbox.box, sp_void
+        #)
+        #$return {"voids": sp_void}
+        return 0
+        
     def mk_vbox(self, voids, llbox):
         voids = voids["voids"]
         box_void_sparse = join_box_void(llbox.box, voids, tol=0.0)
@@ -212,82 +213,61 @@ def read_zobov_output(filename):
 
 
 def zobov_void_finder(box, **kwargs):
-    # Params
-    kwargs.setdefault("buffer_size", 0.08)
-    kwargs.setdefault("box_size", box.size())
-    kwargs.setdefault("number_of_divisions", 2)
-    kwargs.setdefault("delete_files", True)
-    kwargs.setdefault("density_threshold", 0.2)
+    #Params
+    kwargs.setdefault('buffer_size', 0.08)
+    kwargs.setdefault('box_size', box.size())
+    kwargs.setdefault('number_of_divisions',2)
+    kwargs.setdefault('delete_files', True)
+    kwargs.setdefault('density_threshold', 0.2)
 
-    # Paths
-    path = os.path.dirname(os.path.realpath(__file__))
-    path_zobov = os.path.join(path, "zobov")
+    #Paths
+    path = _Paths.CURRENT / "src"/"src"
+    
 
-    path_src = os.path.join(path_zobov, "src")
-    shutil.move(os.path.join(path_zobov, "tracers_zobov.raw"), path_src)
-    os.chdir(path_src)
 
-    # Runing Zobov
-    subprocess.run(
-        [
-            "./vozinit",
-            "tracers_zobov.raw",
-            str(kwargs["buffer_size"]),
-            str(kwargs["box_size"]),
-            str(kwargs["number_of_divisions"]),
-            "output_vozinit",
-        ]
-    )
-    subprocess.run(["./scroutput_vozinit"])
-    subprocess.run(
-        [
-            "./jozov",
-            "adjoutput_vozinit.dat",
-            "voloutput_vozinit.dat",
-            "out_particle_zone.dat",
-            "out_zones_in_void.dat",
-            "out_text_file.dat",
-            str(kwargs["density_threshold"]),
-        ]
-    )
+   
+    #shutil.move(os.path.join(path_zobov,'tracers_zobov.raw'),path_src)
+    #os.chdir(path)
+    print("#######",Path.cwd())
+    #Runing Zobov 
+    subprocess.run(["./vozinit", "../tracers_zobov.raw", 
+                    str(kwargs['buffer_size']), 
+                    str(kwargs['box_size']),
+                    str(kwargs['number_of_divisions']),
+                    'output_vozinit'], cwd=str(path)) #Specify cwd as the working directory
+    subprocess.run(["./scroutput_vozinit"], cwd=str(path))
+    subprocess.run(["./jozov", 
+                    "adjoutput_vozinit.dat", 
+                    "voloutput_vozinit.dat", 
+                    'out_particle_zone.dat',
+                    'out_zones_in_void.dat',
+                    'out_text_file.dat',
+                    str(kwargs['density_threshold'])], cwd=str(path))
 
-    # Delete unused files
-    if kwargs[
-        "delete_files"
-    ]:  # provide delete_files as false to preserve files
-        subprocess.Popen(
-            (
-                "find",
-                ".",
-                "-type",
-                "f",
-                "-name",
-                "part.output_vozinit*",
-                "-exec",
-                "rm",
-                "{}",
-                ";",
-            )
-        )  # Delete part... files
-        # Delete other binary unused files
+    #Delete unused files
+    if kwargs['delete_files']: #provide delete_files as false to preserve files
+        subprocess.Popen((
+            'find', '.', 
+            '-type', 'f', 
+            '-name', 'part.output_vozinit*', 
+            '-exec', 'rm','{}', ';')) #Delete part... files
+        #Delete other binary unused files
         files_to_remove = [
-            "tracers_zobov.raw",
+            '../tracers_zobov.raw',
             "adjoutput_vozinit.dat",
             "voloutput_vozinit.dat",
-            "out_particle_zone.dat",
-            "out_zones_in_void.dat",
-            "scroutput_vozinit",
-        ]
+            #'out_particle_zone.dat',
+            #'out_zones_in_void.dat',
+            'scroutput_vozinit']
         for f in files_to_remove:
             try:
-                os.remove(f)
+                subprocess.Popen(["rm",f], cwd=str(path))
+                #os.remove(f)
             except FileNotFoundError:
-                print(f"File {f} not found")
-    # Output Results
-    zobov_voids = read_zobov_output(
-        os.path.join(path_src, "out_text_file.dat")
-    )
-    return zobov_voids
+                print(f'File {f} not found')
+    #Output Results
+    zobov_voids = read_zobov_output(str(path/'out_text_file.dat'))   
+    return zobov_voids 
 
 
 def calculate_tracers_inside_void(box, voids, **kwargs):
@@ -355,3 +335,22 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
         file2.close()
 
     return index
+    
+    def find_zobov_tracers():
+      with open('txt_out_particle_zone2.txt','r') as f:
+        out = f.readlines()
+      
+      with open('txt_out_zones_in_void.txt','r') as f:
+        out2 = f.readlines()
+      e = [
+      {
+      'n_zone':np.int32(out[i].split(" ")[2].split())[0], 
+      'particles':np.int32(out[i+2].split(" ")[:-1])} for i in range(len(out)) if re.match(r"^ zone", out[i])]
+      
+      f = [{'void':np.int32(out2[i].split(" ")[3:4])[0], 'zones':np.int32(out2[i].split(" ")[5:-1])} for i in range(3,len(out2))]
+      
+      
+      
+      
+      
+      
