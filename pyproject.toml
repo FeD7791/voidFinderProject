@@ -39,7 +39,8 @@ dependencies = [
     "pandas",
     "astropy",
     "uttrs",
-    "scipy"
+    "scipy",
+    "h5py"
 ]
     
 [tool.setuptools]
