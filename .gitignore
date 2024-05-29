@@ -69,5 +69,9 @@ main_pipeline.py
 voids_file.dat
 
 # main voidfiles
-zobov/src/src/
-zobov/src/qhull
+voidfindertk/zobov/src/src
+voidfindertk/zobov/src/lectura_zones
+voidfindertk/zobov/src/particle_zones
+voidfindertk/zobov/*.txt
+voidfindertk/zobov/*.dat
+voidfindertk/zobov/src/qhull

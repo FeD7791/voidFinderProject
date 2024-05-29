@@ -15,6 +15,8 @@ import numpy as np
 
 import pandas as pd
 
+import re
+
 import scipy
 
 import uttr
@@ -22,7 +24,6 @@ import uttr
 from ..models import DataBox, ModelABC
 from ..tools import join_box_void
 
-from pathlib import Path
 class _Paths:
 
     CURRENT = pathlib.Path(
@@ -336,19 +337,22 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
 
     return index
     
-    def find_zobov_tracers():
-      with open('txt_out_particle_zone2.txt','r') as f:
+def find_zobov_tracers():
+    path = _Paths.CURRENT / "src"
+    subprocess.run(['./lectura_zones'], cwd=str(path))
+    subprocess.run(['./particle_zones'], cwd=str(path))
+    with open('txt_out_particle_zone2.txt','r') as f:
         out = f.readlines()
-      
-      with open('txt_out_zones_in_void.txt','r') as f:
+    
+    with open('txt_out_zones_in_void.txt','r') as f:
         out2 = f.readlines()
-      e = [
-      {
-      'n_zone':np.int32(out[i].split(" ")[2].split())[0], 
-      'particles':np.int32(out[i+2].split(" ")[:-1])} for i in range(len(out)) if re.match(r"^ zone", out[i])]
-      
-      f = [{'void':np.int32(out2[i].split(" ")[3:4])[0], 'zones':np.int32(out2[i].split(" ")[5:-1])} for i in range(3,len(out2))]
-      
+    e = [
+    {
+    'n_zone':np.int32(out[i].split(" ")[2].split())[0], 
+    'particles':np.int32(out[i+2].split(" ")[:-1])} for i in range(len(out)) if re.match(r"^ zone", out[i])]
+    
+    f = [{'void':np.int32(out2[i].split(" ")[3:4])[0], 'zones':np.int32(out2[i].split(" ")[5:-1])} for i in range(3,len(out2))]
+    
       
       
       
