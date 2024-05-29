@@ -2,7 +2,6 @@
 import ctypes
 import os
 import pathlib
-import shutil
 import subprocess
 import tempfile
 
@@ -23,6 +22,7 @@ import uttr
 
 from ..models import DataBox, ModelABC
 from ..tools import join_box_void
+
 
 class _Paths:
 
@@ -81,19 +81,23 @@ class ZobovVF(ModelABC):
             databox.vz,
             databox.m,
             len(databox),
-            os.path.join(self.path_zobov, "tracers_zobov.raw").encode("utf-8"),
-            os.path.join(self.path_zobov, "tracers_zobov.txt").encode("utf-8"),
+            os.path.join(self.path_zobov, "tracers_zobov.raw").encode(
+                "utf-8"
+            ),
+            os.path.join(self.path_zobov, "tracers_zobov.txt").encode(
+                "utf-8"
+            ),
         )
         return DataBox(databox)
 
     def model_find(self, llbox):
         sp_void = zobov_void_finder(llbox.box)
-        #sp_void._tracers_in_void = calculate_tracers_inside_void(
+        # sp_void._tracers_in_void = calculate_tracers_inside_void(
         #    llbox.box, sp_void
-        #)
-        #$return {"voids": sp_void}
+        # )
+        # $return {"voids": sp_void}
         return 0
-        
+
     def mk_vbox(self, voids, llbox):
         voids = voids["voids"]
         box_void_sparse = join_box_void(llbox.box, voids, tol=0.0)
@@ -103,7 +107,9 @@ class ZobovVF(ModelABC):
         mass_list = []
         for i in range(len(voids)):
             # voids._tracers_in_void[i] = array of indexes of tracers in void
-            mass_list.append(sum(llbox.box.m.value[voids._tracers_in_void[i]]))
+            mass_list.append(
+                sum(llbox.box.m.value[voids._tracers_in_void[i]])
+            )
         return mass_list
 
 
@@ -136,17 +142,28 @@ class ZobovVoids:
         """
         lengths = set()
         for e in (
-            self.Void_number,  # Rank of the void, in decreasing order of VoidDensContrast.
-            self.File_void_number,  # Number of the void, in previous files
-            self.CoreParticle,  # Index --Related to Box-- of the core particle of the void
-            self.CoreDens,  # Density of the core particle
-            self.ZoneVol,  # Volume of the central zone of the void
-            self.Zone_number_part,  # Number of particles in the central zone of the void
-            self.Void_number_Zones,  # Number of zones in the void
-            self.VoidVol,  # Volume of the void
-            self.Void_number_Part,  # Number of particles in the void
-            self.VoidDensContrast,  # Contrast density of the void
-            self.VoidProb,  # The probability that that DensContrast would arise from Poisson noise
+            # Rank of the void, in decreasing order of VoidDensContrast.
+            self.Void_number,
+            # Number of the void, in previous files
+            self.File_void_number,
+            # Index --Related to Box-- of the core particle of the void
+            self.CoreParticle,
+            # Density of the core particle
+            self.CoreDens,
+            # Volume of the central zone of the void
+            self.ZoneVol,
+            # Number of particles in the central zone of the void
+            self.Zone_number_part,
+            # Number of zones in the void
+            self.Void_number_Zones,
+            # Volume of the void
+            self.VoidVol,
+            # Number of particles in the void
+            self.Void_number_Part,
+            # Contrast density of the void
+            self.VoidDensContrast,
+            # The Poisson noise probability
+            self.VoidProb,
         ):
             lengths.add(len(e))
 
@@ -214,61 +231,76 @@ def read_zobov_output(filename):
 
 
 def zobov_void_finder(box, **kwargs):
-    #Params
-    kwargs.setdefault('buffer_size', 0.08)
-    kwargs.setdefault('box_size', box.size())
-    kwargs.setdefault('number_of_divisions',2)
-    kwargs.setdefault('delete_files', True)
-    kwargs.setdefault('density_threshold', 0.2)
+    # Params
+    kwargs.setdefault("buffer_size", 0.08)
+    kwargs.setdefault("box_size", box.size())
+    kwargs.setdefault("number_of_divisions", 2)
+    kwargs.setdefault("delete_files", True)
+    kwargs.setdefault("density_threshold", 0.2)
 
-    #Paths
-    path = _Paths.CURRENT / "src"/"src"
-    
+    # Paths
+    path = _Paths.CURRENT / "src" / "src"
 
-
-   
-    #shutil.move(os.path.join(path_zobov,'tracers_zobov.raw'),path_src)
-    #os.chdir(path)
-    print("#######",Path.cwd())
-    #Runing Zobov 
-    subprocess.run(["./vozinit", "../tracers_zobov.raw", 
-                    str(kwargs['buffer_size']), 
-                    str(kwargs['box_size']),
-                    str(kwargs['number_of_divisions']),
-                    'output_vozinit'], cwd=str(path)) #Specify cwd as the working directory
+    # Runing Zobov
+    subprocess.run(
+        [
+            "./vozinit",
+            "../tracers_zobov.raw",
+            str(kwargs["buffer_size"]),
+            str(kwargs["box_size"]),
+            str(kwargs["number_of_divisions"]),
+            "output_vozinit",
+        ],
+        cwd=str(path),
+    )  # Specify cwd as the working directory
     subprocess.run(["./scroutput_vozinit"], cwd=str(path))
-    subprocess.run(["./jozov", 
-                    "adjoutput_vozinit.dat", 
-                    "voloutput_vozinit.dat", 
-                    'out_particle_zone.dat',
-                    'out_zones_in_void.dat',
-                    'out_text_file.dat',
-                    str(kwargs['density_threshold'])], cwd=str(path))
-
-    #Delete unused files
-    if kwargs['delete_files']: #provide delete_files as false to preserve files
-        subprocess.Popen((
-            'find', '.', 
-            '-type', 'f', 
-            '-name', 'part.output_vozinit*', 
-            '-exec', 'rm','{}', ';')) #Delete part... files
-        #Delete other binary unused files
-        files_to_remove = [
-            '../tracers_zobov.raw',
+    subprocess.run(
+        [
+            "./jozov",
             "adjoutput_vozinit.dat",
             "voloutput_vozinit.dat",
-            #'out_particle_zone.dat',
-            #'out_zones_in_void.dat',
-            'scroutput_vozinit']
+            "out_particle_zone.dat",
+            "out_zones_in_void.dat",
+            "out_text_file.dat",
+            str(kwargs["density_threshold"]),
+        ],
+        cwd=str(path),
+    )
+
+    # Delete unused files
+    if kwargs[
+        "delete_files"
+    ]:  # provide delete_files as false to preserve files
+        subprocess.Popen(
+            (
+                "find",
+                ".",
+                "-type",
+                "f",
+                "-name",
+                "part.output_vozinit*",
+                "-exec",
+                "rm",
+                "{}",
+                ";",
+            )
+        )  # Delete part... files
+        # Delete other binary unused files
+        files_to_remove = [
+            "../tracers_zobov.raw",
+            "adjoutput_vozinit.dat",
+            "voloutput_vozinit.dat",
+            "scroutput_vozinit",
+        ]
         for f in files_to_remove:
             try:
-                subprocess.Popen(["rm",f], cwd=str(path))
-                #os.remove(f)
+                subprocess.Popen(["rm", f], cwd=str(path))
+                # os.remove(f)
             except FileNotFoundError:
-                print(f'File {f} not found')
-    #Output Results
-    zobov_voids = read_zobov_output(str(path/'out_text_file.dat'))   
-    return zobov_voids 
+                print(f"File {f} not found")
+    # Output Results
+    zobov_voids = read_zobov_output(str(path / "out_text_file.dat"))
+    return zobov_voids
 
 
 def calculate_tracers_inside_void(box, voids, **kwargs):
@@ -284,17 +316,6 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
         xyz_tracers[i] for i in voids.CoreParticle
     ]  # Centers of the void
 
-    # remove the void centers from xyz_tracers
-    ##############################################################################
-    # # Reshape filter_arr to match the dimensionality of a for comparison
-    # filter_arr = void_centers.reshape(-1)  # Flatten filter_arr
-
-    # # Use np.in1d to check for membership, ravel to flatten the result
-    # not_in_filter = xyz_tracers.ravel()[~np.in1d(xyz_tracers.ravel(), filter_arr)]
-
-    # # Reshape the result to maintain the original dimensionality
-    # xyz_tracers = not_in_filter.reshape(-1, 3)
-    ##############################################################################
     if kwargs["hdf5"]:
         print("ATTEMPTING TO CALCULATE TRACERS")
         path = os.path.dirname(os.path.realpath(__file__))
@@ -302,9 +323,11 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
             os.path.join(path, "tracers_in_voids.h5"), "w"
         )  # save in zobovvf
         for i in range(len(void_centers)):
-            # distance from center to each particle : row[i] = [dist(xyz_void(i),box_xyz(i))]
+            # distance from center to each particle : 
+            #row[i] = [dist(xyz_void(i),box_xyz(i))]
             d = scipy.spatial.distance.cdist([void_centers[i]], xyz_tracers)
-            # asociate index to each particle distances[i] = (i ,dist(xyz_void(i),box_xyz(i)))
+            #asociate index to each particle distances[i] = 
+            #(i ,dist(xyz_void(i),box_xyz(i)))
             distances = [list(enumerate(arr)) for arr in d]
             sorted_distances = [
                 sorted(dist, key=lambda x: x[1]) for dist in distances
@@ -313,7 +336,8 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
             n_tracer_in_voids = voids.Void_number_Part
             # keep the lowest n_tracer_in_voids[i] from sorted_distances
 
-            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
+            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1] 
+            #for i in range(len(sorted_distances))]
             sd = [
                 sorted_distances[j][1 : n_tracer_in_voids[i] + 1]
                 for j in range(len(sorted_distances))
@@ -336,25 +360,30 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
         file2.close()
 
     return index
-    
+
+
 def find_zobov_tracers():
     path = _Paths.CURRENT / "src"
-    subprocess.run(['./lectura_zones'], cwd=str(path))
-    subprocess.run(['./particle_zones'], cwd=str(path))
-    with open('txt_out_particle_zone2.txt','r') as f:
+    subprocess.run(["./lectura_zones"], cwd=str(path))
+    subprocess.run(["./particle_zones"], cwd=str(path))
+    with open("txt_out_particle_zone2.txt", "r") as f:
         out = f.readlines()
-    
-    with open('txt_out_zones_in_void.txt','r') as f:
+
+    with open("txt_out_zones_in_void.txt", "r") as f:
         out2 = f.readlines()
     e = [
-    {
-    'n_zone':np.int32(out[i].split(" ")[2].split())[0], 
-    'particles':np.int32(out[i+2].split(" ")[:-1])} for i in range(len(out)) if re.match(r"^ zone", out[i])]
-    
-    f = [{'void':np.int32(out2[i].split(" ")[3:4])[0], 'zones':np.int32(out2[i].split(" ")[5:-1])} for i in range(3,len(out2))]
-    
-      
-      
-      
-      
-      
+        {
+            "n_zone": np.int32(out[i].split(" ")[2].split())[0],
+            "particles": np.int32(out[i + 2].split(" ")[:-1]),
+        }
+        for i in range(len(out))
+        if re.match(r"^ zone", out[i])
+    ]
+
+    f = [
+        {
+            "void": np.int32(out2[i].split(" ")[3:4])[0],
+            "zones": np.int32(out2[i].split(" ")[5:-1]),
+        }
+        for i in range(3, len(out2))
+    ]

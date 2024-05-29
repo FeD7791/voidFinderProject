@@ -1,12 +1,13 @@
-import numpy as np
 import ctypes
-import pandas as pd
-from . import box
-from .models import DataBox
 import math
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import scipy
 
+from . import box
+from .models import DataBox
 
 
 def ctypes_input_params_builder(finder_type,**kwargs):
