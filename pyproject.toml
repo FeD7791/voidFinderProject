@@ -1,0 +1,51 @@
+[tool.black]
+line-length = 79
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voidfindertk"
+version = "0.0.1"
+authors = [
+    {name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"},
+    {name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar"}]
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+description = "A void finder algorithm that can implement disctinct void finder methods."
+keywords = [
+    "void finder",
+    "astronomy",
+    "large scale structure",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+]
+
+urls = { Repository = "https://github.com/FeD7791/voidFinderProject.git" }
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "astropy",
+    "uttrs",
+    "scipy"
+]
+    
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["voidfindertk"]
+exclude = ["tests*"]
+namespaces = false
