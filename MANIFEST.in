@@ -1,2 +1,11 @@
+graft voidfindertk
+global-exclude */__pycache__/*
+global-exclude *.pyc
+recursive-exclude tests *
+include LICENSE.txt
+include README.md
+include .header-template
+exclude tox.ini
+
 graft src
 recursive-exclude __pycache__ *.py[cod]

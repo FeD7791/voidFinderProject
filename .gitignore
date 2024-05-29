@@ -1,0 +1,77 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+
+# Other
+*.pyc
+*.pyo
+*.o
+datasets/
+examples/
+main.py
+*.so
+.flake8
+.black
+gemini.py
+pipeline_popcorn.py
+pipeline.py
+plot_tools.py
+log_file.txt
+main_pipeline.py
+voids_file.dat
+
+# main voidfiles
+voidfindertk/zobov/src/src
+voidfindertk/zobov/src/lectura_zones
+voidfindertk/zobov/src/particle_zones
+voidfindertk/zobov/*.txt
+voidfindertk/zobov/*.dat
+voidfindertk/zobov/src/qhull

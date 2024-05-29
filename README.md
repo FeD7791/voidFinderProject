@@ -1,10 +1,29 @@
 # VoidFinder Toolkit
-Repositorio para el proyecto de Void Finder de la materia de Desarrollo de Software para computo Cientifico
+The Void Finder Toolkit (VFT is a Python software package that integrates various publicly available algo-
+rithms to characterize voids and represent them in a standardized and comparable manner, irrespective
+of their geometry. The implementation includes a common interface inspired by the popular Scikit-Learn
+architecture [Buitinck et al., 2013] that enables users, using the same set of tracers, to determine whether a
+tracer belongs to a void as defined by a selected algorithm, facilitating a more direct comparison of results.
 
-## Descripcion
-El presente trabajo consiste en un algoritmo que tiene como proposito tomar puntos de catalogos sinteticos de galaxias para encontrar regiones de baja densidad (Cosmic Voids).
+## Description
+The code integrates three cosmic void detection algorithms, implemented in C/C++ to harness low-level
+execution speed, with a common interface written in Python that offers users expressiveness and flexibil-
+ity for interactive analysis.
 
-Para ello se plantea implementar una pipeline de tres pasos , modulariazada y flexible que consite en un **input**, area de **procesamiento** y **output**.
+### Finders
+
+The current status of VFT integrates 3 public algorithms:
+• Zobov [Neyrinck, 2008]: ZOBOV works in analogy with a watershed method with water filling basins
+in a density field. It looks for voids as density minima with surrounding depressions and requires no
+free parameters. Each Void grows in density starting from a local minimum up to a link density where
+particles start falling into a deeper minimum.
+• Spherical [Ruiz et al., 2015]: This method searches regions of low density in a Voronoi tessellation.
+For each minimum density region the algorithm then grows a sphere around each candidate until the
+average density inside reaches a specific threshold.
+• Popcorn [Paz et al., 2023]: The algorithm targets low-density regions by adding layers on spherical void
+shapes. Each layer strategically places seeds that expand while maintaining density. Only the best seed
+merges, and a refined process ensures full coverage. This continues until small spheres can’t be added,
+capturing the entire void effectively.
 
 **INPUT**
 
@@ -37,4 +56,84 @@ Se utilizaran criterios distintos para definir estos parametros de salida en la 
 Los datos de salidas se guardaran en archivos, con extensiones diversas y habra posibilidad de graficar la salida en 3D.
 
 
+## Diagrama de componentes
 
+
+```mermaid
+  stateDiagram-v2
+    
+
+   Input --> Procesamiento
+        state Input {
+            [*]-->Posicion
+            [*]-->Velocidad
+            [*]-->Masa
+            [*]-->Delta 
+        }
+
+        state Procesamiento {
+            Element1: Set Global Parameters
+            Element2: Centering
+            Element3: Redshift-Space Distortions
+            Element4: Geometrical Distortions
+            Element5: Void Profiles
+            Element6: Void Velocity
+            post: Post-Procesamiento (Dar formato a los datos)
+            
+            [*] --> Element1
+            [*] --> Element2
+            [*] --> Element3
+            [*] --> Element4
+            [*] --> Element5
+            [*] --> Element6
+
+            Element1 --> post
+            Element2 --> post
+            Element3 --> post
+            Element4 --> post
+            Element5 --> post
+            Element6 --> post
+
+            
+
+
+
+
+            
+        }
+    
+    Procesamiento --> Output
+        state Output {
+                centro: Centro
+                radio: Radio
+                save: Guardar datos
+                graph: Grafico de la estructura
+                [*] --> centro
+                [*] --> radio
+                centro --> save
+                radio --> save
+                save --> graph
+            }
+```
+
+```mermaid
+  timeline
+    title Tiempo de Elaboracion del proyecto (400 Hrs)
+    section 19/09/2023 to 22/09/2023 
+        19/09/2023 : Elaboracion GitHub
+    section 19/09/2023 to 19/10/2023  
+        30/09/2023: Estudio Procesamiento
+        10/10/2023: Modularizacion Global Parameters 
+                  : Agregar alternativas para el Modulo
+        19/10/2023: Modularizacion Centering
+                  : Agregar alternativas para el Modulo 
+        30/10/2023: Modularizacion Void Profiles
+                  : Agregar alternativas para el Modulo 
+    section 30/10/2023 to 10/11/2023 
+        10/11/2023: Elaboracion Modulo Input para dataset simple
+                  : Inclusion de otros dataset como input
+        25/11/2023: Elaboracion Modulo Output
+                  : Elaboracion del modulo de archivos de Salida
+                  : Elaboracion del modulo para graficar los archivos de salida
+    
+```
