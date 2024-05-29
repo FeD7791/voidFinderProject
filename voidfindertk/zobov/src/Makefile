@@ -6,6 +6,8 @@ all: qhull voboz
 
 loader:
 	gcc -fPIC -shared -o zobov_loader.so zobov_loader.c
+	g++ -o lectura_zones lectura_zones_in_void.cpp
+	g++ -o particle_zones lectura_zonfile.cpp
 
 qhull:
 	make -C qhull/src
@@ -20,6 +22,6 @@ examples:
 clean:
 	make -C src clean
 	make -C qhull/src cleanall
-	make -C examples clean
+	#make -C examples clean
 	rm -f bin/*
 	rm -f zobov_loader.so
