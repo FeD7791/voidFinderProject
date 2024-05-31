@@ -36,6 +36,7 @@ def _move_inputs(src, dst_dir):
 
 
 def run_vozinit(
+    *,
     vozinit_dir_path,
     input_file_path,
     buffer_size,
@@ -101,7 +102,7 @@ def run_vozinit(
     return output
 
 
-def run_preprocess(preprocess_dir_path, executable_name, work_dir_path):
+def run_preprocess(*, preprocess_dir_path, executable_name, work_dir_path):
     """Run the preprocessing step of the ZOBOV void finder.
 
     Parameters:
@@ -128,6 +129,7 @@ def run_preprocess(preprocess_dir_path, executable_name, work_dir_path):
 
 
 def run_jozov(
+    *,
     jozov_dir_path,
     executable_name,
     output_name_particles_in_zones,
