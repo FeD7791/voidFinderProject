@@ -20,6 +20,7 @@ import scipy
 
 import uttr
 
+from . import _wrapper
 from ..models import DataBox, ModelABC
 from ..tools import join_box_void
 
@@ -90,13 +91,22 @@ class ZobovVF(ModelABC):
         )
         return DataBox(databox)
 
-    def model_find(self, llbox):
-        sp_void = zobov_void_finder(llbox.box)
-        # sp_void._tracers_in_void = calculate_tracers_inside_void(
-        #    llbox.box, sp_void
-        # )
-        # $return {"voids": sp_void}
-        return 0
+    def model_find(self, **kwargs):
+        kwargs.setdefault("path_src",_Paths.ZOBOV/"src")
+        kwargs.setdefault("path_input_file",_Paths.ZOBOV/"src"/"tracers_zobov.raw")
+        kwargs.setdefault("buffer_size", 0.08)
+        kwargs.setdefault("box_size", 500)
+        kwargs.setdefault("number_of_divisions", 2)
+        kwargs.setdefault("executable_name","output_vozinit")
+        kwargs.setdefault("output_name_particles_in_zones","part_vs_zone")
+        kwargs.setdefault("output_name_zones_in_void","zones_vs_voids")
+        kwargs.setdefault("output_name_text_file","ouput_txt")
+        kwargs.setdefault("density_threshold", 0)
+        _wrapper.run_zobov_void_finder(**kwargs)
+        sp_void = read_zobov_output(
+            str(kwargs["path_src"]/kwargs["output_name_text_file"]))
+        return {"voids": sp_void}
+        
 
     def mk_vbox(self, voids, llbox):
         voids = voids["voids"]
@@ -113,8 +123,8 @@ class ZobovVF(ModelABC):
         return mass_list
 
 
-def _float32_converter(v):
-    return np.asarray(v, dtype=np.float32)
+# def _float32_converter(v):
+#     return np.asarray(v, dtype=np.float32)
 
 
 @uttr.s(repr=False)
@@ -230,77 +240,77 @@ def read_zobov_output(filename):
     return zobov
 
 
-def zobov_void_finder(box, **kwargs):
-    # Params
-    kwargs.setdefault("buffer_size", 0.08)
-    kwargs.setdefault("box_size", box.size())
-    kwargs.setdefault("number_of_divisions", 2)
-    kwargs.setdefault("delete_files", True)
-    kwargs.setdefault("density_threshold", 0.2)
+# def zobov_void_finder(box, **kwargs):
+#     # Params
+#     kwargs.setdefault("buffer_size", 0.08)
+#     kwargs.setdefault("box_size", box.size())
+#     kwargs.setdefault("number_of_divisions", 2)
+#     kwargs.setdefault("delete_files", True)
+#     kwargs.setdefault("density_threshold", 0.2)
 
-    # Paths
-    path = _Paths.CURRENT / "src" / "src"
+#     # Paths
+#     path = _Paths.CURRENT / "src" / "src"
 
-    # Runing Zobov
-    subprocess.run(
-        [
-            "./vozinit",
-            "../tracers_zobov.raw",
-            str(kwargs["buffer_size"]),
-            str(kwargs["box_size"]),
-            str(kwargs["number_of_divisions"]),
-            "output_vozinit",
-        ],
-        cwd=str(path),
-    )  # Specify cwd as the working directory
-    subprocess.run(["./scroutput_vozinit"], cwd=str(path))
-    subprocess.run(
-        [
-            "./jozov",
-            "adjoutput_vozinit.dat",
-            "voloutput_vozinit.dat",
-            "out_particle_zone.dat",
-            "out_zones_in_void.dat",
-            "out_text_file.dat",
-            str(kwargs["density_threshold"]),
-        ],
-        cwd=str(path),
-    )
+#     # Runing Zobov
+#     subprocess.run(
+#         [
+#             "./vozinit",
+#             "../tracers_zobov.raw",
+#             str(kwargs["buffer_size"]),
+#             str(kwargs["box_size"]),
+#             str(kwargs["number_of_divisions"]),
+#             "output_vozinit",
+#         ],
+#         cwd=str(path),
+#     )  # Specify cwd as the working directory
+#     subprocess.run(["./scroutput_vozinit"], cwd=str(path))
+#     subprocess.run(
+#         [
+#             "./jozov",
+#             "adjoutput_vozinit.dat",
+#             "voloutput_vozinit.dat",
+#             "out_particle_zone.dat",
+#             "out_zones_in_void.dat",
+#             "out_text_file.dat",
+#             str(kwargs["density_threshold"]),
+#         ],
+#         cwd=str(path),
+#     )
 
-    # Delete unused files
-    if kwargs[
-        "delete_files"
-    ]:  # provide delete_files as false to preserve files
-        subprocess.Popen(
-            (
-                "find",
-                ".",
-                "-type",
-                "f",
-                "-name",
-                "part.output_vozinit*",
-                "-exec",
-                "rm",
-                "{}",
-                ";",
-            )
-        )  # Delete part... files
-        # Delete other binary unused files
-        files_to_remove = [
-            "../tracers_zobov.raw",
-            "adjoutput_vozinit.dat",
-            "voloutput_vozinit.dat",
-            "scroutput_vozinit",
-        ]
-        for f in files_to_remove:
-            try:
-                subprocess.Popen(["rm", f], cwd=str(path))
-                # os.remove(f)
-            except FileNotFoundError:
-                print(f"File {f} not found")
-    # Output Results
-    zobov_voids = read_zobov_output(str(path / "out_text_file.dat"))
-    return zobov_voids
+#     # Delete unused files
+#     if kwargs[
+#         "delete_files"
+#     ]:  # provide delete_files as false to preserve files
+#         subprocess.Popen(
+#             (
+#                 "find",
+#                 ".",
+#                 "-type",
+#                 "f",
+#                 "-name",
+#                 "part.output_vozinit*",
+#                 "-exec",
+#                 "rm",
+#                 "{}",
+#                 ";",
+#             )
+#         )  # Delete part... files
+#         # Delete other binary unused files
+#         files_to_remove = [
+#             "../tracers_zobov.raw",
+#             "adjoutput_vozinit.dat",
+#             "voloutput_vozinit.dat",
+#             "scroutput_vozinit",
+#         ]
+#         for f in files_to_remove:
+#             try:
+#                 subprocess.Popen(["rm", f], cwd=str(path))
+#                 # os.remove(f)
+#             except FileNotFoundError:
+#                 print(f"File {f} not found")
+#     # Output Results
+#     zobov_voids = read_zobov_output(str(path / "out_text_file.dat"))
+#     return zobov_voids
 
 
 def calculate_tracers_inside_void(box, voids, **kwargs):
@@ -387,3 +397,40 @@ def find_zobov_tracers():
         }
         for i in range(3, len(out2))
     ]
+
+def write_zobov_input(box, path_executable ,path_raw_file_output,path_txt_file_output):
+    # Create input binary files for Zobov finder
+
+        # Declare library path
+        clibrary = ctypes.CDLL(str(path_executable), mode=ctypes.RTLD_GLOBAL)
+
+        # Create Input Pointers for x,y,z,vx,vz,vy,m
+        arr_pointer = 7 * [
+            np.ctypeslib.ndpointer(
+                dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
+            )
+        ]
+
+        # Declare Input Pointers type
+        clibrary.c_binary_writter.argtypes = arr_pointer + [
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+        ]
+        # Fill Input
+        clibrary.c_binary_writter(
+            box.x,
+            box.y,
+            box.z,
+            box.vx,
+            box.vy,
+            box.vz,
+            box.m,
+            len(box),
+            os.path.join(path_raw_file_output,"tracers_zobov.raw").encode(
+                "utf-8"
+            ),
+            os.path.join(path_txt_file_output,"tracers_zobov.txt").encode(
+                "utf-8"
+            ),
+        )
