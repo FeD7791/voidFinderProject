@@ -427,42 +427,42 @@ def find_zobov_tracers():
         for i in range(3, len(out2))
     ]
 
-def write_zobov_input(box, path_executable ,path_raw_file_output,path_txt_file_output):
-    # Create input binary files for Zobov finder
+# def write_zobov_input(box, path_executable ,path_raw_file_output,path_txt_file_output):
+#     # Create input binary files for Zobov finder
 
-        # Declare library path
-        clibrary = ctypes.CDLL(str(path_executable), mode=ctypes.RTLD_GLOBAL)
+#         # Declare library path
+#         clibrary = ctypes.CDLL(str(path_executable), mode=ctypes.RTLD_GLOBAL)
 
-        # Create Input Pointers for x,y,z,vx,vz,vy,m
-        arr_pointer = 7 * [
-            np.ctypeslib.ndpointer(
-                dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-            )
-        ]
+#         # Create Input Pointers for x,y,z,vx,vz,vy,m
+#         arr_pointer = 7 * [
+#             np.ctypeslib.ndpointer(
+#                 dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
+#             )
+#         ]
 
-        # Declare Input Pointers type
-        clibrary.c_binary_writter.argtypes = arr_pointer + [
-            ctypes.c_int,
-            ctypes.c_char_p,
-            ctypes.c_char_p,
-        ]
-        # Fill Input
-        clibrary.c_binary_writter(
-            box.x,
-            box.y,
-            box.z,
-            box.vx,
-            box.vy,
-            box.vz,
-            box.m,
-            len(box),
-            os.path.join(path_raw_file_output,"tracers_zobov.raw").encode(
-                "utf-8"
-            ),
-            os.path.join(path_txt_file_output,"tracers_zobov.txt").encode(
-                "utf-8"
-            ),
-        )
+#         # Declare Input Pointers type
+#         clibrary.c_binary_writter.argtypes = arr_pointer + [
+#             ctypes.c_int,
+#             ctypes.c_char_p,
+#             ctypes.c_char_p,
+#         ]
+#         # Fill Input
+#         clibrary.c_binary_writter(
+#             box.x,
+#             box.y,
+#             box.z,
+#             box.vx,
+#             box.vy,
+#             box.vz,
+#             box.m,
+#             len(box),
+#             os.path.join(path_raw_file_output,"tracers_zobov.raw").encode(
+#                 "utf-8"
+#             ),
+#             os.path.join(path_txt_file_output,"tracers_zobov.txt").encode(
+#                 "utf-8"
+#             ),
+#         )
 
 
 
