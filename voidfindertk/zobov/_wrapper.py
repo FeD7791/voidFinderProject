@@ -43,10 +43,6 @@ def run_vozinit(
     box_size,
     number_of_divisions,
     executable_name,
-    output_name_particles_in_zones,
-    output_name_zones_in_void,
-    output_name_text_file,
-    density_threshold,
     work_dir_path,
 ):
     """
@@ -82,7 +78,6 @@ def run_vozinit(
     str
         Output of the vozinit command.
     """
-    input_file_path = _move_inputs(input_file_path, work_dir_path)
 
     vozinit = sh.Command("vozinit", search_paths=[vozinit_dir_path])
 
@@ -123,6 +118,7 @@ def run_preprocess(*, preprocess_dir_path, executable_name, work_dir_path):
     preprocess = sh.Command(full_executable_name)
 
     with chdir(work_dir_path):
+        print(os.getcwd())
         output = preprocess()
 
     return output
@@ -166,7 +162,7 @@ def run_jozov(
 
     args = (
         f"adj{executable_name}.dat",
-        f"vol{executable_name}",
+        f"vol{executable_name}.dat",
         f"{output_name_particles_in_zones}.dat",
         f"{output_name_zones_in_void}.dat",
         f"{output_name_text_file}.dat",
