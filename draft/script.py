@@ -6,7 +6,6 @@ import sh
 
 from voidfindertk.io import read_table
 from voidfindertk.zobov import _wrapper as wrap
-from voidfindertk.zobov._zobov import write_zobov_input
 
 path_dataset = "./datasets/halos_fede.dat"
 path_loader_so = "./voidfindertk/zobov/src/zobov_loader.so"
@@ -22,7 +21,7 @@ with tempfile.TemporaryDirectory(suffix="_zovob", dir=path_src) as work_dir:
     ##
     work_dir = path.Path(work_dir)
     ##
-    write_zobov_input(
+    wrap.write_input(
         box=box,
         path_executable=path_loader_so,
         path_raw_file_output=work_dir,
@@ -39,13 +38,11 @@ with tempfile.TemporaryDirectory(suffix="_zovob", dir=path_src) as work_dir:
         work_dir_path=work_dir,
     )
 
-    wrap._move_inputs(path_src / "src" / "voz1b1", work_dir)
-    wrap._move_inputs(path_src / "src" / "voztie", work_dir)
-
-    output_preprocess = wrap.run_preprocess(
+    output_preprocess = wrap.run_voz_step(
         preprocess_dir_path=work_dir,
         executable_name="output_vozinit",
         work_dir_path=work_dir,
+        voz_executables_path=path_src / "src",
     )
 
     wrap.run_jozov(
@@ -57,3 +54,4 @@ with tempfile.TemporaryDirectory(suffix="_zovob", dir=path_src) as work_dir:
         density_threshold=0,
         work_dir_path=work_dir,
     )
+    print(sh.ls(work_dir))
