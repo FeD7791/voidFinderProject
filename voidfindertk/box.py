@@ -7,9 +7,11 @@
 """Class Box object constructor."""
 import math
 
-import numpy as np
-import uttr
 from astropy import units as u
+
+import numpy as np
+
+import uttr
 
 
 @uttr.s(repr=False, frozen=True, cmp=False)
@@ -45,9 +47,9 @@ class Box:
     x = uttr.ib(converter=np.array, unit=u.Mpc)
     y = uttr.ib(converter=np.array, unit=u.Mpc)
     z = uttr.ib(converter=np.array, unit=u.Mpc)
-    vx = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
-    vy = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
-    vz = uttr.ib(converter=np.array, unit=u.Mpc / u.h)
+    vx = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
+    vy = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
+    vz = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
     m = uttr.ib(converter=np.array, unit=u.M_sun)
 
     _len = uttr.ib(init=False)
