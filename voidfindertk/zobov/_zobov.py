@@ -18,6 +18,8 @@ import re
 
 import scipy
 
+import sh
+
 import uttr
 
 from . import _wrapper
@@ -372,6 +374,33 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
     return index
 
 
+def find_zones_in_void(path_executable, path_file, mode):
+    run_lectura_ = sh.Command(path_executable)
+    run_lectura_()
+    with open(path_file, "r") as f:
+        out = f.readlines()
+    if mode == 1:
+        e = [
+        {
+            "n_zone": np.int32(out[i].split(" ")[2].split())[0],
+            "particles": np.int32(out[i + 2].split(" ")[:-1]),
+        }
+        for i in range(len(out))
+        if re.match(r"^ zone", out[i])
+        ]
+    if mode == 0:
+        e = [
+        {
+            "void": np.int32(out[i].split(" ")[3:4])[0],
+            "zones": np.int32(out[i].split(" ")[5:-1]),
+        }
+        for i in range(3, len(out))
+        ]
+    else: raise ValueError("Allowed values are 0 or 1")
+    return e
+
+
+
 def find_zobov_tracers():
     path = _Paths.CURRENT / "src"
     subprocess.run(["./lectura_zones"], cwd=str(path))
@@ -434,3 +463,35 @@ def write_zobov_input(box, path_executable ,path_raw_file_output,path_txt_file_o
                 "utf-8"
             ),
         )
+
+
+
+# import struct
+
+# def decode_binary_file(filename):
+#   """
+#   Decodes a binary file containing integer sequences.
+
+#   Args:
+#       filename: The name of the binary file.
+
+#   Returns:
+#       A list of lists, where each inner list represents the decoded integers from the file.
+#   """
+#   with open(filename, "rb") as f:
+#     data = f.read()
+
+#   # Define the format string for unpacking
+#   format_string = "<" + "I" * int(len(data) / 4)  # Unpack all bytes as unsigned integers (I)
+
+#   # Unpack the data
+#   decoded_data = struct.unpack(format_string, data)
+
+#   # Reshape the data into a list of lists
+#   return [list(group) for i in range(0, len(decoded_data), 4) for group in [decoded_data[i:i+4]]]
+
+# # Example usage
+# filename = "your_file.bin"  # Replace with your actual filename
+# decoded_list = decode_binary_file(filename)
+
+# print(decoded_list)
