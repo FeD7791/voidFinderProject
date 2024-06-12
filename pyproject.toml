@@ -42,11 +42,11 @@ dependencies = [
     "scipy",
     "h5py"
 ]
-    
+
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["voidfindertk"]
+where = ["voidfindertk", "voidfindertk.*"]
 exclude = ["tests*"]
 namespaces = false

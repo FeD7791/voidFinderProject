@@ -38,6 +38,11 @@ def _move_inputs(src, dst_dir):
     return shutil.copy2(src, dst_dir)
 
 
+# =============================================================================
+# VOZ INIT
+# =============================================================================
+
+
 def run_vozinit(
     *,
     vozinit_dir_path,
@@ -50,6 +55,11 @@ def run_vozinit(
 ):
     """
     Run the vozinit command of the ZOBOV void finder.
+
+    This first program does not actually have to be run, but it gives some
+    idea of how equal the partition of the simulation will be, checks that the
+    number of guard points is sufficient, and generates a script file which
+    may be used to complete the "voz" step.
 
     Parameters:
     -----------
@@ -72,7 +82,10 @@ def run_vozinit(
     Returns:
     --------
     str
-        Output of the vozinit command.
+        The output of vozinit is a script file which, if paths are defined
+        to allow it, will run voz1b1 on each sub-box, and then voztie.
+
+
     """
 
     vozinit = sh.Command("vozinit", search_paths=[vozinit_dir_path])
@@ -143,8 +156,14 @@ def run_voz1b1(
     voz1b1_dir_path,
     work_dir_path,
 ):
-    """
-    Run the VOZ1B1 executable with specified parameters.
+    """Run the VOZ1B1 executable with specified parameters.
+
+    This program (VOZ one-by-one) calculates the Voronoi diagram on one
+    sub-box of the data cube.  Ideally, one would not have to use the input
+    parameters, since they would be set in the vozinit script file, but one
+    argument might have to be changed if a guard point is encountered while
+    diagramming one of the sub-boxes.  Only the sub-box(es) encountering guard
+    particles need be rediagrammed.
 
     Parameters:
     ----------
@@ -169,7 +188,11 @@ def run_voz1b1(
     Returns:
     -------
     str
-        Output of the command.
+        The output of voz1b1 is a file containing the Voronoi adjacencies and
+        volumes of particles in the sub-box: part.%s.%02d.%02d.%02d, where %s
+        is the "suffix," and the %02d's are the three two-digit labels
+        identifying the sub-box.
+
     """
 
     voz1b1 = sh.Command(voz1b1_dir_path / "voz1b1")
@@ -198,8 +221,19 @@ def run_voztie(
     voztie_dir_path,
     work_dir_path,
 ):
-    """
-    Run the VOZTIE executable with specified parameters.
+    """Run the VOZTIE executable with specified parameters.
+
+    This program ties the sub-boxes together, returning single adjacency
+    (adj%s.dat, where %s is the "suffix,") and volume (vol%s.dat) files for
+    the whole datacube.  The volume file is formatted simply in C
+    (not Fortran77) format: it consists of a 4-byte integer containing the
+    number of particles, followed by an array of 4-byte floats containing each
+    particle volume.  The adjacency file is formatted in a more complicated
+    manner to reduce its size from the doubly linked list used within the code.
+
+    This program (JOin ZOnes to form Voids) first finds "zones" (one for each
+    density minimum), and then links them together in the manner described in
+    the paper.
 
     Parameters:
     ----------
@@ -282,9 +316,7 @@ def run_jozov(
     return output
 
 
-def write_input(
-    box, path_executable, path_raw_file_output, path_txt_file_output
-):
+def write_input(box, path_executable, raw_file_path, txt_file_path):
     """
     Create input binary files for the Zobov finder using an input
     Box of tracers.
@@ -331,12 +363,8 @@ def write_input(
         box.vz,
         box.m,
         len(box),
-        os.path.join(path_raw_file_output, "tracers_zobov.raw").encode(
-            "utf-8"
-        ),
-        os.path.join(path_txt_file_output, "tracers_zobov.txt").encode(
-            "utf-8"
-        ),
+        str(raw_file_path).encode("utf-8"),
+        str(txt_file_path).encode("utf-8"),
     )
 
 
