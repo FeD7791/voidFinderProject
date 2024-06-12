@@ -338,3 +338,82 @@ def write_input(
             "utf-8"
         ),
     )
+
+
+def parse_zones_in_voids_output(
+    executable_path, input_file_path, output_file_path
+):
+    """
+    Parse the output raw file from Zobov's output of zones inside voids
+    resulting from the execution of jozov executable.
+
+    Parameters
+    ----------
+    executable_path : str
+        The path to the executable file.
+    input_file_path : str
+        The path to the input raw file.
+    output_file_path : str
+        The path to the output ascii file.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It parses the input raw file
+        and generates an output raw file.
+
+    Notes
+    -----
+    This function uses ctypes to interact with the C library generated from
+    Zobov's output processing code.
+    """
+    # path = _Paths.ZOBOV / "out_zones_in_void.dat"
+    # Get library
+    clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
+
+    # Input argtypes
+    clibrary.process_files.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+
+    # Call function
+    clibrary.process_files(
+        str(input_file_path).encode(), str(output_file_path).encode()
+    )
+
+
+def parse_tracers_in_zones_output(
+    executable_path, input_file_path, output_file_path
+):
+    """
+    Parse the output raw file from Zobov's output of tracers inside zones
+    resulting from the execution of jozov executable.
+
+    Parameters
+    ----------
+    executable_path : str
+        The path to the executable file.
+    input_file_path : str
+        The path to the input raw file.
+    output_file_path : str
+        The path to the output ascii file.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It parses the input raw file
+        and generates an output raw file.
+
+    Notes
+    -----
+    This function uses ctypes to interact with the C library generated from
+    Zobov's output processing code.
+    """
+    # Get library
+    clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
+
+    # Input argtypes
+    clibrary.get_tracers_in_zones.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+
+    # Call function
+    clibrary.get_tracers_in_zones(
+        str(input_file_path).encode(), str(output_file_path).encode()
+    )
