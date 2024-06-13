@@ -114,12 +114,23 @@ def run_voz_step(
     voz_executables_path,
 ):
     """
-    Run the preprocessing step of the ZOBOV void finder.
+    This method is used to run the script created by vozinit
+    executable. Use this method only if vozinit was executed
+    before. Te executable created by vozinit has the suffix 
+    provided in the vozinit step and the prefix "src". The 
+    executable is a script that runs voz1b1 using the different
+    slices of the box [Obtained from performing the vozinit 
+    step where the voroni tessellation is performed in each 
+    subcube division of dataset]. The script then runs voztie 
+    that ties the subdivision boxes together. 
+
+    To perform the above task voz1b1 and voztie executables 
+    are needed in the work directory
 
     Parameters:
     -----------
     preprocess_dir_path : str
-        Path to the directory containing the preprocessing executable.
+        Path to the directory containing the vozinit executable.
     executable_name : str
         Suffix of the executable file.
     work_dir_path : str
@@ -274,7 +285,17 @@ def run_jozov(
     work_dir_path,
 ):
     """
-    Run the jozov command of the ZOBOV void finder.
+    This program (JOin ZOnes to form Voids) first finds "zones" 
+    (one for each density minimum), and then links them together.
+    The density threshold is an optional parameter, which can 
+    limit the growth of voids into high-density regions.  
+
+    There are 3 outputs of jozov: a zone membership file which contains 
+    the particles in each zone; a void membership file containing the 
+    zones in each void, and a text file.  For the format of the first 
+    two files, please see the code.  Here is an example text file. 
+    The results may not be typical, because the simulation they come 
+    from has very low mass resolution.
 
     Parameters:
     -----------
@@ -316,7 +337,11 @@ def run_jozov(
     return output
 
 
-def write_input(box, path_executable, raw_file_path, txt_file_path):
+def write_input(*,
+                box, 
+                path_executable, 
+                raw_file_path, 
+                txt_file_path):
     """
     Create input binary files for the Zobov finder using an input
     Box of tracers.
@@ -369,7 +394,10 @@ def write_input(box, path_executable, raw_file_path, txt_file_path):
 
 
 def parse_zones_in_voids_output(
-    executable_path, input_file_path, output_file_path
+    *,
+    executable_path, 
+    input_file_path, 
+    output_file_path
 ):
     """
     Parse the output raw file from Zobov's output of zones inside voids
@@ -409,7 +437,10 @@ def parse_zones_in_voids_output(
 
 
 def parse_tracers_in_zones_output(
-    executable_path, input_file_path, output_file_path
+    *,
+    executable_path, 
+    input_file_path, 
+    output_file_path
 ):
     """
     Parse the output raw file from Zobov's output of tracers inside zones
