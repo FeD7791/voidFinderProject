@@ -18,11 +18,11 @@ class _Paths:
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
-    ZOBOV = CURRENT / "src"
+    ZOBOV = CURRENT / "src" #Path to the src folder of Zobov
 
 
 class _Files:
-    TRACERS_RAW = "tracers_zobov.raw"
+    TRACERS_RAW = "tracers_zobov.raw" 
     TRACERS_TXT = "tracers_zobov.txt"
 
 
@@ -34,7 +34,7 @@ class ZobovVF(ModelABC):
         buffer_size=0.08,
         box_size=500,
         number_of_divisions=2,
-        ensity_threshold=0,
+        density_threshold=0,
         zobov_path=None,
         workdir=None,
         workdir_clean=False,
@@ -44,13 +44,13 @@ class ZobovVF(ModelABC):
         self._buffer_size = buffer_size
         self._box_size = box_size
         self._number_of_divisions = number_of_divisions
-        self._ensity_threshold = ensity_threshold
-
+        self._ensity_threshold = density_threshold
+        
         self._zobov_path = pathlib.Path(
             _Paths.ZOBOV if zobov_path is None else zobov_path
         )
 
-        self._workdir = pathlib.Path(
+        self._workdir = pathlib.Path( #Path directorio de trabajo
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
             if workdir is None
             else workdir
@@ -126,6 +126,27 @@ class ZobovVF(ModelABC):
             box_size=self.box_size,
             number_of_divisions=self.number_of_divisions,
             executable_name="output_vozinit",
+            work_dir_path=run_work_dir,
+        )
+
+        # VOZ_STEP =============================================================
+        # This step is mandatory if VOZINIT was run before
+
+        output_preprocess = _wrap.run_voz_step(
+            preprocess_dir_path=run_work_dir,
+            executable_name="output_vozinit",
+            work_dir_path=run_work_dir,
+            voz_executables_path=_Paths.ZOBOV / "src", #this is the path where voz1b1 and voztie exe are
+        )
+
+        # JOZOV =============================================================
+        _wrap.run_jozov(
+            jozov_dir_path=_Paths.ZOBOV / "src",
+            executable_name="output_vozinit",
+            output_name_particles_in_zones="part_vs_zone",
+            output_name_zones_in_void="zones_vs_voids",
+            output_name_text_file="output_txt",
+            density_threshold=0,
             work_dir_path=run_work_dir,
         )
 
