@@ -1,27 +1,28 @@
-import os
 import datetime as dt
+import os
 import pathlib
-import tempfile
 import shutil
+import tempfile
 
 import numpy as np
 
-from ..models import ModelABC
+# from ..models import ModelABC
 from . import _wrapper as _wrap
+
 
 class _Paths:
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
-    ZOBOV = CURRENT / "src" #Path to the src folder of Zobov
+    ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
 
 class _Files:
-    TRACERS_RAW = "tracers_zobov.raw" 
+    TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
 
 
-class ZobovVF(ModelABC):
+class ZobovVF:
 
     def __init__(
         self,
@@ -40,12 +41,12 @@ class ZobovVF(ModelABC):
         self._box_size = box_size
         self._number_of_divisions = number_of_divisions
         self._ensity_threshold = density_threshold
-        
+
         self._zobov_path = pathlib.Path(
             _Paths.ZOBOV if zobov_path is None else zobov_path
         )
-
-        self._workdir = pathlib.Path( #Path directorio de trabajo
+        # Create a workdir path to run zobov
+        self._workdir = pathlib.Path(
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
             if workdir is None
             else workdir
@@ -90,6 +91,9 @@ class ZobovVF(ModelABC):
     # INTERNAL ================================================================
 
     def _create_run_work_dir(self):
+        """
+        This method will create a temporal directory inside workdir
+        """
         timestamp = dt.datetime.now(dt.timezone.utc).isoformat()
         run_work_dir = pathlib.Path(
             tempfile.mkdtemp(suffix=timestamp, dir=self.workdir)
@@ -107,15 +111,15 @@ class ZobovVF(ModelABC):
         # write the  box in the files
         _wrap.write_input(
             box=box,
-            path_executable=self._zobov_path,
+            path_executable=self._zobov_path / "zobov_loader.so",
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
         )
 
         # VOZINIT =============================================================
 
-        output_vozinit = _wrap.run_vozinit(
-            vozinit_dir_path=self._zobov_path,
+        _wrap.run_vozinit(
+            vozinit_dir_path=self._zobov_path / "src",
             input_file_path=tracers_raw_file_path,
             buffer_size=self.buffer_size,
             box_size=self.box_size,
@@ -124,14 +128,15 @@ class ZobovVF(ModelABC):
             work_dir_path=run_work_dir,
         )
 
-        # VOZ_STEP =============================================================
+        # VOZSTEP =============================================================
         # This step is mandatory if VOZINIT was run before
 
-        output_preprocess = _wrap.run_voz_step(
+        _wrap.run_voz_step(
             preprocess_dir_path=run_work_dir,
             executable_name="output_vozinit",
             work_dir_path=run_work_dir,
-            voz_executables_path=_Paths.ZOBOV / "src", #this is the path where voz1b1 and voztie exe are
+            voz_executables_path=_Paths.ZOBOV
+            / "src",  # this is the path where voz1b1 and voztie exe are
         )
 
         # JOZOV =============================================================
