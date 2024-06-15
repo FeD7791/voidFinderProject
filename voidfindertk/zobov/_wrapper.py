@@ -351,7 +351,7 @@ def write_input(*,
     box : object
         Input box object containing x, y, z, vx, vy, vz, and m.
     path_executable : str
-        Path to the executable file.
+        Path to the executable file .
     path_raw_file_output : str
         Path to the raw file output directory.
     path_txt_file_output : str
