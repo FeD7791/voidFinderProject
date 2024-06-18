@@ -1,14 +1,16 @@
-import abc
+
 from abc import ABC, abstractmethod
 
 from attrs import define, field
 
+from .box import DataBox
 
-class DataBox:
-    box = None
 
-    def __init__(self, aux_box):
-        self.box = aux_box
+# class DataBox:
+#     box = None
+
+#     def __init__(self, aux_box):
+#         self.box = aux_box
 
 @define
 class VoidMetrics:
@@ -23,9 +25,9 @@ class ModelABC(ABC):
     def __init__(self):
         pass
 
-    def find(self, box):
-        llbox = self.preprocess(box)
-        voids = self.model_find(llbox)
+    def find(self, databox:DataBox):
+        prep_box = self.preprocess(databox)
+        voids = self.model_find(prep_box)
         # vb = self.mk_vbox(voids, llbox)
         # mass = self.get_void_mass(voids, llbox)
         # metrics = VoidMetrics(
@@ -37,13 +39,14 @@ class ModelABC(ABC):
         #     }
         # )
         # return metrics
+        return voids
 
     @abstractmethod
     def preprocess(self, databox):
         pass
 
     @abstractmethod
-    def model_find(self, llbox):
+    def model_find(self, prep_box):
         pass
 
     # @abstractmethod

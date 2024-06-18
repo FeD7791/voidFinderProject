@@ -13,11 +13,11 @@ import numpy as np
 
 import uttr
 
-# class DataBox:
-#     box = None
+class DataBox:
+    box = None
 
-#     def __init__(self, aux_box):
-#         self.box = aux_box
+    def __init__(self, aux_box):
+        self.box = aux_box
 
 @uttr.s(repr=False, frozen=True, cmp=False)
 class Box:
