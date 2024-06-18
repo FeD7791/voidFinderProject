@@ -10,9 +10,10 @@ import ctypes
 import os
 import shutil
 
-import numpy as np
-
 import sh
+
+import numpy as np
+import pandas as pd
 
 from ..utils import chdir
 
@@ -105,6 +106,9 @@ def run_vozinit(
 
     return output
 
+# =============================================================================
+# VOZ STEP : VOZ1B1 + VOZTIE
+# =============================================================================
 
 def run_voz_step(
     *,
@@ -155,6 +159,9 @@ def run_voz_step(
 
     return output
 
+# =============================================================================
+# VOZ 1b1
+# =============================================================================
 
 def run_voz1b1(
     *,
@@ -224,6 +231,9 @@ def run_voz1b1(
         output = voz1b1(*args)
     return output
 
+# =============================================================================
+# VOZ TIE
+# =============================================================================
 
 def run_voztie(
     *,
@@ -393,86 +403,4 @@ def write_input(*,
     )
 
 
-def parse_zones_in_voids_output(
-    *,
-    executable_path, 
-    input_file_path, 
-    output_file_path
-):
-    """
-    Parse the output raw file from Zobov's output of zones inside voids
-    resulting from the execution of jozov executable.
 
-    Parameters
-    ----------
-    executable_path : str
-        The path to the executable file.
-    input_file_path : str
-        The path to the input raw file.
-    output_file_path : str
-        The path to the output ascii file.
-
-    Returns
-    -------
-    None
-        This function does not return any value. It parses the input raw file
-        and generates an output raw file.
-
-    Notes
-    -----
-    This function uses ctypes to interact with the C library generated from
-    Zobov's output processing code.
-    """
-    # path = _Paths.ZOBOV / "out_zones_in_void.dat"
-    # Get library
-    clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
-
-    # Input argtypes
-    clibrary.process_files.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-
-    # Call function
-    clibrary.process_files(
-        str(input_file_path).encode(), str(output_file_path).encode()
-    )
-
-
-def parse_tracers_in_zones_output(
-    *,
-    executable_path, 
-    input_file_path, 
-    output_file_path
-):
-    """
-    Parse the output raw file from Zobov's output of tracers inside zones
-    resulting from the execution of jozov executable.
-
-    Parameters
-    ----------
-    executable_path : str
-        The path to the executable file.
-    input_file_path : str
-        The path to the input raw file.
-    output_file_path : str
-        The path to the output ascii file.
-
-    Returns
-    -------
-    None
-        This function does not return any value. It parses the input raw file
-        and generates an output raw file.
-
-    Notes
-    -----
-    This function uses ctypes to interact with the C library generated from
-    Zobov's output processing code.
-    """
-    # Get library
-    clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
-
-    # Input argtypes
-    clibrary.get_tracers_in_zones.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-
-    # Call function
-    clibrary.get_tracers_in_zones(
-        str(input_file_path).encode(), str(output_file_path).encode()
-    )

@@ -6,7 +6,7 @@ import tempfile
 
 import numpy as np
 
-# from ..models import ModelABC
+from ..models import ModelABC
 from . import _wrapper as _wrap
 
 
@@ -22,7 +22,7 @@ class _Files:
     TRACERS_TXT = "tracers_zobov.txt"
 
 
-class ZobovVF:
+class ZobovVF(ModelABC):
 
     def __init__(
         self,
@@ -99,8 +99,15 @@ class ZobovVF:
             tempfile.mkdtemp(suffix=timestamp, dir=self.workdir)
         )
         return run_work_dir
+    
+    def preprocess(self, databox):
+        return databox
 
-    def find(self, box):
+    def model_find(self, databox):
+
+        # Retrieve box from DataBox object
+        box = databox.box
+
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
 
@@ -108,7 +115,7 @@ class ZobovVF:
         tracers_raw_file_path = run_work_dir / _Files.TRACERS_RAW
         tracers_txt_file_path = run_work_dir / _Files.TRACERS_TXT
 
-        # write the  box in the files
+        # write the box in the files
         _wrap.write_input(
             box=box,
             path_executable=self._zobov_path / "zobov_loader.so",
