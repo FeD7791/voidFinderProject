@@ -2,7 +2,7 @@ import os
 import pathlib
 import tempfile
 
-from ..utils import config_file_maker, create_run_work_dir, save_file_from_box
+from ..utils import config_file_maker, create_run_working_directory, save_file_from_box
 
 class _Paths:
     CURRENT = pathlib.Path(
@@ -123,6 +123,7 @@ class SCVF:
         self.path_profiles=path_profiles  ,
         self.inner_shell=inner_shell,
         self.outher_shell=outher_shell,
+        self.random_seed = random_seed
         # paths
         # workdir holds the working directory
         self.workdir = pathlib.Path(
@@ -188,7 +189,7 @@ class SCVF:
 
     def model_find(self,box):
         # create sandbox for this run
-        run_work_dir = create_run_work_dir()
+        run_work_dir = create_run_working_directory()
         
 
         
