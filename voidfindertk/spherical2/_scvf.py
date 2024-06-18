@@ -2,7 +2,7 @@ import os
 import pathlib
 import tempfile
 
-from ..utils import config_file_maker, create_run_working_directory, save_file_from_box
+from ..utils import create_run_working_directory, save_file_from_box
 
 class _Paths:
     CURRENT = pathlib.Path(
@@ -35,7 +35,55 @@ class _Paths:
 #             parameters[f'{k[0]}'] = k[1]
 #     return parameters
 
-def _build_vf_param(*,vf_param_path,**kwargs):
+def _get_params(*,class_parameters:list):
+    """
+    This function is used to build the parameters for the 
+    SCVF void finder.
+
+    Parameters
+    ----------
+        class_parameters(list): A list of input parameters of
+        the SCVF class
+
+    Returns
+    -------
+        params(dictionary): A dictionary with the keys as the
+        parameter properties that identify each input used in the 
+        VF.param file
+    """
+    # List of parameters used in VF.param file
+    get_vf_params = [
+        'OMPcores', 'BoxSize','MaxRadiusSearch','ProxyGridSize',
+        'DeltaThreshold','DeltaSeed','OverlapTol','FormatTracers',
+        'NumFiles','FileTracers','FileVoids','ScalePos','ScaleVel',
+        'FracRadius','NumRanWalk','RadIncrement','RandomSeed',
+        'RSDist','Redshift','OmegaMatter','OmegaLambda','Hubble',
+        'GDist','FidOmegaMatter','FidOmegaLambda','FidHubble',
+        'WriteProfiles','MinProfileDist','MaxProfileDist',
+        'NumProfileBins','PathProfiles','InnerShell','OuterShell'
+        ]
+    # get_vf_params = list(_get_scvf_params(SCVF / 'params' / VF.param).keys())
+    # Get the param values from current class SCVF 
+    scvf_params = [
+        p for p in class_parameters 
+        if not p.starts_with('__') and p not in
+        [
+            'model_find',
+            'preprocess',
+            'workdir',
+            'vf_param_path',
+            'main_executable_path'
+            ]
+        ]
+    # Dictionary that holds the parameters used as input in the finder
+    params = {}
+    # Build dictionary from the previous param names and param values
+    for param_name,param_value in zip(get_vf_params,scvf_params):
+        params[f"{param_name}"] = param_value
+    return params
+
+
+def _build_vf_param_file(*,vf_param_path,**kwargs):
     """
     This function will open a file with name VF.param in some 
     location (vf_param_path) and will save any parameters in
@@ -139,6 +187,10 @@ class SCVF:
         self.vf_param_path = pathlib.Path(
             _Paths.SCVF /'params' if vf_param_path is None else vf_param_path
         )
+        # Path to save the traces file
+        self.file_tracers = pathlib.Path(
+            file_tracers if file_tracers is not None else workdir
+        )
 
 
     def preprocess(self,box):
@@ -147,38 +199,11 @@ class SCVF:
         It will first build the VF.params file needed to run the SCVF.
         The VF.params file is used to get the list of parameters  
         """
-        # List of parameters used in VF.param file
-        get_vf_params = [
-            'OMPcores', 'BoxSize','MaxRadiusSearch','ProxyGridSize',
-            'DeltaThreshold','DeltaSeed','OverlapTol','FormatTracers',
-            'NumFiles','FileTracers','FileVoids','ScalePos','ScaleVel',
-            'FracRadius','NumRanWalk','RadIncrement','RandomSeed',
-            'RSDist','Redshift','OmegaMatter','OmegaLambda','Hubble',
-            'GDist','FidOmegaMatter','FidOmegaLambda','FidHubble',
-            'WriteProfiles','MinProfileDist','MaxProfileDist',
-            'NumProfileBins','PathProfiles','InnerShell','OuterShell'
-            ]
-        # get_vf_params = list(_get_scvf_params(SCVF / 'params' / VF.param).keys())
-        # Get the param values from current class SCVF 
-        scvf_params = [
-            p for p in dir(self) 
-            if not p.starts_with('__') and p not in
-            [
-                'model_find',
-                'preprocess',
-                'workdir',
-                'vf_param_path',
-                'main_executable_path'
-                ]
-            ]
-        # Dictionary that holds the parameters used as input in the finder
-        params = {}
-        # Build dictionary from the previous param names and param values
-        for param_name,param_value in zip(get_vf_params,scvf_params):
-            params[f"{param_name}"] = param_value
+        
+        params = _get_params(dir(self))
 
         # Build parameters file VF.param in the location vf_param_path using params
-        _build_vf_param(vf_param_path=self.vf_param_path)
+        _build_vf_param_file(vf_param_path=self.vf_param_path,**params)
 
         # Crete the input file if box was provided
         if self.file_tracers is not None:
