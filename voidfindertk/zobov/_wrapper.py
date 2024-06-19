@@ -10,10 +10,9 @@ import ctypes
 import os
 import shutil
 
-import sh
-
 import numpy as np
-import pandas as pd
+
+import sh
 
 from ..utils import chdir
 
@@ -110,6 +109,7 @@ def run_vozinit(
 # VOZ STEP : VOZ1B1 + VOZTIE
 # =============================================================================
 
+
 def run_voz_step(
     *,
     preprocess_dir_path,
@@ -120,15 +120,15 @@ def run_voz_step(
     """
     This method is used to run the script created by vozinit
     executable. Use this method only if vozinit was executed
-    before. Te executable created by vozinit has the suffix 
-    provided in the vozinit step and the prefix "src". The 
+    before. Te executable created by vozinit has the suffix
+    provided in the vozinit step and the prefix "src". The
     executable is a script that runs voz1b1 using the different
-    slices of the box [Obtained from performing the vozinit 
-    step where the voroni tessellation is performed in each 
-    subcube division of dataset]. The script then runs voztie 
-    that ties the subdivision boxes together. 
+    slices of the box [Obtained from performing the vozinit
+    step where the voroni tessellation is performed in each
+    subcube division of dataset]. The script then runs voztie
+    that ties the subdivision boxes together.
 
-    To perform the above task voz1b1 and voztie executables 
+    To perform the above task voz1b1 and voztie executables
     are needed in the work directory
 
     Parameters:
@@ -162,6 +162,7 @@ def run_voz_step(
 # =============================================================================
 # VOZ 1b1
 # =============================================================================
+
 
 def run_voz1b1(
     *,
@@ -235,6 +236,7 @@ def run_voz1b1(
 # VOZ TIE
 # =============================================================================
 
+
 def run_voztie(
     *,
     number_of_divisions,
@@ -295,16 +297,16 @@ def run_jozov(
     work_dir_path,
 ):
     """
-    This program (JOin ZOnes to form Voids) first finds "zones" 
+    This program (JOin ZOnes to form Voids) first finds "zones"
     (one for each density minimum), and then links them together.
-    The density threshold is an optional parameter, which can 
-    limit the growth of voids into high-density regions.  
+    The density threshold is an optional parameter, which can
+    limit the growth of voids into high-density regions.
 
-    There are 3 outputs of jozov: a zone membership file which contains 
-    the particles in each zone; a void membership file containing the 
-    zones in each void, and a text file.  For the format of the first 
-    two files, please see the code.  Here is an example text file. 
-    The results may not be typical, because the simulation they come 
+    There are 3 outputs of jozov: a zone membership file which contains
+    the particles in each zone; a void membership file containing the
+    zones in each void, and a text file.  For the format of the first
+    two files, please see the code.  Here is an example text file.
+    The results may not be typical, because the simulation they come
     from has very low mass resolution.
 
     Parameters:
@@ -348,9 +350,9 @@ def run_jozov(
 
 
 def write_input(*,
-                box, 
-                path_executable, 
-                raw_file_path, 
+                box,
+                path_executable,
+                raw_file_path,
                 txt_file_path):
     """
     Create input binary files for the Zobov finder using an input
@@ -401,6 +403,3 @@ def write_input(*,
         str(raw_file_path).encode("utf-8"),
         str(txt_file_path).encode("utf-8"),
     )
-
-
-

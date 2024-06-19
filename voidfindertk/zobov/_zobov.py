@@ -6,8 +6,8 @@ import tempfile
 
 import numpy as np
 
-from ..models import ModelABC
 from . import _wrapper as _wrap
+from ..models import ModelABC
 
 
 class _Paths:
@@ -15,6 +15,7 @@ class _Paths:
     Class that holds paths of reference to the current file and
     ZOBOV's src directory
     """
+
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
@@ -22,9 +23,8 @@ class _Paths:
 
 
 class _Files:
-    """
-    
-    """
+    """ """
+
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
 
@@ -49,9 +49,11 @@ class ZobovVF(ModelABC):
     zobov_path : str or None, optional
         Path to ZOBOV executable (default is None, uses internal path).
     workdir : str or None, optional
-        Temporary working directory path (default is None, creates a new temp directory).
+        Temporary working directory path (default is None, creates a new temp
+        directory).
     workdir_clean : bool, optional
-        Whether to clean up the working directory on deletion (default is False).
+        Whether to clean up the working directory on deletion (default is
+        False).
     dtype : numpy.dtype, optional
         Data type used for computations (default is np.float32).
 
@@ -60,12 +62,15 @@ class ZobovVF(ModelABC):
     preprocess(databox)
         Placeholder method for data preprocessing.
     model_find(databox)
-        Executes the ZOBOV Void Finder algorithm on the provided DataBox object.
+        Executes the ZOBOV Void Finder algorithm on the provided DataBox
+        object.
 
     Notes
     -----
-    The ZOBOV Void Finder is executed in several steps including VOZINIT, VOZSTEP, and JOZOV.
+    The ZOBOV Void Finder is executed in several steps including VOZINIT,
+    VOZSTEP, and JOZOV.
     """
+
     def __init__(
         self,
         *,
@@ -134,19 +139,20 @@ class ZobovVF(ModelABC):
 
     def _create_run_work_dir(self):
         """
-        This method will create a temporal directory inside the working directory 
-        of the ZobovVF class workdir.
+        This method will create a temporal directory inside the working
+        directory of the ZobovVF class workdir.
 
         Returns
         -------
-            run_work_dir(pathlib.Path): path of the work directoty 
+            run_work_dir: pathlib.Path
+                path of the work directoty
         """
         timestamp = dt.datetime.now(dt.timezone.utc).isoformat()
         run_work_dir = pathlib.Path(
             tempfile.mkdtemp(suffix=timestamp, dir=self.workdir)
         )
         return run_work_dir
-    
+
     def preprocess(self, databox):
         """
         Placeholder method for data preprocessing.
@@ -165,7 +171,8 @@ class ZobovVF(ModelABC):
 
     def model_find(self, databox):
         """
-        Execute the ZOBOV Void Finder algorithm on the provided DataBox object.
+        Execute the ZOBOV Void Finder algorithm on the provided DataBox
+        object.
 
         Parameters
         ----------
@@ -213,7 +220,7 @@ class ZobovVF(ModelABC):
             / "src",  # this is the path where voz1b1 and voztie exe are
         )
 
-        # JOZOV =============================================================
+        # JOZOV ===============================================================
         _wrap.run_jozov(
             jozov_dir_path=_Paths.ZOBOV / "src",
             executable_name="output_vozinit",
@@ -226,7 +233,7 @@ class ZobovVF(ModelABC):
 
     def __del__(self):
         """
-        Destructor that cleans up the temporary working directory 
+        Destructor that cleans up the temporary working directory
         if workdir_clean is True.
         """
         if self._workdir_clean:

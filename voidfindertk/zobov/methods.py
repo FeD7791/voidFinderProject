@@ -1,61 +1,64 @@
 import ctypes
 
-import uttr
+from astropy import units as u
 
 import numpy as np
+
 import pandas as pd
 
-from astropy import units as u
+import uttr
 
 
 @uttr.s(repr=False)
-class ZobovVoids:
+class _ZobovVoids:
+
     """
     Class that represents the properties of the output ascii
-    file of ZOBOV. This Class contains the properties of the 
+    file of ZOBOV. This Class contains the properties of the
     voids finded with ZOBOV
-        Void#: 
-                What rank the void has, in decreasing order of 
+        Void#:
+                What rank the void has, in decreasing order of
                 VoidDensContrast.
-        FileVoid#: 
-                The number of this void (starting with 0) 
+        FileVoid#:
+                The number of this void (starting with 0)
                 in the first two files.
-        CoreParticle: 
-                The particle number (starting with 0) 
-                of the void's (and zone's) core particle 
-                (i.e. if CoreParticle=2, it would be the third 
-                particle in vol...dat and adj...dat). 
-                Currently, because jozov does not load in particle 
-                positions (saving memory), looking up the coordinates 
-                of this particle in the original position file is 
-                currently the only way of finding the x,y,z position 
-                of the core of the void. With some prodding, 
-                the author might change this.
-        CoreDens: 
-                The density, in units of the mean, of the void's 
+        CoreParticle:
+                The particle number (starting with 0) of the void's (and
+                zone's) core particle (i.e. if CoreParticle=2, it
+                would be the third particle in vol...dat and adj...dat).
+                Currently, because jozov does not load in particle
+                positions (saving memory), looking up the coordinates of
+                this particle in the original position file is currently
+                the only way of finding the x,y,z position of the core
+                of the void. With some prodding, the author might change
+                this.
+        CoreDens:
+                The density, in units of the mean, of the void's
                 core particle.
-        ZoneVol: 
-                The volume of the central zone of the void, 
+        ZoneVol:
+                The volume of the central zone of the void,
                 in units of the volume occupied by a mean-density particle.
-        Zone#Part: 
+        Zone#Part:
                 The number of particles in the central zone of the void.
-        Void#Zones: 
+        Void#Zones:
                 The number of zones in the void.
-        VoidVol: 
-                The volume of the void, in units of the volume occupied by 
+        VoidVol:
+                The volume of the void, in units of the volume occupied by
                 a mean-density particle.
-        Void#Part: 
+        Void#Part:
                 The number of particles in the void.
-        VoidDensContrast: 
-                The density contrast of the void, i.e. the ratio between 
-                the critical density at which water in that zone would flow 
+        VoidDensContrast:
+                The density contrast of the void, i.e. the ratio between
+                the critical density at which water in that zone would flow
                 into a deeper zone to the minimum density.
-        VoidProb: 
-                The probability that that DensContrast would arise from Poisson 
-                noise, using eq. 1 of the ZOBOV paper. This probability is based 
-                on a fit to the probability distribution of DensContrasts from 
-                a Poisson particle distribution. 
+        VoidProb:
+                The probability that that DensContrast would arise
+                from Poisson noise, using eq. 1 of the ZOBOV paper.
+                This probability is based on a fit to the probability
+                distribution of DensContrasts from a Poisson particle
+                distribution.
     """
+
     Void_number = uttr.ib(converter=np.array)
     File_void_number = uttr.ib(converter=np.array)
     CoreParticle = uttr.ib(converter=np.array)
@@ -119,7 +122,6 @@ class ZobovVoids:
         """
         return self._void_len
 
-
     def __repr__(self):
         """Representation method.
 
@@ -132,11 +134,9 @@ class ZobovVoids:
         length = len(self)
         return f"<{cls_name} size={length}>"
 
+
 def parse_zones_in_voids_output(
-    *,
-    executable_path, 
-    input_file_path, 
-    output_file_path
+    *, executable_path, input_file_path, output_file_path
 ):
     """
     Parse the output raw file from Zobov's output of zones inside voids
@@ -176,10 +176,7 @@ def parse_zones_in_voids_output(
 
 
 def parse_tracers_in_zones_output(
-    *,
-    executable_path, 
-    input_file_path, 
-    output_file_path
+    *, executable_path, input_file_path, output_file_path
 ):
     """
     Parse the output raw file from Zobov's output of tracers inside zones
@@ -216,9 +213,10 @@ def parse_tracers_in_zones_output(
         str(input_file_path).encode(), str(output_file_path).encode()
     )
 
+
 def read_zobov_output(filename_path):
     """
-    This method will parse the output of ZOBOV's ascii file 
+    This method will parse the output of ZOBOV's ascii file
     into an object: ZobovVoids with the void properties
     """
     output = pd.read_csv(filename_path, sep="\s+", skiprows=2)
@@ -235,5 +233,5 @@ def read_zobov_output(filename_path):
         "VoidDensContrast",
         "VoidProb",
     ]
-    zobov = ZobovVoids(**output.to_dict(orient="list"))
+    zobov = _ZobovVoids(**output.to_dict(orient="list"))
     return zobov
