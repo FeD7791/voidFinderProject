@@ -1,3 +1,17 @@
+"""
+Methods that are used to run the ZOBOV python wrapper methods in a coherent
+step by step.
+
+    ZobovVF is the main Model object that represent a particular run of ZOBOV
+    void finder. It mainly consists of two steps:
+
+    a. preprocess step used to preprocess any input data needed for the
+    algorythm. For this method none pre process is needed
+    b. model_find: Consist of all steps needed to run zobov and the python
+    wrappers used to represent them. For reference of the steps see ZobovVF
+    Class in this module.
+"""
+
 import datetime as dt
 import os
 import pathlib
@@ -23,7 +37,10 @@ class _Paths:
 
 
 class _Files:
-    """ """
+    """
+    Name of the Box parsed to raw files. This files always are parsed and
+    saved in files with the same names (see write_input module in _wrapper)
+    """
 
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
@@ -74,7 +91,7 @@ class ZobovVF(ModelABC):
             in the output of volume and adjacency files (see run_voztie).
             4. The last step will run ZOBOV's jozov executable (see run_jozov)
             This step will result in the output of three files:
-                - part_vs_zone.dat : Raw File containing the particles inside 
+                - part_vs_zone.dat : Raw File containing the particles inside
                 zones (see run_jozov)
                 - zones_vsvoids.dat : Raw File containing the zones inside
                 voids (see run_jozov)

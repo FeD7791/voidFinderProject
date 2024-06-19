@@ -83,7 +83,7 @@ class _ZobovVoids:
     def __attrs_post_init__(self):
         """Post init method.
 
-        Checks that the lenght of the inputs are the same
+        Checks that the lenght of the parameters are the same
         """
         lengths = set()
         for e in (
@@ -123,7 +123,7 @@ class _ZobovVoids:
         Returns
         -------
             int
-                the number of elements in SphericalVoids
+                The number of voids found by ZOBOV void finder
         """
         return self._void_len
 
@@ -133,7 +133,7 @@ class _ZobovVoids:
         Returns
         -------
             str
-                Name plus number of points in the box
+                Name plus number voids found
         """
         cls_name = type(self).__name__
         length = len(self)

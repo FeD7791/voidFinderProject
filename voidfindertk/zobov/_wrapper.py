@@ -1,8 +1,8 @@
 """
 Wrapper functions for the ZOBOV void finder.
 
-This module provides wrapper executables to run the ZOBOV void finder algorithm
-and its associated preprocessing steps.
+This module provides wrapper executables to run the ZOBOV void finder
+algorithm and its associated preprocessing steps.
 
 """
 
@@ -61,6 +61,10 @@ def run_vozinit(
     number of guard points is sufficient, and generates a script file which
     may be used to complete the "voz" step.
 
+    As a result of the vozinit processa script file is created this sript is
+    used to run voz1b1 on each sub-box (see vozi1b1), and then voztie
+    (see run_voztie) executable.
+
     Parameters:
     -----------
     vozinit_dir_path : str
@@ -82,10 +86,7 @@ def run_vozinit(
     Returns:
     --------
     str
-        The output of vozinit is a script file which, if paths are defined
-        to allow it, will run voz1b1 on each sub-box, and then voztie.
-
-
+        Output of the vozinit process
     """
 
     vozinit = sh.Command("vozinit", search_paths=[vozinit_dir_path])
@@ -145,7 +146,7 @@ def run_voz_step(
     Returns:
     --------
     str
-        Output of the preprocessing command.
+        Output of the voz1b1 and voztie executions.
     """
     # Moving necesary files tho run the src-executable
     _move_inputs(voz_executables_path / "voz1b1", work_dir_path)
@@ -184,6 +185,11 @@ def run_voz1b1(
     diagramming one of the sub-boxes.  Only the sub-box(es) encountering guard
     particles need be rediagrammed.
 
+    The output of voz1b1 is a file containing the Voronoi adjacencies and
+    volumes of particles in the sub-box: part.%s.%02d.%02d.%02d, where %s
+    is the "suffix," and the %02d's are the three two-digit labels
+    identifying the sub-box.
+
     Parameters:
     ----------
     input_file_path : str
@@ -207,10 +213,7 @@ def run_voz1b1(
     Returns:
     -------
     str
-        The output of voz1b1 is a file containing the Voronoi adjacencies and
-        volumes of particles in the sub-box: part.%s.%02d.%02d.%02d, where %s
-        is the "suffix," and the %02d's are the three two-digit labels
-        identifying the sub-box.
+        Output of the voz1b1 run.
 
     """
 
@@ -272,7 +275,7 @@ def run_voztie(
     Returns:
     -------
     str
-        Output of the sh voztie Command.
+        Output of the sh voztie run.
     """
     voztie = sh.Command(voztie_dir_path / "voztie")
 
@@ -330,7 +333,7 @@ def run_jozov(
     Returns:
     --------
     str
-        Output of the jozov command.
+        Output of the jozov run.
     """
     jozov = sh.Command(jozov_dir_path / "jozov")
 
@@ -355,9 +358,24 @@ def write_input(*,
                 raw_file_path,
                 txt_file_path):
     """
-    Create input binary files for the Zobov finder using an input
-    Box of tracers.
+    This module create the position file used in the ZOBOV
+    void finder from the input Box object of tracers.
 
+    The position file contains the positions of all particles.
+    By default, this is a Fortran 77 - formatted file, written as below:
+
+    open(unit=1, file=outname, form='unformatted')
+    write(1) num_particles
+    write(1) (x(i),i=1,num_particles)
+    write(1) (y(i),i=1,num_particles)
+    write(1) (z(i),i=1,num_particles)
+    close(1)
+
+    The module will create two files:
+        "tracers_zobov.raw" : Contains the parsed raw contents of the Box
+        object. This file is the one used to run ZOBOV finder
+        "tracers_zobov.txt" : File with the same contents as file above but
+        in Ascii format for readability.
     Parameters:
     ----------
     box : object
