@@ -1,3 +1,8 @@
+"""
+This module contains several modules parse output files
+obtained through the implemetation of the ZOBOV finder algorythm
+"""
+
 import ctypes
 
 from astropy import units as u
@@ -71,7 +76,7 @@ class _ZobovVoids:
     VoidDensContrast = uttr.ib(converter=np.array)
     VoidProb = uttr.ib(converter=np.array)
     _void_len = uttr.ib(init=False)
-    _tracers_in_void = uttr.ib(
+    tracers_in_void = uttr.ib(
         init=False, default=None
     )  # Provide tracers in void
 
@@ -135,7 +140,7 @@ class _ZobovVoids:
         return f"<{cls_name} size={length}>"
 
 
-def parse_zones_in_voids_output(
+def _parse_zones_in_voids_output(
     *, executable_path, input_file_path, output_file_path
 ):
     """
@@ -155,7 +160,7 @@ def parse_zones_in_voids_output(
     -------
     None
         This function does not return any value. It parses the input raw file
-        and generates an output raw file.
+        and generates an output Ascii file.
 
     Notes
     -----
@@ -175,7 +180,7 @@ def parse_zones_in_voids_output(
     )
 
 
-def parse_tracers_in_zones_output(
+def _parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
 ):
     """
@@ -214,7 +219,7 @@ def parse_tracers_in_zones_output(
     )
 
 
-def read_zobov_output(filename_path):
+def parse_zobov(filename_path):
     """
     This method will parse the output of ZOBOV's ascii file
     into an object: ZobovVoids with the void properties
