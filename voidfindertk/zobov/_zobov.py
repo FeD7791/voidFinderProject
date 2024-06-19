@@ -64,6 +64,22 @@ class ZobovVF(ModelABC):
     model_find(databox)
         Executes the ZOBOV Void Finder algorithm on the provided DataBox
         object.
+        This step follows these steps:
+            1. Build the input data from the input box. This step will parse
+            the box data to a raw file that the next step needs
+            2. Run ZOBOV's vozinit executable using the input params and the
+            tracers input file build in the last step. As the process ends
+            an script file will be created (see run_vozinit).
+            3. In this step the mentioned script will be run. It will result
+            in the output of volume and adjacency files (see run_voztie).
+            4. The last step will run ZOBOV's jozov executable (see run_jozov)
+            This step will result in the output of three files:
+                - part_vs_zone.dat : Raw File containing the particles inside 
+                zones (see run_jozov)
+                - zones_vsvoids.dat : Raw File containing the zones inside
+                voids (see run_jozov)
+                - output_txt.dat : Ascii File containing the voids properties
+                (see run_jozov)
 
     Notes
     -----
