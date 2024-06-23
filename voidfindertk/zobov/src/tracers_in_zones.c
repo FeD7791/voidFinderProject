@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 struct Zone {
     int np;
     int *m;
@@ -15,15 +17,15 @@ int get_tracers_in_zones(const char* inputFileName, const char* outputFileName) 
     }
 
     // Lee los datos desde el archivo binario
-    int np, nzones;
+    int np, n_npart;
     fread(&np, sizeof(int), 1, input);
-    fread(&nzones, sizeof(int), 1, input);
+    fread(&n_npart, sizeof(int), 1, input);
 
-    struct Zone *zones = (struct Zone*)malloc(nzones * sizeof(struct Zone));
-    for (int h = 0; h < nzones; ++h) {
-        fread(&zones[h].np, sizeof(int), 1, input);
-        zones[h].m = (int*)malloc(zones[h].np * sizeof(int));
-        fread(zones[h].m, sizeof(int), zones[h].np, input);
+    struct Zone *npart = (struct Zone*)malloc(n_npart * sizeof(struct Zone));
+    for (int h = 0; h < n_npart; ++h) {
+        fread(&npart[h].np, sizeof(int), 1, input);
+        npart[h].m = (int*)malloc(npart[h].np * sizeof(int));
+        fread(npart[h].m, sizeof(int), npart[h].np, input);
     }
 
     fclose(input);
@@ -38,17 +40,17 @@ int get_tracers_in_zones(const char* inputFileName, const char* outputFileName) 
     // Escribe los datos en el archivo de salida en formato ASCII
     fprintf(output, "\n np\n");
     fprintf(output, "%d\n", np);
-    fprintf(output, "\n nzones\n");
-    fprintf(output, "%d\n", nzones);
+    fprintf(output, "\n n_npart\n");
+    fprintf(output, "%d\n", n_npart);
     fprintf(output, "\n");
 
-    for (int i = 0; i < nzones; ++i) {
+    for (int i = 0; i < n_npart; ++i) {
         fprintf(output, "\n------------------------\n");
-        fprintf(output, " zone %d\n", zones[i].np);
+        fprintf(output, " Nparticles %d\n", npart[i].np);
         fprintf(output, " particulas  \n");
 
-        for (int j = 0; j < zones[i].np; ++j) {
-            fprintf(output, "%d ", zones[i].m[j]);
+        for (int j = 0; j < npart[i].np; ++j) {
+            fprintf(output, "%d ", npart[i].m[j]);
         }
         fprintf(output, "\n");
     }
@@ -58,19 +60,19 @@ int get_tracers_in_zones(const char* inputFileName, const char* outputFileName) 
     printf("Datos guardados en %s\n", outputFileName);
 
     // Liberar memoria
-    for (int i = 0; i < nzones; ++i) {
-        free(zones[i].m);
+    for (int i = 0; i < n_npart; ++i) {
+        free(npart[i].m);
     }
-    free(zones);
+    free(npart);
 
     return 0;
 }
 
 // int main() {
-//     const char* inputFileName = "out_particle_zone.dat";
+//     const char* inputFileName = "part_vs_zone.dat";
 //     const char* outputFileName = "txt_out_particle_zone2.txt";
     
-//     if (convertBinaryToAscii(inputFileName, outputFileName) != 0) {
+//     if (get_tracers_in_zones(inputFileName, outputFileName) != 0) {
 //         return 1;
 //     }
 
