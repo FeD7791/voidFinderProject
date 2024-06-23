@@ -15,7 +15,7 @@ import uttr
 
 
 @uttr.s(repr=False)
-class _ZobovVoids:
+class ZobovVoids:
 
     """
     Class that represents the properties of the output ascii
@@ -64,68 +64,21 @@ class _ZobovVoids:
                 distribution.
     """
 
-    Void_number = uttr.ib(converter=np.array)
-    File_void_number = uttr.ib(converter=np.array)
-    CoreParticle = uttr.ib(converter=np.array)
-    CoreDens = uttr.ib(converter=np.array)
-    ZoneVol = uttr.ib(converter=np.array)
-    Zone_number_part = uttr.ib(converter=np.array)
-    Void_number_Zones = uttr.ib(converter=np.array)
-    VoidVol = uttr.ib(converter=np.array, unit=u.Mpc**3)
-    Void_number_Part = uttr.ib(converter=np.array)
-    VoidDensContrast = uttr.ib(converter=np.array)
-    VoidProb = uttr.ib(converter=np.array)
+    void_number = uttr.ib(converter=int)
+    file_void_number = uttr.ib(converter=int)
+    core_particle = uttr.ib(converter=int)
+    core_dens = uttr.ib(converter=np.float32)
+    zone_vol = uttr.ib(converter=np.float32, unit=u.Mpc**3)
+    zone_number_part = uttr.ib(converter=int)
+    void_number_zones = uttr.ib(converter=int)
+    void_vol = uttr.ib(converter=np.float32, unit=u.Mpc**3)
+    void_number_part = uttr.ib(converter=int)
+    void_dens_contrast = uttr.ib(converter=np.float32)
+    void_prob = uttr.ib(converter=np.float32)
     _void_len = uttr.ib(init=False)
     tracers_in_void = uttr.ib(
         init=False, default=None
     )  # Provide tracers in void
-
-    def __attrs_post_init__(self):
-        """Post init method.
-
-        Checks that the lenght of the parameters are the same
-        """
-        lengths = set()
-        for e in (
-            # Rank of the void, in decreasing order of VoidDensContrast.
-            self.Void_number,
-            # Number of the void, in previous files
-            self.File_void_number,
-            # Index --Related to Box-- of the core particle of the void
-            self.CoreParticle,
-            # Density of the core particle
-            self.CoreDens,
-            # Volume of the central zone of the void
-            self.ZoneVol,
-            # Number of particles in the central zone of the void
-            self.Zone_number_part,
-            # Number of zones in the void
-            self.Void_number_Zones,
-            # Volume of the void
-            self.VoidVol,
-            # Number of particles in the void
-            self.Void_number_Part,
-            # Contrast density of the void
-            self.VoidDensContrast,
-            # The Poisson noise probability
-            self.VoidProb,
-        ):
-            lengths.add(len(e))
-
-        if len(lengths) != 1:
-            raise ValueError("Arrays should be of the same size")
-
-        super().__setattr__("_void_len", lengths.pop())
-
-    def __len__(self):
-        """Length method.
-
-        Returns
-        -------
-            int
-                The number of voids found by ZOBOV void finder
-        """
-        return self._void_len
 
     def __repr__(self):
         """Representation method.
@@ -136,49 +89,7 @@ class _ZobovVoids:
                 Name plus number voids found
         """
         cls_name = type(self).__name__
-        length = len(self)
-        return f"<{cls_name} size={length}>"
-
-
-def _parse_zones_in_voids_output(
-    *, executable_path, input_file_path, output_file_path
-):
-    """
-    Parse the output raw file from Zobov's output of zones inside voids
-    resulting from the execution of jozov executable.
-
-    Parameters
-    ----------
-    executable_path : str
-        The path to the executable file.
-    input_file_path : str
-        The path to the input raw file.
-    output_file_path : str
-        The path to the output ascii file.
-
-    Returns
-    -------
-    None
-        This function does not return any value. It parses the input raw file
-        and generates an output Ascii file.
-
-    Notes
-    -----
-    This function uses ctypes to interact with the C library generated from
-    Zobov's output processing code.
-    """
-    # path = _Paths.ZOBOV / "out_zones_in_void.dat"
-    # Get library
-    clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
-
-    # Input argtypes
-    clibrary.process_files.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-
-    # Call function
-    clibrary.process_files(
-        str(input_file_path).encode(), str(output_file_path).encode()
-    )
-
+        return f"<{cls_name} void_number={self.void_number}>"
 
 def _parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
@@ -219,24 +130,75 @@ def _parse_tracers_in_zones_output(
     )
 
 
-def parse_zobov(filename_path):
+def _parse_zobov(filename_path):
     """
     This method will parse the output of ZOBOV's ascii file
     into an object: ZobovVoids with the void properties
     """
-    output = pd.read_csv(filename_path, sep="\s+", skiprows=2)
-    output.columns = [
-        "Void_number",
-        "File_void_number",
-        "CoreParticle",
-        "CoreDens",
-        "ZoneVol",
-        "Zone_number_part",
-        "Void_number_Zones",
-        "VoidVol",
-        "Void_number_Part",
-        "VoidDensContrast",
-        "VoidProb",
+
+    with open(filename_path,"r") as f:
+        voids = f.readlines()
+    parameters = [
+        "void_number",
+        "file_void_number",
+        "core_particle",
+        "core_dens",
+        "zone_vol",
+        "zone_number_part",
+        "void_number_zones",
+        "void_vol",
+        "void_number_part",
+        "void_dens_contrast",
+        "void_prob",
     ]
-    zobov = _ZobovVoids(**output.to_dict(orient="list"))
-    return zobov
+    zobov_voids = []
+    for void in voids[2:]:
+        z_void = ZobovVoids(**dict(zip(parameters,void.split())))
+        zobov_voids.append(z_void)
+
+    return zobov_voids
+
+
+def _get_particles_in_voids(*,particles_in_zones_path):
+    """
+    This method is used to extract the particles inside each void from the
+    parsed file got from the membership file of zobov (which contains
+    the particles in each zone). In the parsed file exists n lists of partices
+    where the first item in each list is the core particle of the 'core' zone
+    of the void. This particle is the one that appears as the CoreParticle in
+    the txt output of ZOBOV with the void properties.
+
+    The parsed file is obtained from the ZOBOV's membership file using the
+    parse_tracers_in_zones_output private method in this module.
+
+    Parameters
+    ----------
+        particles_in_zones_path : str
+            Path to the parsed file
+    
+    Returns
+    -------
+        dict
+            A dictionary where each key is the CoreParticle (see ZobovVoids
+            in this module) and the values are the list of the particles
+            inside each void.
+    Notes
+    -----
+        Please note that each element is not directly related to a void but
+        rather is linked indirectly using the CoreParticle as identifier that
+        can relate to the void using the txt property file of ZOBOV.
+    """
+    with open(particles_in_zones_path, "r") as f: # Read Parsed file
+        zones_particles = f.readlines()
+
+    particles_in_zones = {}
+    for i in np.arange(len(zones_particles)):
+
+        if zones_particles[i].startswith(" Nparticles"):
+
+            particles = np.array(
+                zones_particles[i+2].split(" ")[:-1],
+                dtype=int
+                )
+            particles_in_zones[f"{particles[0]}"] = particles
+    return particles_in_zones
