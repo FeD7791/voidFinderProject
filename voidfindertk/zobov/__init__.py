@@ -16,7 +16,7 @@
 # IMPORTS
 # =============================================================================
 
-from ._methods import parse_zobov
+# from ._methods import parse_zobov
 from ._zobov import ZobovVF
 
 # =============================================================================
