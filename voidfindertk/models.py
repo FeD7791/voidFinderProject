@@ -26,8 +26,9 @@ class ModelABC(ABC):
         pass
 
     def find(self, databox:DataBox):
-        prep_box = self.preprocess(databox)
-        voids = self.model_find(prep_box)
+        preprocess_parameters = self.preprocess(databox)
+        model_find_parameters = self.model_find(preprocess_parameters)
+        build_void_parameters = self.build_void(model_find_parameters)
         # vb = self.mk_vbox(voids, llbox)
         # mass = self.get_void_mass(voids, llbox)
         # metrics = VoidMetrics(
@@ -49,9 +50,9 @@ class ModelABC(ABC):
     def model_find(self, prep_box):
         pass
 
-    # @abstractmethod
-    # def mk_vbox(self, voids, llbox):
-    #     pass
+    @abstractmethod
+    def build_void(self, voids, llbox):
+        pass
 
     # @abstractmethod
     # def get_void_mass(self, void_box, llbox):
