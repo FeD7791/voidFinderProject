@@ -21,6 +21,7 @@ import tempfile
 import numpy as np
 
 from . import _wrapper as _wrap
+from . import _methods
 from ..models import ModelABC
 
 
@@ -35,6 +36,11 @@ class _Paths:
     )
     ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
+class _Names:
+    OUTPUT_VOZINIT = "output_vozinit"
+    OUTPUT_JOZOV_VOIDS = "output_txt"
+    PARTICLES_IN_ZONES = "part_vs_zone"
+    ZONES_IN_VOID = "zones_vs_voids"
 
 class _Files:
     """
@@ -44,6 +50,16 @@ class _Files:
 
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
+    PARTICLES_VS_ZONES_RAW = f"{_Names.PARTICLES_IN_ZONES}.dat"
+    PARTICLES_VS_ZONES_TXT = "part_vs_zone.txt"
+    OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
+
+class _ExecutableNames:
+    ZOBOV_LOADER_EXE = "zobov_loader.so"
+    TRACERS_IN_ZONES_EXE = "tracers_in_zones.so"
+
+
+
 
 
 class ZobovVF(ModelABC):
@@ -238,7 +254,7 @@ class ZobovVF(ModelABC):
             buffer_size=self.buffer_size,
             box_size=self.box_size,
             number_of_divisions=self.number_of_divisions,
-            executable_name="output_vozinit",
+            executable_name=_Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
         )
 
@@ -247,7 +263,7 @@ class ZobovVF(ModelABC):
 
         _wrap.run_voz_step(
             preprocess_dir_path=run_work_dir,
-            executable_name="output_vozinit",
+            executable_name=_Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
             voz_executables_path=_Paths.ZOBOV
             / "src",  # this is the path where voz1b1 and voztie exe are
@@ -256,13 +272,14 @@ class ZobovVF(ModelABC):
         # JOZOV ===============================================================
         _wrap.run_jozov(
             jozov_dir_path=_Paths.ZOBOV / "src",
-            executable_name="output_vozinit",
-            output_name_particles_in_zones="part_vs_zone",
+            executable_name=_Names.OUTPUT_VOZINIT,
+            output_name_particles_in_zones=_Names.PARTICLES_IN_ZONES,
             output_name_zones_in_void="zones_vs_voids",
             output_name_text_file="output_txt",
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
+        return {'run_work_dir':run_work_dir}
 
     def __del__(self):
         """
@@ -271,3 +288,25 @@ class ZobovVF(ModelABC):
         """
         if self._workdir_clean:
             shutil.rmtree(self._workdir)
+
+    def build_void(self, model_find_parameters):
+        # Params from model_find
+        run_work_dir = model_find_parameters['run_work_dir']
+        # Process 1
+        _methods.parse_tracers_in_zones_output(
+        executable_path= _Paths.ZOBOV / "tracers_in_zones.so",
+        input_file_path= run_work_dir / "part_vs_zone.dat",
+        output_file_path= run_work_dir / "part_vs_zone.txt"
+        )
+
+        # Process 2
+        p_in_v = _methods.get_particles_in_voids(
+            particles_in_zones_path= run_work_dir / "part_vs_zone.txt"
+        )
+        z_voids = _methods.parse_zobov(
+            filename_path= run_work_dir / "output_txt.dat"
+            )
+        zobov_voids = _methods.get_tracers_in_void(
+            zobov_voids=z_voids,tracers=p_in_v
+        )
+        return {'zobov_voids':zobov_voids, 'run_work_dir':run_work_dir}
