@@ -22,7 +22,7 @@ import numpy as np
 
 from . import _wrapper as _wrap
 from . import _methods
-from ..models import ModelABC
+from ..models import ModelABC, ModelVoid
 
 
 class _Paths:
@@ -59,6 +59,31 @@ class _ExecutableNames:
     TRACERS_IN_ZONES_EXE = "tracers_in_zones.so"
 
 
+class Voids(ModelVoid):
+    def __init__(
+            self,
+            *,
+            tracers,
+            voids
+    ):
+        self._tracers = tracers,
+        self._voids = voids
+    @property
+    def tracers(self):
+        return self._tracers
+    @property
+    def voids(self):
+        return self._voids
+
+    def voids_numbers(self):
+        return len(self.voids)
+
+    def void_of(self, tracer):
+        voids_w_tracer = []
+        for idx, void in enumerate(self.voids):
+            if tracer in void.tracers_in_void:
+                voids_w_tracer.append(idx)
+        return np.array(voids_w_tracer)
 
 
 
@@ -202,6 +227,14 @@ class ZobovVF(ModelABC):
         )
         return run_work_dir
 
+    def __del__(self):
+        """
+        Destructor that cleans up the temporary working directory
+        if workdir_clean is True.
+        """
+        if self._workdir_clean:
+            shutil.rmtree(self._workdir)
+
     def preprocess(self, databox):
         """
         Placeholder method for data preprocessing.
@@ -241,7 +274,8 @@ class ZobovVF(ModelABC):
         # write the box in the files
         _wrap.write_input(
             box=box,
-            path_executable=self._zobov_path / "zobov_loader.so",
+            path_executable=
+                self._zobov_path / _ExecutableNames.ZOBOV_LOADER_EXE,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
         )
@@ -274,39 +308,36 @@ class ZobovVF(ModelABC):
             jozov_dir_path=_Paths.ZOBOV / "src",
             executable_name=_Names.OUTPUT_VOZINIT,
             output_name_particles_in_zones=_Names.PARTICLES_IN_ZONES,
-            output_name_zones_in_void="zones_vs_voids",
-            output_name_text_file="output_txt",
+            output_name_zones_in_void=_Names.ZONES_IN_VOID,
+            output_name_text_file=_Names.OUTPUT_JOZOV_VOIDS,
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
-        return {'run_work_dir':run_work_dir}
+        return {'run_work_dir':run_work_dir,'databox':databox}
 
-    def __del__(self):
-        """
-        Destructor that cleans up the temporary working directory
-        if workdir_clean is True.
-        """
-        if self._workdir_clean:
-            shutil.rmtree(self._workdir)
-
-    def build_void(self, model_find_parameters):
+    def build_voids(self, model_find_parameters):
         # Params from model_find
         run_work_dir = model_find_parameters['run_work_dir']
         # Process 1
         _methods.parse_tracers_in_zones_output(
-        executable_path= _Paths.ZOBOV / "tracers_in_zones.so",
-        input_file_path= run_work_dir / "part_vs_zone.dat",
-        output_file_path= run_work_dir / "part_vs_zone.txt"
+        executable_path= _Paths.ZOBOV / _ExecutableNames.TRACERS_IN_ZONES_EXE,
+        input_file_path= run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
+        output_file_path= run_work_dir / _Files.PARTICLES_VS_ZONES_TXT
         )
 
         # Process 2
         p_in_v = _methods.get_particles_in_voids(
-            particles_in_zones_path= run_work_dir / "part_vs_zone.txt"
+            particles_in_zones_path= 
+                run_work_dir / _Files.PARTICLES_VS_ZONES_TXT
         )
         z_voids = _methods.parse_zobov(
-            filename_path= run_work_dir / "output_txt.dat"
+            filename_path= run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
             )
         zobov_voids = _methods.get_tracers_in_void(
             zobov_voids=z_voids,tracers=p_in_v
         )
-        return {'zobov_voids':zobov_voids, 'run_work_dir':run_work_dir}
+        voids = Voids(
+            tracers=model_find_parameters['databox'],
+            voids=zobov_voids
+            )
+        return voids

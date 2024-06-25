@@ -6,19 +6,28 @@ from attrs import define, field
 from .box import DataBox
 
 
-# class DataBox:
-#     box = None
 
-#     def __init__(self, aux_box):
-#         self.box = aux_box
+class ModelVoid(ABC):
+    def __init__(self):
+        pass
 
-@define
-class VoidMetrics:
-    void_box_coordinates = field(init=False)
-    void_mass = field(init=False)
-    tracers = field(init=False)
-    voids = field(init=False)
+    @property
+    @abstractmethod
+    def tracers(self):
+        pass 
 
+    @property
+    @abstractmethod
+    def voids(self):
+        pass
+
+    @abstractmethod
+    def voids_numbers(self):
+        pass
+
+    @abstractmethod
+    def void_of(self,tracer):
+        pass
 
 class ModelABC(ABC):
 
@@ -28,18 +37,7 @@ class ModelABC(ABC):
     def find(self, databox:DataBox):
         preprocess_parameters = self.preprocess(databox)
         model_find_parameters = self.model_find(preprocess_parameters)
-        build_void_parameters = self.build_void(model_find_parameters)
-        # vb = self.mk_vbox(voids, llbox)
-        # mass = self.get_void_mass(voids, llbox)
-        # metrics = VoidMetrics(
-        #     **{
-        #         "void_box_coordinates": vb,
-        #         "void_mass": mass,
-        #         "tracers": llbox.box,
-        #         "voids": voids,
-        #     }
-        # )
-        # return metrics
+        voids = self.build_voids(model_find_parameters)
         return voids
 
     @abstractmethod
@@ -47,12 +45,13 @@ class ModelABC(ABC):
         pass
 
     @abstractmethod
-    def model_find(self, prep_box):
+    def model_find(self, preprocess_parameters):
         pass
 
     @abstractmethod
-    def build_void(self, voids, llbox):
+    def build_voids(self, model_find_parameters):
         pass
+
 
     # @abstractmethod
     # def get_void_mass(self, void_box, llbox):
