@@ -20,8 +20,8 @@ import tempfile
 
 import numpy as np
 
-from . import _wrapper as _wrap
 from . import _methods
+from . import _wrapper as _wrap
 from ..models import ModelABC, ModelVoid
 
 
@@ -36,11 +36,13 @@ class _Paths:
     )
     ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
+
 class _Names:
     OUTPUT_VOZINIT = "output_vozinit"
     OUTPUT_JOZOV_VOIDS = "output_txt"
     PARTICLES_IN_ZONES = "part_vs_zone"
     ZONES_IN_VOID = "zones_vs_voids"
+
 
 class _Files:
     """
@@ -54,23 +56,51 @@ class _Files:
     PARTICLES_VS_ZONES_TXT = "part_vs_zone.txt"
     OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
 
+
 class _ExecutableNames:
     ZOBOV_LOADER_EXE = "zobov_loader.so"
     TRACERS_IN_ZONES_EXE = "tracers_in_zones.so"
 
 
 class Voids(ModelVoid):
-    def __init__(
-            self,
-            *,
-            tracers,
-            voids
-    ):
-        self._tracers = tracers,
+    """
+    A class representing voids and their associated tracers.
+
+    Parameters
+    ----------
+    tracers : iterable
+        List or array-like object containing tracers associated with voids.
+    voids : iterable
+        List or array-like object containing voids.
+
+    Attributes
+    ----------
+    tracers : Object
+        Box object that contains tracers and their properties.
+    voids : list
+        List of ZobovVoids objects.
+
+    Methods
+    -------
+    voids_numbers()
+        Returns the number of voids.
+    void_of(tracer)
+        Finds and returns indices of voids containing a specific tracer.
+
+    Notes
+    -----
+    This class inherits from ModelVoid.
+
+    """
+
+    def __init__(self, *, tracers, voids):
+        self._tracers = (tracers,)
         self._voids = voids
+
     @property
     def tracers(self):
         return self._tracers
+
     @property
     def voids(self):
         return self._voids
@@ -84,7 +114,6 @@ class Voids(ModelVoid):
             if tracer in void.tracers_in_void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
-
 
 
 class ZobovVF(ModelABC):
@@ -115,6 +144,28 @@ class ZobovVF(ModelABC):
     dtype : numpy.dtype, optional
         Data type used for computations (default is np.float32).
 
+    Attributes
+    ----------
+        _buffer_size : float
+            Input parameter of vozinit in ZOBOV void finder:
+            The buffer size sets the size, in units such that the box size of
+            the data cube is 1, of the buffer around each sub-box when
+            calculating the Voronoi diagram.
+        _box_size : float
+            Input parameter of vozinit in ZOBOV void finder:
+            The range of positions of particles in each dimension
+        _number_of_divisions : int
+            Input parameter of vozinit in ZOBOV void finder:
+            (default 2) -- the no. of partitions in each dimension; must be at
+            least 2 (giving 8 sub-boxes)
+        _density_threshold : float
+            Input parameter of vozinit in ZOBOV void finder:
+        _zobov_path : Pathlib.path
+        _workdir : Pathlib.path
+        _workdir_clean : bool
+        _dtype : numpy.dtype
+
+
     Methods
     -------
     preprocess(databox)
@@ -130,7 +181,7 @@ class ZobovVF(ModelABC):
             an script file will be created (see run_vozinit).
             3. In this step the mentioned script will be run. It will result
             in the output of volume and adjacency files (see run_voztie).
-            4. The last step will run ZOBOV's jozov executable (see run_jozov)
+            4. This step will run ZOBOV's jozov executable (see run_jozov)
             This step will result in the output of three files:
                 - part_vs_zone.dat : Raw File containing the particles inside
                 zones (see run_jozov)
@@ -138,7 +189,8 @@ class ZobovVF(ModelABC):
                 voids (see run_jozov)
                 - output_txt.dat : Ascii File containing the voids properties
                 (see run_jozov)
-
+            5. This step will create the object Voids that contains the voids
+            foud by the method and their properties.
     Notes
     -----
     The ZOBOV Void Finder is executed in several steps including VOZINIT,
@@ -161,7 +213,7 @@ class ZobovVF(ModelABC):
         self._buffer_size = buffer_size
         self._box_size = box_size
         self._number_of_divisions = number_of_divisions
-        self._ensity_threshold = density_threshold
+        self._density_threshold = density_threshold
 
         self._zobov_path = pathlib.Path(
             _Paths.ZOBOV if zobov_path is None else zobov_path
@@ -191,7 +243,7 @@ class ZobovVF(ModelABC):
 
     @property
     def ensity_threshold(self):
-        return self._ensity_threshold
+        return self._density_threshold
 
     @property
     def zobov_path(self):
@@ -274,8 +326,8 @@ class ZobovVF(ModelABC):
         # write the box in the files
         _wrap.write_input(
             box=box,
-            path_executable=
-                self._zobov_path / _ExecutableNames.ZOBOV_LOADER_EXE,
+            path_executable=self._zobov_path
+            / _ExecutableNames.ZOBOV_LOADER_EXE,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
         )
@@ -313,31 +365,56 @@ class ZobovVF(ModelABC):
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
-        return {'run_work_dir':run_work_dir,'databox':databox}
+        return {"run_work_dir": run_work_dir, "databox": databox}
 
     def build_voids(self, model_find_parameters):
-        # Params from model_find
-        run_work_dir = model_find_parameters['run_work_dir']
-        # Process 1
+        """
+        This methods is used to build the final object Voids (see Voids class
+        in this module). Each step will specify a mandatory attribute or
+        method of Voids class.
+
+        Parameters
+        ----------
+            model_find_parameters: Dictionary
+                The dictionary holds some relevant properties from the
+                model_find method (See model_find method in whithin this class
+                ). Those properties are needed to run this module.
+                These properties are:
+                - run_work_dir: Directory path where the current run is
+                performed.
+                - databox : Object class DataBox (See DataBox in box module)
+                with the tracers information.
+        Returns
+        -------
+            voids : Voids class
+                Object Voids that contains the voids found in this run
+                alongside with their properties.
+        """
+        # Get current working directory
+        run_work_dir = model_find_parameters["run_work_dir"]
+        # Process 1: Parse tracers in zones raw file in the work directory
         _methods.parse_tracers_in_zones_output(
-        executable_path= _Paths.ZOBOV / _ExecutableNames.TRACERS_IN_ZONES_EXE,
-        input_file_path= run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
-        output_file_path= run_work_dir / _Files.PARTICLES_VS_ZONES_TXT
+            executable_path=_Paths.ZOBOV
+            / _ExecutableNames.TRACERS_IN_ZONES_EXE,
+            input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
+            output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
         )
 
-        # Process 2
+        # Process 2: Create dictionary with list of particles
         p_in_v = _methods.get_particles_in_voids(
-            particles_in_zones_path= 
-                run_work_dir / _Files.PARTICLES_VS_ZONES_TXT
+            particles_in_zones_path=run_work_dir
+            / _Files.PARTICLES_VS_ZONES_TXT
         )
+        # Get list of ZobovVoids objects
         z_voids = _methods.parse_zobov(
-            filename_path= run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
-            )
-        zobov_voids = _methods.get_tracers_in_void(
-            zobov_voids=z_voids,tracers=p_in_v
+            filename_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
         )
+        # Fill property tracers_in_void for each ZobovVoids object
+        zobov_voids = _methods.get_tracers_in_void(
+            zobov_voids=z_voids, tracers=p_in_v
+        )
+        # Create Voids Object
         voids = Voids(
-            tracers=model_find_parameters['databox'],
-            voids=zobov_voids
-            )
+            tracers=model_find_parameters["databox"], voids=zobov_voids
+        )
         return voids
