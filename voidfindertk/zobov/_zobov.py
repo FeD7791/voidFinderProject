@@ -22,7 +22,7 @@ import numpy as np
 
 from . import _methods
 from . import _wrapper as _wrap
-from ..models import ModelABC, ModelVoid
+from ..models import ModelABC
 
 
 class _Paths:
@@ -58,62 +58,8 @@ class _Files:
 
 
 class _ExecutableNames:
-    ZOBOV_LOADER_EXE = "zobov_loader.so"
-    TRACERS_IN_ZONES_EXE = "tracers_in_zones.so"
-
-
-class Voids(ModelVoid):
-    """
-    A class representing voids and their associated tracers.
-
-    Parameters
-    ----------
-    tracers : iterable
-        List or array-like object containing tracers associated with voids.
-    voids : iterable
-        List or array-like object containing voids.
-
-    Attributes
-    ----------
-    tracers : Object
-        Box object that contains tracers and their properties.
-    voids : list
-        List of ZobovVoids objects.
-
-    Methods
-    -------
-    voids_numbers()
-        Returns the number of voids.
-    void_of(tracer)
-        Finds and returns indices of voids containing a specific tracer.
-
-    Notes
-    -----
-    This class inherits from ModelVoid.
-
-    """
-
-    def __init__(self, *, tracers, voids):
-        self._tracers = (tracers,)
-        self._voids = voids
-
-    @property
-    def tracers(self):
-        return self._tracers
-
-    @property
-    def voids(self):
-        return self._voids
-
-    def voids_numbers(self):
-        return len(self.voids)
-
-    def void_of(self, tracer):
-        voids_w_tracer = []
-        for idx, void in enumerate(self.voids):
-            if tracer in void.tracers_in_void:
-                voids_w_tracer.append(idx)
-        return np.array(voids_w_tracer)
+    ZOBOV_LOADER_BIN = "zobov_loader.so"
+    TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
 
 
 class ZobovVF(ModelABC):
@@ -327,7 +273,7 @@ class ZobovVF(ModelABC):
         _wrap.write_input(
             box=box,
             path_executable=self._zobov_path
-            / _ExecutableNames.ZOBOV_LOADER_EXE,
+            / _ExecutableNames.ZOBOV_LOADER_BIN,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
         )
@@ -395,7 +341,7 @@ class ZobovVF(ModelABC):
         # Process 1: Parse tracers in zones raw file in the work directory
         _methods.parse_tracers_in_zones_output(
             executable_path=_Paths.ZOBOV
-            / _ExecutableNames.TRACERS_IN_ZONES_EXE,
+            / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
         )
@@ -414,7 +360,13 @@ class ZobovVF(ModelABC):
             zobov_voids=z_voids, tracers=p_in_v
         )
         # Create Voids Object
-        voids = Voids(
-            tracers=model_find_parameters["databox"], voids=zobov_voids
+        extra = {
+            "zobov_path": self._zobov_path,
+            "zobov_voids": tuple(zobov_voids),
+        }
+
+        particle_by_voids = tuple(
+            np.asarray(void.tracers_in_void) for void in zobov_voids
         )
-        return voids
+
+        return particle_by_voids, extra
