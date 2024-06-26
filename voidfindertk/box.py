@@ -13,11 +13,13 @@ import numpy as np
 
 import uttr
 
+
 class DataBox:
     box = None
 
     def __init__(self, aux_box):
         self.box = aux_box
+
 
 @uttr.s(repr=False, frozen=True, cmp=False)
 class Box:
@@ -143,3 +145,16 @@ class Box:
     def size(self):
         size = math.ceil(np.max(self.z.value))
         return size
+
+    def copy(self):
+        cls = type(self)
+        new_tracers = cls(
+            x=self.x,
+            y=self.y,
+            z=self.z,
+            vx=self.vx,
+            vy=self.vy,
+            vz=self.vz,
+            m=self.m,
+        )
+        return new_tracers
