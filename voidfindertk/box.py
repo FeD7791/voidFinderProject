@@ -131,7 +131,8 @@ class Box:
         )
 
     def __repr__(self):
-        """Representation method.
+        """
+        Representation method.
 
         Returns
         -------
@@ -147,6 +148,13 @@ class Box:
         return size
 
     def copy(self):
+        """
+        Method used to perform a deep copy of the class Box.
+
+        Retruns
+        -------
+            Box object with a copy of Box Parameters.
+        """
         cls = type(self)
         new_tracers = cls(
             x=self.x,
