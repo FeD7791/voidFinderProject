@@ -13,7 +13,7 @@ import uttr
 
 
 @uttr.s(repr=False)
-class ZobovVoids:
+class VoidProperties:
     """
     Class that represents the properties of the output ascii
     file of ZOBOV. This Class contains the properties of the
@@ -72,10 +72,6 @@ class ZobovVoids:
     void_number_part = uttr.ib(converter=int)
     void_dens_contrast = uttr.ib(converter=np.float32)
     void_prob = uttr.ib(converter=np.float32)
-    _void_len = uttr.ib(init=False)
-    tracers_in_void = uttr.ib(
-        init=False, default=None
-    )  # Provide tracers in void
 
     def __repr__(self):
         """Representation method.
@@ -122,7 +118,8 @@ def parse_tracers_in_zones_output(
         Nparticles : (Number of particles)
         particulas
         [List of particles]
-    First memeber of [List of particles] is the core particle (See ZobovVoids)
+    First memeber of [List of particles] is the core particle (See
+    VoidProperties)
     """
     # Get library
     clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
@@ -139,7 +136,7 @@ def parse_tracers_in_zones_output(
 def parse_zobov(*, filename_path):
     """
     This method will parse the output of ZOBOV's ascii file into an object:
-    ZobovVoids (See ZobovVoids Class within this module) with the void
+    VoidProperties (See VoidProperties Class within this module) with the void
     properties.
     Parameters
     ----------
@@ -184,7 +181,8 @@ def parse_zobov(*, filename_path):
     Returns
     -------
         zobov_voids : list
-            List of objects ZobovVoids (See ZobovVoids whithin _methods)
+            List of objects VoidProperties (See VoidProperties whithin
+            _methods)
     """
 
     with open(filename_path, "r") as f:
@@ -204,7 +202,7 @@ def parse_zobov(*, filename_path):
     ]
     zobov_voids = []
     for void in voids[2:]:
-        z_void = ZobovVoids(**dict(zip(parameters, void.split())))
+        z_void = VoidProperties(**dict(zip(parameters, void.split())))
         zobov_voids.append(z_void)
     return zobov_voids
 
@@ -229,7 +227,7 @@ def get_particles_in_voids(*, particles_in_zones_path):
     Returns
     -------
         dict
-            A dictionary where each key is the CoreParticle (see ZobovVoids
+            A dictionary where each key is the CoreParticle (see VoidProperties
             in this module) and the values are the list of the particles
             inside each void.
     Notes
@@ -245,35 +243,8 @@ def get_particles_in_voids(*, particles_in_zones_path):
     for i in np.arange(len(zones_particles)):
         # Deal with the format of the particles in zones file
         if zones_particles[i].startswith(" Nparticles"):
-
             particles = np.array(
                 zones_particles[i + 2].split(" ")[:-1], dtype=int
             )
             particles_in_zones[f"{particles[0]}"] = particles
     return particles_in_zones
-
-
-def get_tracers_in_void(zobov_voids: list, tracers: dict):
-    """
-    This function is used to give the tracers_in_void property to members
-    of the ZobovVoids class. The property of ZobovVoids is tracers_in_void
-    and should get a list of int numbers related to some box particles that
-    are inside the void. Each void has a core_particle (See ZobovVoids) that
-    is the particle of the central voronoi cell in the void (actually the
-    first zone from which the void was built)
-
-    Parameters
-    ----------
-        zobov_voids : list
-            Output of _parse_zobov
-        tracers : dict
-            Output of _get_particles_in_voids
-    Returns
-    -------
-        zobov_voids : list
-            The same list but each ZobovVoids now contain the property
-            tracers_in_void of ZobovVoids.
-    """
-    for void in zobov_voids:
-        void.tracers_in_void = tracers[str(void.core_particle)]
-    return zobov_voids

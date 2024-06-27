@@ -1,6 +1,6 @@
 """
-Methods that are used to run the ZOBOV python wrapper methods in a coherent
-step by step.
+Module that holds functions and methods that are used to run the ZOBOV python
+wrapper methods in a coherent step by step.
 
     ZobovVF is the main Model object that represent a particular run of ZOBOV
     void finder. It mainly consists of two steps:
@@ -20,9 +20,9 @@ import tempfile
 
 import numpy as np
 
-from . import _methods
+from . import _postprocessing
 from . import _wrapper as _wrap
-from ..models import ModelABC
+from ..vfinder_abc import ModelABC
 
 
 class _Paths:
@@ -339,34 +339,31 @@ class ZobovVF(ModelABC):
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
         # Process 1: Parse tracers in zones raw file in the work directory
-        _methods.parse_tracers_in_zones_output(
+        _postprocessing.parse_tracers_in_zones_output(
             executable_path=_Paths.ZOBOV
             / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
         )
 
-        # Process 2: Create dictionary with list of particles
-        p_in_v = _methods.get_particles_in_voids(
+        # Process 2: Create darray of array of particles
+        p_in_v = _postprocessing.get_particles_in_voids(
             particles_in_zones_path=run_work_dir
             / _Files.PARTICLES_VS_ZONES_TXT
         )
         # Get list of ZobovVoids objects
-        z_voids = _methods.parse_zobov(
+        zobov_voids = _postprocessing.parse_zobov(
             filename_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
         )
-        # Fill property tracers_in_void for each ZobovVoids object
-        zobov_voids = _methods.get_tracers_in_void(
-            zobov_voids=z_voids, tracers=p_in_v
-        )
-        # Create Voids Object
+        # Create Voids as array of particles in void
+        voids = []
+        for void in zobov_voids:
+            voids.append(p_in_v[str(void.core_particle)])
+        particle_by_voids = tuple(voids)
+
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
         }
-
-        particle_by_voids = tuple(
-            np.asarray(void.tracers_in_void) for void in zobov_voids
-        )
 
         return particle_by_voids, extra
