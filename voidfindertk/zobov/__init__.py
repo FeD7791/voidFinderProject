@@ -16,11 +16,11 @@
 # IMPORTS
 # =============================================================================
 
-# from ._methods import parse_zobov
 from ._zobov import ZobovVF
+from ._postprocessing import data_post_processing
 
 # =============================================================================
 # ALL
 # =============================================================================
 
-__all__ = ["ZobovVF", "parse_zobov"]
+__all__ = ["ZobovVF","data_post_processing"]
