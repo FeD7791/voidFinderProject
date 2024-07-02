@@ -266,7 +266,9 @@ def data_post_processing(
     Parameters
     ----------
         executable_path: str
-            location of the binary file used to parse the code.
+            location of the binary file used to parse the code. The default
+            binary name is : "tracers_in_zones.so" and is located into
+            zobov/src folder
         input_file_path: str
             location of the raw file to be parsed.
         output_file_path: str
