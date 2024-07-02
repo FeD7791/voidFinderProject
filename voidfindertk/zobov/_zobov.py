@@ -25,18 +25,6 @@ from . import _wrapper as _wrap
 from ..vfinder_abc import ModelABC
 
 
-class _Paths:
-    """
-    Class that holds paths of reference to the current file and
-    ZOBOV's src directory
-    """
-
-    CURRENT = pathlib.Path(
-        os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-    )
-    ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
-
-
 class _Names:
     OUTPUT_VOZINIT = "output_vozinit"
     OUTPUT_JOZOV_VOIDS = "output_txt"
@@ -60,6 +48,18 @@ class _Files:
 class _ExecutableNames:
     ZOBOV_LOADER_BIN = "zobov_loader.so"
     TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
+
+
+class _Paths:
+    """
+    Class that holds paths of reference to the current file and
+    ZOBOV's src directory
+    """
+
+    CURRENT = pathlib.Path(
+        os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+    )
+    ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
 
 class ZobovVF(ModelABC):
@@ -338,32 +338,22 @@ class ZobovVF(ModelABC):
         """
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
-        # Process 1: Parse tracers in zones raw file in the work directory
-        _postprocessing.parse_tracers_in_zones_output(
+
+        # Get tracers box
+        box = model_find_parameters["databox"].box
+
+        particle_by_voids, zobov_voids = _postprocessing.data_post_processing(
             executable_path=_Paths.ZOBOV
             / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
+            jozov_text_file_output_path=run_work_dir
+            / _Files.OUTPUT_JOZOV_VOIDS_DAT,
         )
-
-        # Process 2: Create darray of array of particles
-        p_in_v = _postprocessing.get_particles_in_voids(
-            particles_in_zones_path=run_work_dir
-            / _Files.PARTICLES_VS_ZONES_TXT
-        )
-        # Get list of ZobovVoids objects
-        zobov_voids = _postprocessing.parse_zobov(
-            filename_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
-        )
-        # Create Voids as array of particles in void
-        voids = []
-        for void in zobov_voids:
-            voids.append(p_in_v[str(void.core_particle)])
-        particle_by_voids = tuple(voids)
 
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
         }
 
-        return particle_by_voids, extra
+        return box, particle_by_voids, extra
