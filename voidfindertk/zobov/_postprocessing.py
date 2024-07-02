@@ -133,15 +133,17 @@ def parse_tracers_in_zones_output(
     )
 
 
-def parse_zobov(*, filename_path):
+def parse_zobov(*, jozov_text_file_output_path):
     """
     This method will parse the output of ZOBOV's ascii file into an object:
     VoidProperties (See VoidProperties Class within this module) with the void
     properties.
     Parameters
     ----------
-        filename_path: str
-            The path to the file to be parsed. This file contains:
+        jozov_text_file_output_path: str
+            The path to the file to be parsed. The name is referenced to the
+            txt output file that results from the ZOBOV's jozov step.
+            This file contains:
             1. Line : Number of particles and voids found by the method.
             2. Line : Name of the attributes asigned to the voids. Attributes
             are:
@@ -185,7 +187,7 @@ def parse_zobov(*, filename_path):
             _methods)
     """
 
-    with open(filename_path, "r") as f:
+    with open(jozov_text_file_output_path, "r") as f:
         voids = f.readlines()
     parameters = [
         "void_number",
@@ -248,3 +250,56 @@ def get_particles_in_voids(*, particles_in_zones_path):
             )
             particles_in_zones[f"{particles[0]}"] = particles
     return particles_in_zones
+
+
+def data_post_processing(
+    *,
+    executable_path,
+    input_file_path,
+    output_file_path,
+    jozov_text_file_output_path,
+):
+    """
+    Process data from the resulting files of a particular run using the ZOBOV
+    void finder algorithm.
+
+    Parameters
+    ----------
+        executable_path: str
+            location of the binary file used to parse the code.
+        input_file_path: str
+            location of the raw file to be parsed.
+        output_file_path: str
+            location where the parsed ascii file is going to be located.
+        jozov_text_file_output_path: str
+            location of the jozov txt output file.
+    Returns
+    -------
+    tuple
+        A tuple containing two elements:
+        - particle_by_voids : tuple
+            Tuple of arrays, where each array contains particles within a void.
+        - zobov_voids : list
+            List of ZobovVoids objects representing voids parsed from JOZOV
+            output.
+
+
+    """
+    # Process 1: Parse tracers in zones raw file in the work directory
+    parse_tracers_in_zones_output(
+        executable_path=executable_path,
+        input_file_path=input_file_path,
+        output_file_path=output_file_path,
+    )
+    # Process 2: Create darray of array of particles
+    p_in_v = get_particles_in_voids(particles_in_zones_path=output_file_path)
+    # Get list of ZobovVoids objects
+    zobov_voids = parse_zobov(
+        jozov_text_file_output_path=jozov_text_file_output_path
+    )
+    # Create Voids as array of particles in void
+    voids = []
+    for void in zobov_voids:
+        voids.append(p_in_v[str(void.core_particle)])
+    particle_by_voids = tuple(voids)
+    return particle_by_voids, zobov_voids
