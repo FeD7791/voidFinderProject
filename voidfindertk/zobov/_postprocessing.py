@@ -46,8 +46,6 @@ class VoidProperties:
     void_prob : float
         Probability that the DensContrast would arise from Poisson noise,
         using eq. 1 of the ZOBOV paper.
-    particles : numpy.ndarray
-        Array of particle IDs in the void.
 
     Notes
     -----
@@ -67,7 +65,6 @@ class VoidProperties:
     void_number_part = uttr.ib(converter=int)
     void_dens_contrast = uttr.ib(converter=np.float32)
     void_prob = uttr.ib(converter=np.float32)
-    particles = uttr.ib(converter=np.array)
 
     def __repr__(self):
         """Return a string representation of the VoidProperties object.
@@ -80,9 +77,11 @@ class VoidProperties:
         cls_name = type(self).__name__
         return f"<{cls_name} void_number={self.void_number}>"
 
+
 # =============================================================================
 # FUNCTIONS
 # =============================================================================
+
 
 def parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
@@ -145,7 +144,7 @@ def get_particles_in_voids(*, particles_in_zones_path):
     return particles_in_zones
 
 
-def create_zobov_voids_properties(
+def create_zobov_voids_properties_and_particles(
     *, jozov_text_file_output_path, particle_in_voids
 ):
     """Create VoidProperties objects from ZOBOV output and particle data.
@@ -181,19 +180,17 @@ def create_zobov_voids_properties(
         "void_prob",
     ]
 
-    zobov_voids = []
+    properties_and_particles = []
     for void in voids[2:]:
         properties = dict(zip(parameters, void.split()))
-        properties["particles"] = particle_in_voids[
-            str(properties["core_particle"])
-        ]
-        z_void = VoidProperties(**properties)
-        zobov_voids.append(z_void)
+        particles = particle_in_voids[str(properties["core_particle"])]
+        zobov_void_properties = VoidProperties(**properties)
+        properties_and_particles.append((zobov_void_properties, particles))
 
-    return tuple(zobov_voids)
+    return tuple(properties_and_particles)
 
 
-def process_and_extract_void_properties(
+def process_and_extract_void_properties_and_particles(
     *,
     executable_path,
     input_file_path,
@@ -233,10 +230,12 @@ def process_and_extract_void_properties(
     # Process 2: Create dictionary of array of particles
     p_in_v = get_particles_in_voids(particles_in_zones_path=output_file_path)
 
-    # Get list of ZobovVoids objects
-    void_properties = create_zobov_voids_properties(
-        jozov_text_file_output_path=jozov_text_file_output_path,
-        particle_in_voids=p_in_v,
+    # Get list of ZobovVoids objects => [(ZVP, PTS), (ZVP, PTS)]
+    void_properties_and_particles = (
+        create_zobov_voids_properties_and_particles(
+            jozov_text_file_output_path=jozov_text_file_output_path,
+            particle_in_voids=p_in_v,
+        )
     )
 
-    return void_properties
+    return void_properties_and_particles
