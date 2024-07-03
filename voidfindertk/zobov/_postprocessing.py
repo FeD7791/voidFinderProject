@@ -1,63 +1,59 @@
 """
-This module contains several modules parse output files
-obtained through the implemetation of the ZOBOV finder algorythm
+This module contains several functions to parse output files
+obtained through the implementation of the ZOBOV void finder algorithm.
 """
 
 import ctypes
-
 from astropy import units as u
-
 import numpy as np
-
 import uttr
 
 
 @uttr.s(repr=False)
 class VoidProperties:
-    """Class that represents the properties of the output ascii
-    file of ZOBOV. This Class contains the properties of the
-    voids finded with ZOBOV
-        Void#:
-                What rank the void has, in decreasing order of
-                VoidDensContrast.
-        FileVoid#:
-                The number of this void (starting with 0)
-                in the first two files.
-        CoreParticle:
-                The particle number (starting with 0) of the void's (and
-                zone's) core particle (i.e. if CoreParticle=2, it
-                would be the third particle in vol...dat and adj...dat).
-                Currently, because jozov does not load in particle
-                positions (saving memory), looking up the coordinates of
-                this particle in the original position file is currently
-                the only way of finding the x,y,z position of the core
-                of the void. With some prodding, the author might change
-                this.
-        CoreDens:
-                The density, in units of the mean, of the void's
-                core particle.
-        ZoneVol:
-                The volume of the central zone of the void,
-                in units of the volume occupied by a mean-density particle.
-        Zone#Part:
-                The number of particles in the central zone of the void.
-        Void#Zones:
-                The number of zones in the void.
-        VoidVol:
-                The volume of the void, in units of the volume occupied by
-                a mean-density particle.
-        Void#Part:
-                The number of particles in the void.
-        VoidDensContrast:
-                The density contrast of the void, i.e. the ratio between
-                the critical density at which water in that zone would flow
-                into a deeper zone to the minimum density.
-        VoidProb:
-                The probability that that DensContrast would arise
-                from Poisson noise, using eq. 1 of the ZOBOV paper.
-                This probability is based on a fit to the probability
-                distribution of DensContrasts from a Poisson particle
-                distribution.
+    """Class that represents the properties of voids found with ZOBOV.
+
+    This class contains the properties of voids identified by ZOBOV,
+    as extracted from the output ASCII file.
+
+    Attributes
+    ----------
+    void_number : int
+        Rank of the void in decreasing order of VoidDensContrast.
+    file_void_number : int
+        Number of this void (starting with 0) in the first two files.
+    core_particle : int
+        Particle number (starting with 0) of the void's (and zone's) core
+        particle.
+    core_dens : float
+        Density of the void's core particle, in units of the mean density.
+    zone_vol : float
+        Volume of the central zone of the void, in units of the volume occupied
+        by a mean-density particle.
+    zone_number_part : int
+        Number of particles in the central zone of the void.
+    void_number_zones : int
+        Number of zones in the void.
+    void_vol : float
+        Volume of the void, in units of the volume occupied by a mean-density
+        particle.
+    void_number_part : int
+        Number of particles in the void.
+    void_dens_contrast : float
+        Density contrast of the void, i.e., the ratio between the critical
+        density at which water in that zone would flow into a deeper zone to
+        the minimum density.
+    void_prob : float
+        Probability that the DensContrast would arise from Poisson noise,
+        using eq. 1 of the ZOBOV paper.
+    particles : numpy.ndarray
+        Array of particle IDs in the void.
+
+    Notes
+    -----
+    The void_prob is based on a fit to the probability distribution of
+    DensContrasts from a Poisson particle distribution.
+
     """
 
     void_number = uttr.ib(converter=int)
@@ -74,15 +70,40 @@ class VoidProperties:
     particles = uttr.ib(converter=np.array)
 
     def __repr__(self):
-        """x.__repr__() <==> repr(x)"""
+        """Return a string representation of the VoidProperties object.
+
+        Returns
+        -------
+        str
+            String representation of the VoidProperties object.
+        """
         cls_name = type(self).__name__
         return f"<{cls_name} void_number={self.void_number}>"
 
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
 
 def parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
 ):
+    """Parse tracers in zones output using a C library.
 
+    Parameters
+    ----------
+    executable_path : str
+        Path to the C library executable.
+    input_file_path : str
+        Path to the input file containing tracers in zones data.
+    output_file_path : str
+        Path where the parsed output will be saved.
+
+    Notes
+    -----
+    This function uses ctypes to call a C function that parses the tracers in
+    zones output.
+
+    """
     # Get library
     clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
 
@@ -96,7 +117,20 @@ def parse_tracers_in_zones_output(
 
 
 def get_particles_in_voids(*, particles_in_zones_path):
+    """Extract particles in voids from a parsed file.
 
+    Parameters
+    ----------
+    particles_in_zones_path : str
+        Path to the file containing parsed particles in zones data.
+
+    Returns
+    -------
+    dict
+        Dictionary with zone IDs as keys and numpy arrays of particle IDs as
+        values.
+
+    """
     with open(particles_in_zones_path, "r") as f:  # Read Parsed file
         zones_particles = f.readlines()
 
@@ -114,6 +148,22 @@ def get_particles_in_voids(*, particles_in_zones_path):
 def create_zobov_voids_properties(
     *, jozov_text_file_output_path, particle_in_voids
 ):
+    """Create VoidProperties objects from ZOBOV output and particle data.
+
+    Parameters
+    ----------
+    jozov_text_file_output_path : str
+        Path to the JOZOV text file output.
+    particle_in_voids : dict
+        Dictionary containing particles in voids, as returned by
+        get_particles_in_voids.
+
+    Returns
+    -------
+    tuple
+        Tuple of VoidProperties objects representing the voids found by ZOBOV.
+
+    """
     with open(jozov_text_file_output_path, "r") as f:
         voids = f.readlines()
 
@@ -150,7 +200,29 @@ def process_and_extract_void_properties(
     output_file_path,
     jozov_text_file_output_path,
 ):
+    """Process ZOBOV output files and extract void properties.
 
+    This function performs the following steps:
+    1. Parses tracers in zones raw file.
+    2. Creates an array of particles for each void.
+    3. Generates VoidProperties objects for each void.
+
+    Parameters
+    ----------
+    executable_path : str
+        Path to the C library executable for parsing tracers.
+    input_file_path : str
+        Path to the input file containing tracers in zones data.
+    output_file_path : str
+        Path where the parsed tracers output will be saved.
+    jozov_text_file_output_path : str
+        Path to the JOZOV text file output.
+
+    Returns
+    -------
+    tuple
+        Tuple of VoidProperties objects representing the voids found by ZOBOV.
+    """
     # Process 1: Parse tracers in zones raw file in the work directory
     parse_tracers_in_zones_output(
         executable_path=executable_path,
@@ -158,7 +230,7 @@ def process_and_extract_void_properties(
         output_file_path=output_file_path,
     )
 
-    # Process 2: Create darray of array of particles
+    # Process 2: Create dictionary of array of particles
     p_in_v = get_particles_in_voids(particles_in_zones_path=output_file_path)
 
     # Get list of ZobovVoids objects
@@ -167,5 +239,4 @@ def process_and_extract_void_properties(
         particle_in_voids=p_in_v,
     )
 
-    # particle_by_voids = tuple(voids)
     return void_properties
