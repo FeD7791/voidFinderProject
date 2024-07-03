@@ -339,21 +339,26 @@ class ZobovVF(ModelABC):
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
 
-        # Get tracers box
-        box = model_find_parameters["databox"].box
-
-        particle_by_voids, zobov_voids = _postprocessing.data_post_processing(
-            executable_path=_Paths.ZOBOV
-            / _ExecutableNames.TRACERS_IN_ZONES_BIN,
-            input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
-            output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
-            jozov_text_file_output_path=run_work_dir
-            / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+        zobov_vp_and_part = (
+            _postprocessing.process_and_extract_void_properties_and_particles(
+                executable_path=_Paths.ZOBOV
+                / _ExecutableNames.TRACERS_IN_ZONES_BIN,
+                input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
+                output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
+                jozov_text_file_output_path=run_work_dir
+                / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            )
         )
+
+        # divide the output
+        particle_by_voids, zobov_voids = [], []
+        for void_properties, particle_in_void in zobov_vp_and_part:
+            particle_by_voids.append(particle_in_void)
+            zobov_voids.append(void_properties)
 
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
         }
 
-        return particle_by_voids, extra
+        return tuple(particle_by_voids), extra

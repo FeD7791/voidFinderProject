@@ -1,6 +1,6 @@
-"""
-This module contains several functions to parse output files
-obtained through the implementation of the ZOBOV void finder algorithm.
+"""This module contains functions to parse output files from the ZOBOV \
+void finder.
+
 """
 
 import ctypes
@@ -11,46 +11,39 @@ import uttr
 
 @uttr.s(repr=False)
 class VoidProperties:
-    """Class that represents the properties of voids found with ZOBOV.
+    """
+    Properties of voids found with ZOBOV.
 
-    This class contains the properties of voids identified by ZOBOV,
-    as extracted from the output ASCII file.
+    This class represents void properties from ZOBOV's ASCII output file.
 
     Attributes
     ----------
     void_number : int
-        Rank of the void in decreasing order of VoidDensContrast.
+        Void rank in decreasing order of VoidDensContrast.
     file_void_number : int
-        Number of this void (starting with 0) in the first two files.
+        Void number (starting from 0) in the first two files.
     core_particle : int
-        Particle number (starting with 0) of the void's (and zone's) core
-        particle.
+        Particle number (from 0) of the void's (and zone's) core particle.
     core_dens : float
-        Density of the void's core particle, in units of the mean density.
+        Core particle density, in units of mean density.
     zone_vol : float
-        Volume of the central zone of the void, in units of the volume occupied
-        by a mean-density particle.
+        Central zone volume, in units of mean-density particle volume.
     zone_number_part : int
-        Number of particles in the central zone of the void.
+        Number of particles in the void's central zone.
     void_number_zones : int
         Number of zones in the void.
     void_vol : float
-        Volume of the void, in units of the volume occupied by a mean-density
-        particle.
+        Void volume, in units of mean-density particle volume.
     void_number_part : int
         Number of particles in the void.
     void_dens_contrast : float
-        Density contrast of the void, i.e., the ratio between the critical
-        density at which water in that zone would flow into a deeper zone to
-        the minimum density.
+        Void density contrast (ratio of critical flow density to min density).
     void_prob : float
-        Probability that the DensContrast would arise from Poisson noise,
-        using eq. 1 of the ZOBOV paper.
+        Probability of DensContrast arising from Poisson noise (ZOBOV eq. 1).
 
     Notes
     -----
-    The void_prob is based on a fit to the probability distribution of
-    DensContrasts from a Poisson particle distribution.
+    void_prob is based on DensContrast distribution from Poisson particles.
 
     """
 
@@ -67,7 +60,8 @@ class VoidProperties:
     void_prob = uttr.ib(converter=np.float32)
 
     def __repr__(self):
-        """Return a string representation of the VoidProperties object.
+        """
+        Return a string representation of the VoidProperties object.
 
         Returns
         -------
@@ -86,22 +80,21 @@ class VoidProperties:
 def parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
 ):
-    """Parse tracers in zones output using a C library.
+    """
+    Parse tracers in zones output using a C library.
 
     Parameters
     ----------
     executable_path : str
         Path to the C library executable.
     input_file_path : str
-        Path to the input file containing tracers in zones data.
+        Path to the input file with tracers in zones data.
     output_file_path : str
         Path where the parsed output will be saved.
 
     Notes
     -----
-    This function uses ctypes to call a C function that parses the tracers in
-    zones output.
-
+    Uses ctypes to call a C function for parsing tracers in zones output.
     """
     # Get library
     clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
@@ -116,19 +109,19 @@ def parse_tracers_in_zones_output(
 
 
 def get_particles_in_voids(*, particles_in_zones_path):
-    """Extract particles in voids from a parsed file.
+    """
+    Extract particles in voids from a parsed file.
 
     Parameters
     ----------
     particles_in_zones_path : str
-        Path to the file containing parsed particles in zones data.
+        Path to the file with parsed particles in zones data.
 
     Returns
     -------
     dict
-        Dictionary with zone IDs as keys and numpy arrays of particle IDs as
-        values.
-
+        Dictionary with zone IDs as keys and numpy arrays of particle IDs
+        as values.
     """
     with open(particles_in_zones_path, "r") as f:  # Read Parsed file
         zones_particles = f.readlines()
@@ -147,21 +140,20 @@ def get_particles_in_voids(*, particles_in_zones_path):
 def create_zobov_voids_properties_and_particles(
     *, jozov_text_file_output_path, particle_in_voids
 ):
-    """Create VoidProperties objects from ZOBOV output and particle data.
+    """
+    Create VoidProperties objects from ZOBOV output and particle data.
 
     Parameters
     ----------
     jozov_text_file_output_path : str
         Path to the JOZOV text file output.
     particle_in_voids : dict
-        Dictionary containing particles in voids, as returned by
-        get_particles_in_voids.
+        Dictionary of particles in voids from get_particles_in_voids.
 
     Returns
     -------
     tuple
-        Tuple of VoidProperties objects representing the voids found by ZOBOV.
-
+        Tuple of (VoidProperties, particles) pairs for voids found by ZOBOV.
     """
     with open(jozov_text_file_output_path, "r") as f:
         voids = f.readlines()
@@ -197,7 +189,7 @@ def process_and_extract_void_properties_and_particles(
     output_file_path,
     jozov_text_file_output_path,
 ):
-    """Process ZOBOV output files and extract void properties.
+    """Process ZOBOV output files and extract void properties and particles.
 
     This function performs the following steps:
     1. Parses tracers in zones raw file.
@@ -209,7 +201,7 @@ def process_and_extract_void_properties_and_particles(
     executable_path : str
         Path to the C library executable for parsing tracers.
     input_file_path : str
-        Path to the input file containing tracers in zones data.
+        Path to the input file with tracers in zones data.
     output_file_path : str
         Path where the parsed tracers output will be saved.
     jozov_text_file_output_path : str
@@ -218,7 +210,7 @@ def process_and_extract_void_properties_and_particles(
     Returns
     -------
     tuple
-        Tuple of VoidProperties objects representing the voids found by ZOBOV.
+        Tuple of (VoidProperties, particles) pairs for voids found by ZOBOV.
     """
     # Process 1: Parse tracers in zones raw file in the work directory
     parse_tracers_in_zones_output(
