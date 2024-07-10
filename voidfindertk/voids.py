@@ -1,5 +1,7 @@
 import numpy as np
 
+from .utils import Bunch
+
 
 class Voids:
     """
@@ -47,16 +49,17 @@ class Voids:
         Returns indices of voids containing a specific tracer particle.
 
     """
+
     def __init__(self, *, method, tracers, voids, extra):
         if len(tracers) <= len(voids):
             raise ValueError(
                 "Number of tracers must be lesser than the numbers of voids"
-                )
+            )
 
         self._method = str(method)
         self._tracers = tracers.copy()  # the tracers
         self._voids = tuple(voids)  # tuple of arrays
-        self._extra = dict(extra)  # dict with zaraza
+        self._extra = Bunch("extra", extra)  # dict with zaraza
 
     @property
     def method(self):
@@ -69,20 +72,22 @@ class Voids:
         return self._tracers
 
     @property
-    def voids(self):
+    def voids_(self):
         """tuple: Collection of arrays that contains the IDs of particles
         inside voids."""
         return self._voids
 
     @property
-    def numbers_of_voids(self):
+    def numbers_of_voids_(self):
         """int: Number of voids."""
         return len(self.voids)
 
     @property
-    def extra(self):
+    def extra_(self):
         """dict: Holds extra results and information of the run."""
         return dict(self._extra)
+
+    e_ = extra_
 
     # REPR ====================================================================
     def __repr__(self):

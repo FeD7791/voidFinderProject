@@ -17,10 +17,10 @@
 # =============================================================================
 
 from ._zobov import ZobovVF
-from ._postprocessing import data_post_processing
+from ._postprocessing import process_and_extract_void_properties_and_particles
 
 # =============================================================================
 # ALL
 # =============================================================================
 
-__all__ = ["ZobovVF","data_post_processing"]
+__all__ = ["ZobovVF", "process_and_extract_void_properties_and_particles"]
