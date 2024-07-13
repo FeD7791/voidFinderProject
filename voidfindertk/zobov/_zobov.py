@@ -41,13 +41,16 @@ class _Files:
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
     PARTICLES_VS_ZONES_RAW = f"{_Names.PARTICLES_IN_ZONES}.dat"
-    PARTICLES_VS_ZONES_TXT = "part_vs_zone.txt"
+    PARTICLES_VS_ZONES_ASCII = f"{_Names.PARTICLES_IN_ZONES}_ascii.txt"
     OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
+    ZONES_VS_VOID_RAW = f"{_Names.ZONES_IN_VOID}.dat"
+    ZONES_VS_VOID_ASCII = f"{_Names.ZONES_IN_VOID}_ascii.txt"
 
 
 class _ExecutableNames:
     ZOBOV_LOADER_BIN = "zobov_loader.so"
     TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
+    ZONES_IN_VOIDS_BIN = "zones_in_void.so"
 
 
 class _Paths:
@@ -341,14 +344,25 @@ class ZobovVF(ModelABC):
 
         zobov_vp_and_part = (
             _postprocessing.process_and_extract_void_properties_and_particles(
-                executable_path=_Paths.ZOBOV
+                tinz_executable_path=_Paths.ZOBOV
                 / _ExecutableNames.TRACERS_IN_ZONES_BIN,
-                input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
-                output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_TXT,
+                zinv_executable_path=_Paths.ZOBOV
+                / _ExecutableNames.ZONES_IN_VOIDS_BIN,
+
+                tinz_input_file_path=run_work_dir
+                / _Files.PARTICLES_VS_ZONES_RAW,
+                tinz_output_file_path=run_work_dir
+                / _Files.PARTICLES_VS_ZONES_ASCII,
+
+                zinv_input_file_path=run_work_dir
+                / _Files.ZONES_VS_VOID_RAW,
+                zinv_output_file_path=run_work_dir
+                / _Files.ZONES_VS_VOID_ASCII,
+
                 jozov_text_file_output_path=run_work_dir
-                / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+                / _Files.OUTPUT_JOZOV_VOIDS_DAT
             )
-        )
+            )
 
         # divide the output
         particle_by_voids, zobov_voids = [], []

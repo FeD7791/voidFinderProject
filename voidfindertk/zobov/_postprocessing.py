@@ -4,9 +4,11 @@ void finder.
 """
 
 import ctypes
+
 from astropy import units as u
+
 import numpy as np
-import pandas as pd
+
 import uttr
 
 
@@ -79,16 +81,33 @@ class VoidProperties:
 def parse_zones_in_void_output(
     *, executable_path, input_file_path, output_file_path
 ):
+    """
+    Parse tracers in zones output using a C library.
+
+    Parameters
+    ----------
+    executable_path : str
+        Path to the C library executable.
+    input_file_path : str
+        Path to the input file with tracers in zones data.
+    output_file_path : str
+        Path where the parsed output will be saved.
+
+    Notes
+    -----
+    Uses ctypes to call a C function for parsing tracers in zones output.
+    """
     # Get library
     clibrary = ctypes.CDLL(str(executable_path), mode=ctypes.RTLD_GLOBAL)
 
     # Input argtypes
-    clibrary.get_tracers_in_zones.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    clibrary.process_files.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 
     # Call function
-    clibrary.get_tracers_in_zones(
+    clibrary.process_files(
         str(input_file_path).encode(), str(output_file_path).encode()
     )
+
 
 def parse_tracers_in_zones_output(
     *, executable_path, input_file_path, output_file_path
@@ -146,8 +165,7 @@ def get_particles_in_zones(*, particles_in_zones_path):
             particles = np.array(
                 zones_particles[i + 2].split(" ")[:-1], dtype=int
             )
-# I use lists as outputs to speed get particles_particles_in_voids process.
-            particles_in_zones[f"{particles[0]}"] = particles#<--
+            particles_in_zones[f"{particles[0]}"] = particles  # <--
     return particles_in_zones
 
 
@@ -215,12 +233,18 @@ def process_and_extract_void_properties_and_particles(
 
     Parameters
     ----------
-    executable_path : str
-        Path to the C library executable for parsing tracers.
-    input_file_path : str
-        Path to the input file with tracers in zones data.
-    output_file_path : str
-        Path where the parsed tracers output will be saved.
+    tinz_executable_path : str
+        Path to the C library executable for parsing tracers vs zones file.
+    zinv_executable_path : str
+        Path to the C library executable for parsing zones vs voids file.
+    tinz_input_file_path : str
+        Path to the input file with tracers vs zones data.
+    tinz_output_file_path : str
+        Path where the parsed tracers vs zones output will be saved.
+    zinv_input_file_path : str
+        Path to the input file with zones vs voids data.
+    zinv_output_file_path : str
+        Path where the parsed zones vs voids output will be saved.
     jozov_text_file_output_path : str
         Path to the JOZOV text file output.
 
@@ -229,7 +253,7 @@ def process_and_extract_void_properties_and_particles(
     tuple
         Tuple of (VoidProperties, particles) pairs for voids found by ZOBOV.
     """
-    # Process 1: 
+    # Process 1:
     # a) Parse tracers in zones raw file in the work directory
     parse_tracers_in_zones_output(
         executable_path=tinz_executable_path,
@@ -240,14 +264,14 @@ def process_and_extract_void_properties_and_particles(
     parse_zones_in_void_output(
         executable_path=zinv_executable_path,
         input_file_path=zinv_input_file_path,
-        output_file_path=zinv_output_file_path
+        output_file_path=zinv_output_file_path,
     )
     # Process 2: Create dictionary of array of particles
     p_in_v = get_particles_in_void(
         txt_path=jozov_text_file_output_path,
         tracers_in_zones_path=tinz_output_file_path,
-        zones_in_void_path=zinv_output_file_path
-        )
+        zones_in_void_path=zinv_output_file_path,
+    )
 
     # Get list of ZobovVoids objects => [(ZVP, PTS), (ZVP, PTS)]
     void_properties_and_particles = (
@@ -258,6 +282,7 @@ def process_and_extract_void_properties_and_particles(
     )
 
     return void_properties_and_particles
+
 
 def get_zones_in_void(zones_in_void_file_path):
     """
@@ -273,30 +298,29 @@ def get_zones_in_void(zones_in_void_file_path):
             following elements are the zones inside the void (the void index
             is the same as the first element of the array)
     """
-    with open(zones_in_void_file_path,"r") as f:
+    with open(zones_in_void_file_path, "r") as f:
         zones = f.readlines()
-    zones_in_void = [np.array(zone.split(),dtype=int) for zone in zones[2:]]
+    zones_in_void = [np.array(zone.split(), dtype=int) for zone in zones[2:]]
     return zones_in_void
 
-def _get_file_void_and_core_particle(*,txt_path):
+
+def _get_file_void_and_core_particle(*, txt_path):
     """
     Returns the FileVoid# and CoreParticle of each void.
     """
     fv_cp = []
-    with open(txt_path,'r') as f:
+    with open(txt_path, "r") as f:
         data = f.readlines()
         for line in data[2:]:
-            l = line.split()
-            fv_cp.append(np.array([l[1],l[2]],dtype=int))
+            line_split = line.split()
+            fv_cp.append(np.array([line_split[1], line_split[2]], dtype=int))
     fv_cp = np.array(fv_cp)
     return fv_cp
 
+
 def get_particles_in_void(
-        *,
-        txt_path,
-        tracers_in_zones_path,
-        zones_in_void_path
-        ):
+    *, txt_path, tracers_in_zones_path, zones_in_void_path
+):
     """
     Creates array of tracers inside each void.
     Parameters
@@ -317,14 +341,14 @@ def get_particles_in_void(
     Notes
     -----
     """
-    #Get the tracers in zones from the parsed file
+    # Get the tracers in zones from the parsed file
     tracers_in_zones = get_particles_in_zones(
         particles_in_zones_path=tracers_in_zones_path
-        )
-    #Get the zones in each void from the parsed file
+    )
+    # Get the zones in each void from the parsed file
     zones_in_void = get_zones_in_void(
         zones_in_void_file_path=zones_in_void_path
-        )
+    )
     # Get the columns FileVoid# y CoreParticle
     fv_cp = _get_file_void_and_core_particle(txt_path=txt_path)
 
@@ -333,13 +357,12 @@ def get_particles_in_void(
 
     for zones in zones_in_void:
 
-        array = np.array([],dtype=int)
+        array = np.array([], dtype=int)
         for zone in zones[1:]:
-            index = np.where(fv_cp[:,0]==zone)[0][0]
+            index = np.where(fv_cp[:, 0] == zone)[0][0]
             core_particle = fv_cp[index][1]
             array = np.concatenate(
-                (array,tracers_in_zones[str(core_particle)]),
-                dtype = int
-                )
+                (array, tracers_in_zones[str(core_particle)]), dtype=int
+            )
         particles_in_void[str(array[0])] = array
     return particles_in_void
