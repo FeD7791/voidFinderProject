@@ -146,7 +146,8 @@ def get_particles_in_zones(*, particles_in_zones_path):
             particles = np.array(
                 zones_particles[i + 2].split(" ")[:-1], dtype=int
             )
-            particles_in_zones[f"{particles[0]}"] = particles
+# I use lists as outputs to speed get particles_particles_in_voids process.
+            particles_in_zones[f"{particles[0]}"] = particles#<--
     return particles_in_zones
 
 
@@ -242,12 +243,11 @@ def process_and_extract_void_properties_and_particles(
         output_file_path=zinv_output_file_path
     )
     # Process 2: Create dictionary of array of particles
-    p_in_z = get_particles_in_zones(
-        particles_in_zones_path=tinz_executable_path
+    p_in_v = get_particles_in_void(
+        txt_path=jozov_text_file_output_path,
+        tracers_in_zones_path=tinz_output_file_path,
+        zones_in_void_path=zinv_output_file_path
         )
-    z_in_v = get_zones_in_void(
-        input_file_path=zinv_output_file_path
-    )
 
     # Get list of ZobovVoids objects => [(ZVP, PTS), (ZVP, PTS)]
     void_properties_and_particles = (
@@ -259,7 +259,7 @@ def process_and_extract_void_properties_and_particles(
 
     return void_properties_and_particles
 
-def get_zones_in_void(input_file_path):
+def get_zones_in_void(zones_in_void_file_path):
     """
     Read the zones in voids file
     Parameters
@@ -273,24 +273,73 @@ def get_zones_in_void(input_file_path):
             following elements are the zones inside the void (the void index
             is the same as the first element of the array)
     """
-    zones_in_void = []
-    with open(input_file_path,"r") as f:
+    with open(zones_in_void_file_path,"r") as f:
         zones = f.readlines()
-    for zone in zones[2:]:
-        zones_in_void.append(np.array(zone.split(),dtype=int))
+    zones_in_void = [np.array(zone.split(),dtype=int) for zone in zones[2:]]
     return zones_in_void
 
-def get_particles_in_void(*,txt_path, tracers_in_zones, zones_in_void):
-    df = pd.read_csv(txt_path, sep='\s+', header=1)
-    #FileVoid# CorePartic
-    df2 = df[["FileVoid#","CoreParticle"]].to_numpy()
+def _get_file_void_and_core_particle(*,txt_path):
+    """
+    Returns the FileVoid# and CoreParticle of each void.
+    """
+    fv_cp = []
+    with open(txt_path,'r') as f:
+        data = f.readlines()
+        for line in data[2:]:
+            l = line.split()
+            fv_cp.append(np.array([l[1],l[2]],dtype=int))
+    fv_cp = np.array(fv_cp)
+    return fv_cp
 
-    particles_in_void = []
+def get_particles_in_void(
+        *,
+        txt_path,
+        tracers_in_zones_path,
+        zones_in_void_path
+        ):
+    """
+    Creates array of tracers inside each void.
+    Parameters
+    ----------
+        txt_path(str):
+            Path to the ascii txt file resulting from JOZOV which contains the
+            properties of the void.
+        tracers_in_zones(str):
+            Path to the file with particles in zones data.
+        zones_in_void_path(str):
+            Path to the file that contains the zones in void data.
+    Returns
+    -------
+        particles_in_void(list):
+            List where each element is a numpy array of integers. Each integer
+            references a particle in the input box. The first particle in each
+            array is the core particle of a void (See VoidProperties).
+    Notes
+    -----
+    """
+    #Get the tracers in zones from the parsed file
+    tracers_in_zones = get_particles_in_zones(
+        particles_in_zones_path=tracers_in_zones_path
+        )
+    #Get the zones in each void from the parsed file
+    zones_in_void = get_zones_in_void(
+        zones_in_void_file_path=zones_in_void_path
+        )
+    # Get the columns FileVoid# y CoreParticle
+    fv_cp = _get_file_void_and_core_particle(txt_path=txt_path)
+
+    # This part is SLOW
+    particles_in_void = {}
+
     for zones in zones_in_void:
+
         array = np.array([],dtype=int)
         for zone in zones[1:]:
-            index = np.where(df2[:,0]==zone)[0][0]
-            core_particle = df2[index][1]
-            array = np.concatenate((array,tracers_in_zones[str(core_particle)]),dtype=int)
-        particles_in_void.append(array)
+            index = np.where(fv_cp[:,0]==zone)[0][0]
+            core_particle = fv_cp[index][1]
+            array = np.concatenate(
+                (array,tracers_in_zones[str(core_particle)]),
+                dtype = int
+                )
+        particles_in_void[str(array[0])] = array
     return particles_in_void
