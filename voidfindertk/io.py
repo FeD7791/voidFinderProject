@@ -61,6 +61,8 @@ def read_table(
             f"There are: {data.isnull().sum().sum()}\
                   null or missing values"
         )
+    #Clean duplicates
+    data.drop_duplicates(ignore_index=True, inplace=True)
 
     the_box = box.Box(
         x=data.loc[:, "x"],
