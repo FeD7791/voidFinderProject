@@ -77,7 +77,7 @@ def config_file_maker(*,
     #Transform non str items in strings
     config_element.optionxform = str
     config_element['INPUT_PARAMS'] = params
-    with open(path / 'vars.conf', 'w') as conf:
+    with open(str(path), 'w') as conf:
         config_element.write(conf)
 
 def popcorn_svf_input_data_builder(*,box,file_path):
