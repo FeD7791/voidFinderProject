@@ -76,3 +76,6 @@ voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
 voidfindertk/zobov/src/*
 voidfindertk/zobov/src/src/*
+
+# Popcorn
+voidfindertk/popcorn/popcorn_void_finder/
