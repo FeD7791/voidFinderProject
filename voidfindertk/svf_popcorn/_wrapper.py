@@ -57,28 +57,26 @@ def config_file_maker(*,
     path(pathlib.Path):
         Path where the file is going to be generated.
     '''
-    params = {
-        'trsfile':trsfile,
-        'filefmt':filefmt,
-        'num_file':num_file,
-        'sphfile':sphfile,
-        'popfile':popfile,
-        'auxfiles':auxfiles,
-        'rawpopfile':rawpopfile,
-        'pairsfile':pairsfile,
-        'boxsize':boxsize,
-        'densth':densth,
-        'minradius':minradius,
-        'maxradius':maxradius,
-        'massmin':massmin,
-        'eps':eps,
-    }
-    config_element = ConfigParser()
-    #Transform non str items in strings
-    config_element.optionxform = str
-    config_element['INPUT_PARAMS'] = params
-    with open(str(path), 'w') as conf:
-        config_element.write(conf)
+    config = ConfigParser(allow_no_value=True)
+    config.optionxform = str
+    config.add_section('INPUT_PARAMS')
+    config.set('INPUT_PARAMS', 'TRSFILE', trsfile)
+    config.set('INPUT_PARAMS', 'FILEFMT', filefmt)
+    config.set('INPUT_PARAMS', 'NUM_FILE', num_file)
+    config.set('INPUT_PARAMS', 'SPHFILE', sphfile)
+    config.set('INPUT_PARAMS', 'POPFILE', popfile)
+    config.set('INPUT_PARAMS', 'AUXFILES', auxfiles)
+    config.set('INPUT_PARAMS', 'RAWPOPFILE', rawpopfile)
+    config.set('INPUT_PARAMS', 'PAIRSFILE', pairsfile)
+    config.set('INPUT_PARAMS', 'BOXSIZE', boxsize)
+    config.set('INPUT_PARAMS', 'DENSTH', densth)
+    config.set('INPUT_PARAMS', 'MINRADIUS',minradius)
+    config.set('INPUT_PARAMS', 'MAXRADIUS', maxradius)
+    config.set('INPUT_PARAMS', 'MASSMIN', massmin)
+    config.set('INPUT_PARAMS', 'EPS', eps)
+
+    with open(path, 'w') as configfile:
+        config.write(configfile)
 
 def popcorn_svf_input_data_builder(*,box,file_path):
     '''
