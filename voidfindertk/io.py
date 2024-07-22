@@ -76,6 +76,70 @@ def read_table(
     the_box = box.DataBox(the_box)
     return the_box
 
+def xyz_read_table(
+    path_or_buffer, **kwargs
+):  # names = ['x','y','z'] to put column names
+    """Reads XYZ coordinates from a table and constructs a DataBox.
+
+    Parameters
+    ----------
+    path_or_buffer : str or file-like
+        File path or buffer to read the data from.
+    **kwargs
+        Additional keyword arguments passed to `pd.read_csv`.
+
+    Returns
+    -------
+    box.DataBox
+        A DataBox object containing XYZ coordinates.
+
+    Raises
+    ------
+    ValueError
+        If the number of columns in the data is not 3.
+    TypeError
+        If there are null or missing values in the data.
+
+    Notes
+    -----
+    This function expects the input data to have exactly 3 columns for X, Y, and Z coordinates.
+    It reads the data using pandas `read_csv` function and constructs an XYZBox object,
+    which is then wrapped in a DataBox object for further processing.
+
+    Example
+    -------
+    >>> data_file = 'coordinates.txt'
+    >>> the_box = xyz_read_table(data_file)
+    """
+
+    kwargs.setdefault("sep", r"\s+")
+    kwargs.setdefault("usecols", [0, 1, 2,])
+    kwargs.setdefault("names", ["x", "y", "z",])
+    data = pd.read_csv(path_or_buffer, **kwargs, header=None)
+    col_number = len(data.columns)
+
+    if col_number != 3:
+        raise ValueError(
+            "There are not enough columns to create the coordinates of a box."
+            f"Found {col_number} expected 3"
+        )
+
+    check_values = data.notnull().values.all()
+    if not check_values:
+        raise TypeError(
+            f"There are: {data.isnull().sum().sum()}\
+                  null or missing values"
+        )
+    #Clean duplicates
+    data.drop_duplicates(ignore_index=True, inplace=True)
+
+    the_box = box.XYZBox(
+        x=data.loc[:, "x"],
+        y=data.loc[:, "y"],
+        z=data.loc[:, "z"],
+    )
+    the_box = box.DataBox(the_box)
+    return the_box
 
 # def read_popcorn_output(filename):
 #    """
