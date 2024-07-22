@@ -55,7 +55,7 @@ docs/_build/
 *.pyo
 *.o
 datasets/
-examples/
+#examples/
 main.py
 *.so
 .flake8
@@ -70,12 +70,10 @@ voids_file.dat
 
 # main voidfiles
 
-voidfindertk/zobov/src/lectura_zones
-voidfindertk/zobov/src/particle_zones
 voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
-voidfindertk/zobov/src/*
 voidfindertk/zobov/src/src/*
+voidfindertk/zobov/qhull/
 
 # Popcorn
 voidfindertk/svf_popcorn/popcorn_void_finder/*
