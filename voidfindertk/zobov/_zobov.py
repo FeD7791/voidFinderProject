@@ -75,13 +75,16 @@ class ZobovVF(ModelABC):
     Parameters
     ----------
     buffer_size : float, optional
-        Buffer size for ZOBOV (default is 0.08).
+        Buffer size for ZOBOV (default is 0.08). The buffer size sets the size
+        in units such that the box size of the data cube is 1, of the buffer
+        around each sub-box when calculating the Voronoi diagram.
     box_size : int, optional
-        Size of the box containing the data (default is 500).
+        Range of positions of particles in each dimension (default is 500).
     number_of_divisions : int, optional
         Number of divisions in each dimension of the box (default is 2).
     density_threshold : int, optional
-        Density threshold for void identification (default is 0).
+        The density threshold is an optional parameter, which can limit the
+        growth of voids into high-density regions. (default is 0).
     zobov_path : str or None, optional
         Path to ZOBOV executable (default is None, uses internal path).
     workdir : str or None, optional
