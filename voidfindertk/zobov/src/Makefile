@@ -1,13 +1,13 @@
 
-all: qhull voboz
+all: qhull voboz loader
 
 .PHONY : qhull voboz examples
 .PHONY : loader
 
 loader:
 	gcc -fPIC -shared -o zobov_loader.so zobov_loader.c
-	g++ -o lectura_zones lectura_zones_in_void.cpp
-	g++ -o particle_zones lectura_zonfile.cpp
+	gcc -fPIC -shared -o zones_in_void.so zones_in_void.c
+	gcc -fPIC -shared -o tracers_in_zones.so tracers_in_zones.c
 
 qhull:
 	make -C qhull/src
@@ -22,6 +22,5 @@ examples:
 clean:
 	make -C src clean
 	make -C qhull/src cleanall
-	#make -C examples clean
+	make -C examples clean
 	rm -f bin/*
-	rm -f zobov_loader.so

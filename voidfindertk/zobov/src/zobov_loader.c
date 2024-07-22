@@ -20,10 +20,11 @@ void c_binary_writter(
     double *arr_x,
     double *arr_y,
     double *arr_z,
-    double *arr_vx,
-    double *arr_vy,
-    double *arr_vz,
-    double *arr_m , int size,
+    // double *arr_vx,
+    // double *arr_vy,
+    // double *arr_vz,
+    // double *arr_m ,
+    int size,
     char *raw_path, char *txt_path
 ){
     // puts(raw_path);

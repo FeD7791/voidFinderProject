@@ -1,19 +1,23 @@
-[tool.black]
-line-length = 79
-
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["voidfindertk", "voidfindertk.*"]
+exclude = ["spherical", "spherical.*"]
+namespaces = false
 
 [project]
 name = "voidfindertk"
+description = "A package to compare void finders"
 version = "0.0.1"
+readme = "README.md"
+dependencies = ["numpy","pandas","scipy","attrs","uttrs","sh","astropy"]
 authors = [
     {name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"},
     {name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar"}]
-readme = "README.md"
 license = {file = "LICENSE.txt"}
-description = "A void finder algorithm that can implement disctinct void finder methods."
+
 keywords = [
     "void finder",
     "astronomy",
@@ -33,19 +37,3 @@ classifiers = [
 ]
 
 urls = { Repository = "https://github.com/FeD7791/voidFinderProject.git" }
-
-dependencies = [
-    "numpy",
-    "pandas",
-    "astropy",
-    "uttrs",
-    "scipy"
-]
-    
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.packages.find]
-where = ["voidfindertk"]
-exclude = ["tests*"]
-namespaces = false

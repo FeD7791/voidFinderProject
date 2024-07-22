@@ -1,360 +1,382 @@
-# modulos de python
-import ctypes
+"""
+Module that holds functions and methods that are used to run the ZOBOV python
+wrapper methods in a coherent step by step.
+
+    ZobovVF is the main Model object that represent a particular run of ZOBOV
+    void finder. It mainly consists of two steps:
+
+    a. preprocess step used to preprocess any input data needed for the
+    algorythm. For this method none pre process is needed
+    b. model_find: Consist of all steps needed to run zobov and the python
+    wrappers used to represent them. For reference of the steps see ZobovVF
+    Class in this module.
+"""
+
+import datetime as dt
 import os
 import pathlib
 import shutil
-import subprocess
 import tempfile
-
-
-from astropy import units as u
-
-import h5py
 
 import numpy as np
 
-import pandas as pd
+from . import _postprocessing
+from . import _wrapper as _wrap
+from ..vfinder_abc import ModelABC
 
-import re
 
-import scipy
+class _Names:
+    OUTPUT_VOZINIT = "output_vozinit"
+    OUTPUT_JOZOV_VOIDS = "output_txt"
+    PARTICLES_IN_ZONES = "part_vs_zone"
+    ZONES_IN_VOID = "zones_vs_voids"
 
-import uttr
 
-from ..models import DataBox, ModelABC
-from ..tools import join_box_void
+class _Files:
+    """
+    Name of the Box parsed to raw files. This files always are parsed and
+    saved in files with the same names (see write_input module in _wrapper)
+    """
+
+    TRACERS_RAW = "tracers_zobov.raw"
+    TRACERS_TXT = "tracers_zobov.txt"
+    PARTICLES_VS_ZONES_RAW = f"{_Names.PARTICLES_IN_ZONES}.dat"
+    PARTICLES_VS_ZONES_ASCII = f"{_Names.PARTICLES_IN_ZONES}_ascii.txt"
+    OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
+    ZONES_VS_VOID_RAW = f"{_Names.ZONES_IN_VOID}.dat"
+    ZONES_VS_VOID_ASCII = f"{_Names.ZONES_IN_VOID}_ascii.txt"
+
+
+class _ExecutableNames:
+    ZOBOV_LOADER_BIN = "zobov_loader.so"
+    TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
+    ZONES_IN_VOIDS_BIN = "zones_in_void.so"
+
 
 class _Paths:
+    """
+    Class that holds paths of reference to the current file and
+    ZOBOV's src directory
+    """
 
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
-    ZOBOV = CURRENT / "src"
-    LOADER_SO = ZOBOV / "zobov_loader.so"
+    ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
 
 class ZobovVF(ModelABC):
+    """
+    ZobovVF class for running ZOBOV Void Finder.
 
-    def __init__(self, path=None, workdir=None, dtype=np.float32):
-        self._loader_so = pathlib.Path(
-            _Paths.LOADER_SO if path is None else pathlib.Path(path)
+    This class provides methods to preprocess data and execute the ZOBOV
+    Void Finder algorithm on a given data box.
+
+    Parameters
+    ----------
+    buffer_size : float, optional
+        Buffer size for ZOBOV (default is 0.08). The buffer size sets the size
+        in units such that the box size of the data cube is 1, of the buffer
+        around each sub-box when calculating the Voronoi diagram.
+    box_size : int, optional
+        Range of positions of particles in each dimension (default is 500).
+    number_of_divisions : int, optional
+        Number of divisions in each dimension of the box (default is 2).
+    density_threshold : int, optional
+        The density threshold is an optional parameter, which can limit the
+        growth of voids into high-density regions. (default is 0).
+    zobov_path : str or None, optional
+        Path to ZOBOV executable (default is None, uses internal path).
+    workdir : str or None, optional
+        Temporary working directory path (default is None, creates a new temp
+        directory).
+    workdir_clean : bool, optional
+        Whether to clean up the working directory on deletion (default is
+        False).
+    dtype : numpy.dtype, optional
+        Data type used for computations (default is np.float32).
+
+    Attributes
+    ----------
+        _buffer_size : float
+            Input parameter of vozinit in ZOBOV void finder:
+            The buffer size sets the size, in units such that the box size of
+            the data cube is 1, of the buffer around each sub-box when
+            calculating the Voronoi diagram.
+        _box_size : float
+            Input parameter of vozinit in ZOBOV void finder:
+            The range of positions of particles in each dimension
+        _number_of_divisions : int
+            Input parameter of vozinit in ZOBOV void finder:
+            (default 2) -- the no. of partitions in each dimension; must be at
+            least 2 (giving 8 sub-boxes)
+        _density_threshold : float
+            Input parameter of vozinit in ZOBOV void finder:
+        _zobov_path : Pathlib.path
+        _workdir : Pathlib.path
+        _workdir_clean : bool
+        _dtype : numpy.dtype
+
+
+    Methods
+    -------
+    preprocess(databox)
+        Placeholder method for data preprocessing.
+    model_find(databox)
+        Executes the ZOBOV Void Finder algorithm on the provided DataBox
+        object.
+        This step follows these steps:
+            1. Build the input data from the input box. This step will parse
+            the box data to a raw file that the next step needs
+            2. Run ZOBOV's vozinit executable using the input params and the
+            tracers input file build in the last step. As the process ends
+            an script file will be created (see run_vozinit).
+            3. In this step the mentioned script will be run. It will result
+            in the output of volume and adjacency files (see run_voztie).
+            4. This step will run ZOBOV's jozov executable (see run_jozov)
+            This step will result in the output of three files:
+                - part_vs_zone.dat : Raw File containing the particles inside
+                zones (see run_jozov)
+                - zones_vsvoids.dat : Raw File containing the zones inside
+                voids (see run_jozov)
+                - output_txt.dat : Ascii File containing the voids properties
+                (see run_jozov)
+            5. This step will create the object Voids that contains the voids
+            foud by the method and their properties.
+    Notes
+    -----
+    The ZOBOV Void Finder is executed in several steps including VOZINIT,
+    VOZSTEP, and JOZOV.
+    """
+
+    def __init__(
+        self,
+        *,
+        buffer_size=0.08,
+        box_size=500,
+        number_of_divisions=2,
+        density_threshold=0,
+        zobov_path=None,
+        workdir=None,
+        workdir_clean=False,
+        dtype=np.float32,
+    ):
+
+        self._buffer_size = buffer_size
+        self._box_size = box_size
+        self._number_of_divisions = number_of_divisions
+        self._density_threshold = density_threshold
+
+        self._zobov_path = pathlib.Path(
+            _Paths.ZOBOV if zobov_path is None else zobov_path
         )
-
+        # Create a workdir path to run ZOBOV
         self._workdir = pathlib.Path(
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
             if workdir is None
-            else workdir
+            else pathlib.Path(os.path.abspath(workdir))
         )
+        self._workdir_clean = bool(workdir_clean)
 
         self._dtype = dtype
 
+    # PROPERTIES ==============================================================
     @property
-    def path_zobov(self):
-        return self._loader_so.parent
+    def buffer_size(self):
+        return self._buffer_size
+
+    @property
+    def box_size(self):
+        return self._box_size
+
+    @property
+    def number_of_divisions(self):
+        return self._number_of_divisions
+
+    @property
+    def ensity_threshold(self):
+        return self._density_threshold
+
+    @property
+    def zobov_path(self):
+        return self._zobov_path
+
+    @property
+    def workdir(self):
+        return self._workdir
+
+    @property
+    def workdir_clean(self):
+        return self._workdir_clean
+
+    @property
+    def dtype(self):
+        return self._dtype
+
+    # INTERNAL ================================================================
+
+    def _create_run_work_dir(self):
+        """
+        This method will create a temporal directory inside the working
+        directory of the ZobovVF class workdir.
+
+        Returns
+        -------
+            run_work_dir: pathlib.Path
+                path of the work directoty
+        """
+        timestamp = dt.datetime.now(dt.timezone.utc).isoformat()
+        run_work_dir = pathlib.Path(
+            tempfile.mkdtemp(suffix=timestamp, dir=self.workdir)
+        )
+        return run_work_dir
+
+    def __del__(self):
+        """
+        Destructor that cleans up the temporary working directory
+        if workdir_clean is True.
+        """
+        if self._workdir_clean:
+            shutil.rmtree(self._workdir)
 
     def preprocess(self, databox):
-        # Create input binary files for Zobov finder
+        """
+        Placeholder method for data preprocessing.
 
-        # Declare library path
-        clibrary = ctypes.CDLL(str(self._loader_so), mode=ctypes.RTLD_GLOBAL)
+        Parameters
+        ----------
+        databox : object
+            DataBox object containing data to be preprocessed.
 
-        # Create Input Pointers for x,y,z,vx,vz,vy,m
-        arr_pointer = 7 * [
-            np.ctypeslib.ndpointer(
-                dtype=np.float64, ndim=1, flags=["CONTIGUOUS"]
-            )
-        ]
+        Returns
+        -------
+        object
+            Preprocessed data.
+        """
+        return databox
 
-        # Declare Input Pointers type
-        clibrary.c_binary_writter.argtypes = arr_pointer + [
-            ctypes.c_int,
-            ctypes.c_char_p,
-            ctypes.c_char_p,
-        ]
-        # Fill Input
-        clibrary.c_binary_writter(
-            databox.x,
-            databox.y,
-            databox.z,
-            databox.vx,
-            databox.vy,
-            databox.vz,
-            databox.m,
-            len(databox),
-            os.path.join(self.path_zobov, "tracers_zobov.raw").encode("utf-8"),
-            os.path.join(self.path_zobov, "tracers_zobov.txt").encode("utf-8"),
+    def model_find(self, databox):
+        """
+        Execute the ZOBOV Void Finder algorithm on the provided DataBox
+        object.
+
+        Parameters
+        ----------
+        databox : object
+            DataBox object containing the data box to be analyzed.
+        """
+        # Retrieve box from DataBox object
+        box = databox.box
+
+        # create the sandbox
+        run_work_dir = self._create_run_work_dir()
+
+        # the tracers files
+        tracers_raw_file_path = run_work_dir / _Files.TRACERS_RAW
+        tracers_txt_file_path = run_work_dir / _Files.TRACERS_TXT
+
+        # write the box in the files
+        _wrap.write_input(
+            box=box,
+            path_executable=self._zobov_path
+            / _ExecutableNames.ZOBOV_LOADER_BIN,
+            raw_file_path=tracers_raw_file_path,
+            txt_file_path=tracers_txt_file_path,
         )
-        return DataBox(databox)
 
-    def model_find(self, llbox):
-        sp_void = zobov_void_finder(llbox.box)
-        #sp_void._tracers_in_void = calculate_tracers_inside_void(
-        #    llbox.box, sp_void
-        #)
-        #$return {"voids": sp_void}
-        return 0
-        
-    def mk_vbox(self, voids, llbox):
-        voids = voids["voids"]
-        box_void_sparse = join_box_void(llbox.box, voids, tol=0.0)
-        return box_void_sparse
+        # VOZINIT =============================================================
 
-    def get_void_mass(self, voids, llbox):
-        mass_list = []
-        for i in range(len(voids)):
-            # voids._tracers_in_void[i] = array of indexes of tracers in void
-            mass_list.append(sum(llbox.box.m.value[voids._tracers_in_void[i]]))
-        return mass_list
+        _wrap.run_vozinit(
+            vozinit_dir_path=self._zobov_path / "src",
+            input_file_path=tracers_raw_file_path,
+            buffer_size=self.buffer_size,
+            box_size=self.box_size,
+            number_of_divisions=self.number_of_divisions,
+            executable_name=_Names.OUTPUT_VOZINIT,
+            work_dir_path=run_work_dir,
+        )
 
+        # VOZSTEP =============================================================
+        # This step is mandatory if VOZINIT was run before
 
-def _float32_converter(v):
-    return np.asarray(v, dtype=np.float32)
+        _wrap.run_voz_step(
+            preprocess_dir_path=run_work_dir,
+            executable_name=_Names.OUTPUT_VOZINIT,
+            work_dir_path=run_work_dir,
+            voz_executables_path=_Paths.ZOBOV
+            / "src",  # this is the path where voz1b1 and voztie exe are
+        )
 
+        # JOZOV ===============================================================
+        _wrap.run_jozov(
+            jozov_dir_path=_Paths.ZOBOV / "src",
+            executable_name=_Names.OUTPUT_VOZINIT,
+            output_name_particles_in_zones=_Names.PARTICLES_IN_ZONES,
+            output_name_zones_in_void=_Names.ZONES_IN_VOID,
+            output_name_text_file=_Names.OUTPUT_JOZOV_VOIDS,
+            density_threshold=0,
+            work_dir_path=run_work_dir,
+        )
+        return {"run_work_dir": run_work_dir}
 
-@uttr.s(repr=False)
-class ZobovVoids:
-    Void_number = uttr.ib(converter=np.array)
-    File_void_number = uttr.ib(converter=np.array)
-    CoreParticle = uttr.ib(converter=np.array)
-    CoreDens = uttr.ib(converter=np.array)
-    ZoneVol = uttr.ib(converter=np.array)
-    Zone_number_part = uttr.ib(converter=np.array)
-    Void_number_Zones = uttr.ib(converter=np.array)
-    VoidVol = uttr.ib(converter=np.array, unit=u.Mpc**3)
-    Void_number_Part = uttr.ib(converter=np.array)
-    VoidDensContrast = uttr.ib(converter=np.array)
-    VoidProb = uttr.ib(converter=np.array)
-    _void_len = uttr.ib(init=False)
-    _tracers_in_void = uttr.ib(
-        init=False, default=None
-    )  # Provide tracers in void
-
-    def __attrs_post_init__(self):
-        """Post init method.
-
-        Checks that the lenght of the inputs are the same
+    def build_voids(self, model_find_parameters):
         """
-        lengths = set()
-        for e in (
-            self.Void_number,  # Rank of the void, in decreasing order of VoidDensContrast.
-            self.File_void_number,  # Number of the void, in previous files
-            self.CoreParticle,  # Index --Related to Box-- of the core particle of the void
-            self.CoreDens,  # Density of the core particle
-            self.ZoneVol,  # Volume of the central zone of the void
-            self.Zone_number_part,  # Number of particles in the central zone of the void
-            self.Void_number_Zones,  # Number of zones in the void
-            self.VoidVol,  # Volume of the void
-            self.Void_number_Part,  # Number of particles in the void
-            self.VoidDensContrast,  # Contrast density of the void
-            self.VoidProb,  # The probability that that DensContrast would arise from Poisson noise
-        ):
-            lengths.add(len(e))
+        This methods is used to build the final object Voids (see Voids class
+        in this module). Each step will specify a mandatory attribute or
+        method of Voids class.
 
-        if len(lengths) != 1:
-            raise ValueError("Arrays should be of the same size")
-
-        super().__setattr__("_void_len", lengths.pop())
-
-    def __len__(self):
-        """Length method.
-
+        Parameters
+        ----------
+            model_find_parameters: Dictionary
+                The dictionary holds some relevant properties from the
+                model_find method (See model_find method in whithin this class
+                ). Those properties are needed to run this module.
+                These properties are:
+                - run_work_dir: Directory path where the current run is
+                performed.
+                - databox : Object class DataBox (See DataBox in box module)
+                with the tracers information.
         Returns
         -------
-            int
-                the number of elements in SphericalVoids
+            voids : Voids class
+                Object Voids that contains the voids found in this run
+                alongside with their properties.
         """
-        return self._void_len
+        # Get current working directory
+        run_work_dir = model_find_parameters["run_work_dir"]
 
-    # def _slice(self,min,max):
-    #     zobovvoid = {
-    #         'Void_number':self.Void_number[min:max],
-    #         'File_void_number':self.File_void_number[min:max],
-    #         'CoreParticle':self.CoreParticle[min:max],
-    #         'CoreDens':self.CoreDens[min:max],
-    #         'ZoneVol':self.ZoneVol[min:max],
-    #         'Zone_number_part':self.Zone_number_part[min:max],
-    #         'Void_number_Zones':self.Void_number_Zones[min:max],
-    #         'VoidVol':self.VoidVol[min:max],
-    #         'Void_number_Part':self.Void_number_Part[min:max],
-    #         'VoidDensContrast':self.VoidDensContrast[min:max],
-    #         'VoidProb':self.VoidProb[min:max]
-    #     }
-    #     return ZobovVoids(**zobovvoid)
+        zobov_vp_and_part = (
+            _postprocessing.process_and_extract_void_properties_and_particles(
+                tinz_executable_path=_Paths.ZOBOV
+                / _ExecutableNames.TRACERS_IN_ZONES_BIN,
+                zinv_executable_path=_Paths.ZOBOV
+                / _ExecutableNames.ZONES_IN_VOIDS_BIN,
 
-    def __repr__(self):
-        """Representation method.
+                tinz_input_file_path=run_work_dir
+                / _Files.PARTICLES_VS_ZONES_RAW,
+                tinz_output_file_path=run_work_dir
+                / _Files.PARTICLES_VS_ZONES_ASCII,
 
-        Returns
-        -------
-            str
-                Name plus number of points in the box
-        """
-        cls_name = type(self).__name__
-        length = len(self)
-        return f"<{cls_name} size={length}>"
+                zinv_input_file_path=run_work_dir
+                / _Files.ZONES_VS_VOID_RAW,
+                zinv_output_file_path=run_work_dir
+                / _Files.ZONES_VS_VOID_ASCII,
 
+                jozov_text_file_output_path=run_work_dir
+                / _Files.OUTPUT_JOZOV_VOIDS_DAT
+            )
+            )
 
-def read_zobov_output(filename):
-    output = pd.read_csv(filename, sep="\s+", skiprows=2)
-    output.columns = [
-        "Void_number",
-        "File_void_number",
-        "CoreParticle",
-        "CoreDens",
-        "ZoneVol",
-        "Zone_number_part",
-        "Void_number_Zones",
-        "VoidVol",
-        "Void_number_Part",
-        "VoidDensContrast",
-        "VoidProb",
-    ]
-    zobov = ZobovVoids(**output.to_dict(orient="list"))
-    return zobov
+        # divide the output
+        particle_by_voids, zobov_voids = [], []
+        for void_properties, particle_in_void in zobov_vp_and_part:
+            particle_by_voids.append(particle_in_void)
+            zobov_voids.append(void_properties)
 
+        extra = {
+            "zobov_path": self._zobov_path,
+            "zobov_voids": tuple(zobov_voids),
+            "files_dir": run_work_dir
+        }
 
-def zobov_void_finder(box, **kwargs):
-    #Params
-    kwargs.setdefault('buffer_size', 0.08)
-    kwargs.setdefault('box_size', box.size())
-    kwargs.setdefault('number_of_divisions',2)
-    kwargs.setdefault('delete_files', True)
-    kwargs.setdefault('density_threshold', 0.2)
-
-    #Paths
-    path = _Paths.CURRENT / "src"/"src"
-    
-
-
-   
-    #shutil.move(os.path.join(path_zobov,'tracers_zobov.raw'),path_src)
-    #os.chdir(path)
-    print("#######",Path.cwd())
-    #Runing Zobov 
-    subprocess.run(["./vozinit", "../tracers_zobov.raw", 
-                    str(kwargs['buffer_size']), 
-                    str(kwargs['box_size']),
-                    str(kwargs['number_of_divisions']),
-                    'output_vozinit'], cwd=str(path)) #Specify cwd as the working directory
-    subprocess.run(["./scroutput_vozinit"], cwd=str(path))
-    subprocess.run(["./jozov", 
-                    "adjoutput_vozinit.dat", 
-                    "voloutput_vozinit.dat", 
-                    'out_particle_zone.dat',
-                    'out_zones_in_void.dat',
-                    'out_text_file.dat',
-                    str(kwargs['density_threshold'])], cwd=str(path))
-
-    #Delete unused files
-    if kwargs['delete_files']: #provide delete_files as false to preserve files
-        subprocess.Popen((
-            'find', '.', 
-            '-type', 'f', 
-            '-name', 'part.output_vozinit*', 
-            '-exec', 'rm','{}', ';')) #Delete part... files
-        #Delete other binary unused files
-        files_to_remove = [
-            '../tracers_zobov.raw',
-            "adjoutput_vozinit.dat",
-            "voloutput_vozinit.dat",
-            #'out_particle_zone.dat',
-            #'out_zones_in_void.dat',
-            'scroutput_vozinit']
-        for f in files_to_remove:
-            try:
-                subprocess.Popen(["rm",f], cwd=str(path))
-                #os.remove(f)
-            except FileNotFoundError:
-                print(f'File {f} not found')
-    #Output Results
-    zobov_voids = read_zobov_output(str(path/'out_text_file.dat'))   
-    return zobov_voids 
-
-
-def calculate_tracers_inside_void(box, voids, **kwargs):
-    kwargs.setdefault("hdf5", True)
-    xyz_tracers = np.array(
-        [
-            np.array([box.x.value[i], box.y.value[i], box.z.value[i]])
-            for i in range(len(box))
-        ]
-    )
-    # filter this array based on the ones that are centers according to voids
-    void_centers = [
-        xyz_tracers[i] for i in voids.CoreParticle
-    ]  # Centers of the void
-
-    # remove the void centers from xyz_tracers
-    ##############################################################################
-    # # Reshape filter_arr to match the dimensionality of a for comparison
-    # filter_arr = void_centers.reshape(-1)  # Flatten filter_arr
-
-    # # Use np.in1d to check for membership, ravel to flatten the result
-    # not_in_filter = xyz_tracers.ravel()[~np.in1d(xyz_tracers.ravel(), filter_arr)]
-
-    # # Reshape the result to maintain the original dimensionality
-    # xyz_tracers = not_in_filter.reshape(-1, 3)
-    ##############################################################################
-    if kwargs["hdf5"]:
-        print("ATTEMPTING TO CALCULATE TRACERS")
-        path = os.path.dirname(os.path.realpath(__file__))
-        file = h5py.File(
-            os.path.join(path, "tracers_in_voids.h5"), "w"
-        )  # save in zobovvf
-        for i in range(len(void_centers)):
-            # distance from center to each particle : row[i] = [dist(xyz_void(i),box_xyz(i))]
-            d = scipy.spatial.distance.cdist([void_centers[i]], xyz_tracers)
-            # asociate index to each particle distances[i] = (i ,dist(xyz_void(i),box_xyz(i)))
-            distances = [list(enumerate(arr)) for arr in d]
-            sorted_distances = [
-                sorted(dist, key=lambda x: x[1]) for dist in distances
-            ]  # sort the array ascending
-            # get the number of particles in each void
-            n_tracer_in_voids = voids.Void_number_Part
-            # keep the lowest n_tracer_in_voids[i] from sorted_distances
-
-            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1] for i in range(len(sorted_distances))]
-            sd = [
-                sorted_distances[j][1 : n_tracer_in_voids[i] + 1]
-                for j in range(len(sorted_distances))
-            ]
-
-            file.create_dataset(f"{i}", data=sd)
-
-        # Get indexes, returns list of list of indexes
-        file.close()
-        file2 = h5py.File(os.path.join(path, "tracers_in_voids.h5"), "r")
-
-        index = [
-            list(list(zip(*value[:][0]))[0])
-            for key, value in dict(file2).items()
-        ]
-        index = [
-            list(np.array(arr, dtype=int)) for arr in index
-        ]  # transform in array of integers
-
-        file2.close()
-
-    return index
-    
-def find_zobov_tracers():
-    path = _Paths.CURRENT / "src"
-    subprocess.run(['./lectura_zones'], cwd=str(path))
-    subprocess.run(['./particle_zones'], cwd=str(path))
-    with open('txt_out_particle_zone2.txt','r') as f:
-        out = f.readlines()
-    
-    with open('txt_out_zones_in_void.txt','r') as f:
-        out2 = f.readlines()
-    e = [
-    {
-    'n_zone':np.int32(out[i].split(" ")[2].split())[0], 
-    'particles':np.int32(out[i+2].split(" ")[:-1])} for i in range(len(out)) if re.match(r"^ zone", out[i])]
-    
-    f = [{'void':np.int32(out2[i].split(" ")[3:4])[0], 'zones':np.int32(out2[i].split(" ")[5:-1])} for i in range(3,len(out2))]
-    
-      
-      
-      
-      
-      
+        return tuple(particle_by_voids), extra

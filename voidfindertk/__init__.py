@@ -4,4 +4,13 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-"""Module for cration of a box object."""
+"""Voidfindertk"""
+
+__version__ = "0.0.1"
+
+from .box import *
+from .io import *
+from .import zobov
+from .import spherical2
+from .import svf_popcorn
+from .import dive
