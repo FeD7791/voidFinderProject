@@ -27,7 +27,7 @@ class Voids:
         Name of the method used to find the voids.
     tracers : Box object
         Box object that holds the properties of the tracers.
-    voids : tuple
+    tracers_in_voids : tuple
         Collection of arrays that contains the IDs of the particles
         that are inside a void.
     extra : dict
@@ -39,7 +39,7 @@ class Voids:
         Returns the name of the method used to find the voids.
     tracers : Box object
         Returns a copy of the Box object containing the tracer properties.
-    voids : tuple
+    tracers_in_voids : tuple
         Returns the collection of arrays containing particle IDs inside voids.
     numbers_of_voids : int
         Returns the number of voids.
@@ -50,15 +50,15 @@ class Voids:
 
     """
 
-    def __init__(self, *, method, tracers, voids, extra):
-        if len(tracers) <= len(voids):
+    def __init__(self, *, method, tracers, tracers_in_voids, extra):
+        if len(tracers) <= len(tracers_in_voids):
             raise ValueError(
                 "Number of tracers must be lesser than the numbers of voids"
             )
 
         self._method = str(method)
         self._tracers = tracers.copy()  # the tracers
-        self._voids = tuple(voids)  # tuple of arrays
+        self._tracers_in_voids = tuple(tracers_in_voids)  # tuple of arrays
         self._extra = Bunch("extra", extra)  # dict with zaraza
 
     @property
@@ -72,15 +72,15 @@ class Voids:
         return self._tracers
 
     @property
-    def voids_(self):
+    def tracers_in_voids_(self):
         """tuple: Collection of arrays that contains the IDs of particles
         inside voids."""
-        return self._voids
+        return self._tracers_in_voids
 
     @property
     def numbers_of_voids_(self):
         """int: Number of voids."""
-        return len(self._voids)
+        return len(self._tracers_in_voids)
 
     @property
     def extra_(self):
@@ -114,7 +114,7 @@ class Voids:
 
         """
         voids_w_tracer = []
-        for idx, void in enumerate(self._voids):
+        for idx, void in enumerate(self._tracers_in_voids):
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)

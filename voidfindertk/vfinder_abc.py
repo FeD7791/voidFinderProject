@@ -17,7 +17,7 @@ class ModelABC(ABC):
         voids = Voids(
             method=type(self).__name__,
             tracers=databox.box,
-            voids=voids_tuple,
+            tracers_in_voids=voids_tuple,
             extra=extra,
         )
 
