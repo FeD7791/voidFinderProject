@@ -397,8 +397,8 @@ def write_input(*,
     # Declare library path
     clibrary = ctypes.CDLL(str(path_executable), mode=ctypes.RTLD_GLOBAL)
 
-    # Create Input Pointers for x,y,z,vx,vz,vy,m
-    arr_pointer = 7 * [
+    # Create Input Pointers for x,y,z
+    arr_pointer = 3 * [
         np.ctypeslib.ndpointer(dtype=np.float64, ndim=1, flags=["CONTIGUOUS"])
     ]
 
@@ -413,10 +413,10 @@ def write_input(*,
         box.x,
         box.y,
         box.z,
-        box.vx,
-        box.vy,
-        box.vz,
-        box.m,
+        # box.vx,
+        # box.vy,
+        # box.vz,
+        # box.m,
         len(box),
         str(raw_file_path).encode("utf-8"),
         str(txt_file_path).encode("utf-8"),
