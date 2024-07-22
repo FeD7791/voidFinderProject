@@ -74,10 +74,7 @@ class Box:
         """
         lengths = set(())
 
-
-        for e in (
-            self.x, self.y, self.z, self.vx, self.vy, self.vz, self.m
-            ):
+        for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz, self.m):
             lengths.add(len(e))
 
         if len(lengths) != 1:
@@ -185,12 +182,14 @@ class Box:
         )
         return new_tracers
 
+
 @uttr.s(repr=False, frozen=True, cmp=False)
-class XYZBox():
+class XYZBox:
     x = uttr.ib(converter=np.array, unit=u.Mpc)
     y = uttr.ib(converter=np.array, unit=u.Mpc)
     z = uttr.ib(converter=np.array, unit=u.Mpc)
     _len = uttr.ib(init=False)
+
     def __attrs_post_init__(self):
         """Post init method.
 
@@ -198,8 +197,10 @@ class XYZBox():
         """
         lengths = set(())
         for e in (
-            self.x, self.y, self.z,
-            ):
+            self.x,
+            self.y,
+            self.z,
+        ):
             lengths.add(len(e))
 
         if len(lengths) != 1:
@@ -222,6 +223,7 @@ class XYZBox():
                 + f" ymax: {math.ceil(np.max(self.y.value))}"
                 + f" zmax: {math.ceil(np.max(self.z.value))}"
             )
+
     def __len__(self):
         """Length method.
 
@@ -231,7 +233,7 @@ class XYZBox():
                 the number of elements in the box
         """
         return self._len
-    
+
     def __eq__(self, other):
         """
         Return True if the two objects are equal, False otherwise.

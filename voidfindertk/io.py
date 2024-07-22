@@ -14,7 +14,6 @@ from . import box
 # from .sphericalvf import spherical_tools
 
 
-
 def read_table(
     path_or_buffer, **kwargs
 ):  # names = ['x','y','z','vx','vy','vz','m'] to put column names
@@ -61,7 +60,7 @@ def read_table(
             f"There are: {data.isnull().sum().sum()}\
                   null or missing values"
         )
-    #Clean duplicates
+    # Clean duplicates
     data.drop_duplicates(ignore_index=True, inplace=True)
 
     the_box = box.Box(
@@ -75,6 +74,7 @@ def read_table(
     )
     the_box = box.DataBox(the_box)
     return the_box
+
 
 def xyz_read_table(
     path_or_buffer, **kwargs
@@ -102,9 +102,11 @@ def xyz_read_table(
 
     Notes
     -----
-    This function expects the input data to have exactly 3 columns for X, Y, and Z coordinates.
-    It reads the data using pandas `read_csv` function and constructs an XYZBox object,
-    which is then wrapped in a DataBox object for further processing.
+    This function expects the input data to have exactly 3 columns for X, Y,
+    and Z coordinates.
+    It reads the data using pandas `read_csv` function and constructs an
+    XYZBox object,which is then wrapped in a DataBox object for further
+    processing.
 
     Example
     -------
@@ -113,8 +115,22 @@ def xyz_read_table(
     """
 
     kwargs.setdefault("sep", r"\s+")
-    kwargs.setdefault("usecols", [0, 1, 2,])
-    kwargs.setdefault("names", ["x", "y", "z",])
+    kwargs.setdefault(
+        "usecols",
+        [
+            0,
+            1,
+            2,
+        ],
+    )
+    kwargs.setdefault(
+        "names",
+        [
+            "x",
+            "y",
+            "z",
+        ],
+    )
     data = pd.read_csv(path_or_buffer, **kwargs, header=None)
     col_number = len(data.columns)
 
@@ -130,7 +146,7 @@ def xyz_read_table(
             f"There are: {data.isnull().sum().sum()}\
                   null or missing values"
         )
-    #Clean duplicates
+    # Clean duplicates
     data.drop_duplicates(ignore_index=True, inplace=True)
 
     the_box = box.XYZBox(
@@ -141,9 +157,11 @@ def xyz_read_table(
     the_box = box.DataBox(the_box)
     return the_box
 
+
 # def read_popcorn_output(filename):
 #    """
-#    Reads the output from a file named "popcorn" and stores the information in a dictionary.
+#    Reads the output from a file named "popcorn" and stores the information
+# in a dictionary.
 #
 #    Parameters
 #    ----------
@@ -211,12 +229,14 @@ def xyz_read_table(
 #
 #            # Read the list of spheres
 #            for _ in range(num_members):
-#                esfera_info = file.readline().strip().split()  # Dividir por espacios en blanco
+#                esfera_info = file.readline().strip().split()  # Dividir por
+# espacios en blanco
 #                x = float(esfera_info[0])
 #                y = float(esfera_info[1])
 #                z = float(esfera_info[2])
 #                sphere_radius = float(esfera_info[3])
-#                void_dict['spheres'].append({'x': x, 'y': y, 'z': z, 'sphere_radius': sphere_radius})
+#                void_dict['spheres'].append({'x': x, 'y': y, 'z': z,
+# 'sphere_radius': sphere_radius})
 #
 #            # Read the list of subhalo IDs
 #            for _ in range(num_subhalos):
@@ -233,7 +253,8 @@ def xyz_read_table(
 #                voids_all.append(datos['voids'][f'{i}'])
 #            df_voids = pd.DataFrame.from_dict(voids_all)
 #            #Popcorn object
-#            popcorn_voids = popcorn_tools.PopCornVoids(**df_voids.to_dict(orient='list'))
+#            popcorn_voids = popcorn_tools.PopCornVoids(
+# **df_voids.to_dict(orient='list'))
 #
 #    return popcorn_voids
 
@@ -252,5 +273,6 @@ def xyz_read_table(
 #        'poisson',
 #        'nran'
 #        ]
-#    spherical = spherical_tools.SphericalVoids(**output.to_dict(orient='list'))
+#    spherical = spherical_tools.SphericalVoids(**output.to_dict(
+# orient='list'))
 #    return spherical
