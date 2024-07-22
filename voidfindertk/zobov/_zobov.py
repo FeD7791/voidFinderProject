@@ -171,7 +171,7 @@ class ZobovVF(ModelABC):
         self._workdir = pathlib.Path(
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
             if workdir is None
-            else workdir
+            else pathlib.Path(os.path.abspath(workdir))
         )
         self._workdir_clean = bool(workdir_clean)
 
@@ -373,6 +373,7 @@ class ZobovVF(ModelABC):
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
+            "files_dir": run_work_dir
         }
 
         return tuple(particle_by_voids), extra
