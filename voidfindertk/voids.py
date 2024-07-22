@@ -80,7 +80,7 @@ class Voids:
     @property
     def numbers_of_voids_(self):
         """int: Number of voids."""
-        return len(self.voids)
+        return len(self._voids)
 
     @property
     def extra_(self):
@@ -93,7 +93,7 @@ class Voids:
     def __repr__(self):
         return (
             f"<Voids '{self.method}' "
-            f"{self.numbers_of_voids}V, {len(self.tracers)}T>"
+            f"{self.numbers_of_voids_}V, {len(self.tracers)}T>"
         )
 
     # utilities ===============================================================
@@ -114,7 +114,7 @@ class Voids:
 
         """
         voids_w_tracer = []
-        for idx, void in enumerate(self.voids):
+        for idx, void in enumerate(self._voids):
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
