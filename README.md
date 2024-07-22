@@ -11,7 +11,18 @@ The current status of VFT integrates 3 public algorithms:
 • Spherical [Ruiz et al., 2015]: This method searches regions of low density in a Voronoi tessellation. For each minimum density region the algorithm then grows a sphere around each candidate until the average density inside reaches a specific threshold.
 • Popcorn [Paz et al., 2023]: The algorithm targets low-density regions by adding layers on spherical void shapes. Each layer strategically places seeds that expand while maintaining density. Only the best seed merges, and a refined process ensures full coverage. This continues until small spheres can’t be added, capturing the entire void effectively.
 
-## dev Installation
+## Installation:
+Follow this steps:
+
+### 1 Install Zobov
+GCC is needed
+```bash
+$ cd voidFinderProject
+$ cd .voidfindertk/zobov/src
+$ make
+```
+
+### 2 dev Installation
 
 Clone this repo and then inside the local directory execute
 
@@ -20,13 +31,7 @@ $ git clone https://github.com/FeD7791/voidFinderProject.git
 $ cd voidFinderProject
 $ pip install -e .
 ```
-### Install Zobov
-GCC is needed
-```bash
-$ cd voidFinderProject
-$ cd .voidfindertk/zobov/src
-$ make
-```
+
 
 
 
