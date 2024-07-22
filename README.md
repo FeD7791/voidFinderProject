@@ -24,7 +24,7 @@ $ pip install -e .
 GCC is needed
 ```bash
 $ cd voidFinderProject
-$ cd ./zobov/src
+$ cd .voidfindertk/zobov/src
 $ make
 ```
 
