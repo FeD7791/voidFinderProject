@@ -1,5 +1,5 @@
 
-all: qhull voboz
+all: qhull voboz loader
 
 .PHONY : qhull voboz examples
 .PHONY : loader
