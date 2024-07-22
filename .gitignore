@@ -70,10 +70,10 @@ voids_file.dat
 
 # main voidfiles
 
-# voidfindertk/zobov/*.txt
-# voidfindertk/zobov/*.dat
-# voidfindertk/zobov/src/src/*
-# voidfindertk/zobov/qhull/
+voidfindertk/zobov/*.txt
+voidfindertk/zobov/*.dat
+voidfindertk/zobov/src/src/*
+voidfindertk/zobov/qhull/
 
 # Popcorn
 voidfindertk/svf_popcorn/popcorn_void_finder/*
