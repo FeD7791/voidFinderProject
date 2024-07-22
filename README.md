@@ -17,13 +17,13 @@ Clone this repo and then inside the local directory execute
 
 ```bash
 $ git clone https://github.com/FeD7791/voidFinderProject.git
-$ cd voidfindertk
+$ cd voidFinderProject
 $ pip install -e .
 ```
 ### Install Zobov
 GCC is needed
 ```bash
-$ cd voidfindertk
+$ cd voidFinderProject
 $ cd ./zobov/src
 $ make
 ```
