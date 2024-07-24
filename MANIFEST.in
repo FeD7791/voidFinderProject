@@ -1,2 +1,13 @@
+include LICENSE.txt
+include README.md
+
 graft voidfindertk
-recursive-exclude voidfindertk/spherical *
+
+recursive-exclude draft *
+recursive-exclude examples *
+recursive-exclude tests *
+
+
+exclude .header-template
+exclude tox.ini
+exclude pyproject.toml
