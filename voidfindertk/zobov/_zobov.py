@@ -345,34 +345,45 @@ class ZobovVF(ModelABC):
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
 
+        # Process 1:
+        # a) Parse tracers in zones raw file in the work directory
+        _postprocessing.parse_tracers_in_zones_output(
+            executable_path=_Paths.ZOBOV
+            / _ExecutableNames.TRACERS_IN_ZONES_BIN,
+            input_file_path=run_work_dir
+            / _Files.PARTICLES_VS_ZONES_RAW,
+            output_file_path=run_work_dir
+            / _Files.PARTICLES_VS_ZONES_ASCII,
+        )
+        # b) Parse zones in voids raw file in the work directory
+        _postprocessing.parse_zones_in_void_output(
+            executable_path=_Paths.ZOBOV
+            / _ExecutableNames.ZONES_IN_VOIDS_BIN,
+            input_file_path=run_work_dir
+            / _Files.ZONES_VS_VOID_RAW,
+            output_file_path=run_work_dir
+            / _Files.ZONES_VS_VOID_ASCII,
+        )
+        # Process 2:
+        # a) Get Tuple of (VoidProperties, particles)
         zobov_vp_and_part = (
             _postprocessing.process_and_extract_void_properties_and_particles(
-                tinz_executable_path=_Paths.ZOBOV
-                / _ExecutableNames.TRACERS_IN_ZONES_BIN,
-                zinv_executable_path=_Paths.ZOBOV
-                / _ExecutableNames.ZONES_IN_VOIDS_BIN,
-
-                tinz_input_file_path=run_work_dir
-                / _Files.PARTICLES_VS_ZONES_RAW,
                 tinz_output_file_path=run_work_dir
-                / _Files.PARTICLES_VS_ZONES_ASCII,
-
-                zinv_input_file_path=run_work_dir
-                / _Files.ZONES_VS_VOID_RAW,
+            / _Files.PARTICLES_VS_ZONES_ASCII,
                 zinv_output_file_path=run_work_dir
-                / _Files.ZONES_VS_VOID_ASCII,
-
+            / _Files.ZONES_VS_VOID_ASCII,
                 jozov_text_file_output_path=run_work_dir
-                / _Files.OUTPUT_JOZOV_VOIDS_DAT
+            / _Files.OUTPUT_JOZOV_VOIDS_DAT
             )
             )
 
-        # divide the output
+        # b) divide the output
         particle_by_voids, zobov_voids = [], []
         for void_properties, particle_in_void in zobov_vp_and_part:
             particle_by_voids.append(particle_in_void)
             zobov_voids.append(void_properties)
 
+        # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
