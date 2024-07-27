@@ -1,5 +1,6 @@
-from ..zobov import ZobovVF, Files
 from . import _processing
+
+from ..zobov import Files, ZobovVF
 
 
 
@@ -25,10 +26,10 @@ class DiveVF(ZobovVF):
             filename=Files.VOLUME_RAW
             )
         # get center and radii
-        centers,radii = _processing.get_center_and_radii(
+        centers, radii = _processing.get_center_and_radii(
             void_properties=void_properties,
             tracer_volumes=tracer_volumes,
             particle_by_voids=particle_by_voids,
-            box=box
+            box=box,
         )
         return radii, centers
