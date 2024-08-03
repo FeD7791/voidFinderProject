@@ -1,8 +1,11 @@
 from configparser import ConfigParser
 import pandas as pd
 import sh
+from ..utils import chdir
 
-def config_file_maker(*,
+def config_file_maker(
+    *,
+    # Parameters
     trsfile,
     filefmt,
     num_file,
@@ -17,7 +20,9 @@ def config_file_maker(*,
     maxradius,
     massmin,
     eps,
-    path):
+    # Directory path to place the file
+    path
+    ):
     '''
     Generates the configuration file with the parameters to run the void
     finder in the desired path.
@@ -90,9 +95,22 @@ def popcorn_svf_input_data_builder(*,box,file_path):
     '''
     df = pd.DataFrame(box.__dict__)
     df.drop(labels=['_len'], axis=1,inplace=True)
-    df.to_csv(file_path, sep='\t', index=False, header= False)
+    df = df[["m","x","y","z","vx","vy","vz"]] #Popcorn input file format
+    df.to_csv(
+        file_path,
+        sep=' ',
+        index=False,
+        header=False,
+        float_format='%.2f'
+        )
 
-def spherical_popcorn_void_finder(*,mpi_flags,bin_path,conf_file_path):
+def spherical_popcorn_void_finder(
+    *,
+    mpi_flags,
+    bin_path,
+    conf_file_path,
+    work_dir_path
+    ):
     '''
     Runs the Popcorn-Spherical Void Finder using mpi.
     Parameters
@@ -100,9 +118,11 @@ def spherical_popcorn_void_finder(*,mpi_flags,bin_path,conf_file_path):
     mpi_flags(str):
         mpi flags.
     bin_path(pathlib.Path):
-        Path to the binary file that runs the void finder.
+        Path to the folder where the binary file that runs the void finder is.
     conf_file_path(pathlib.Path):
-        Path to the configuration variables used to run de void finder.
+        Path to the configuration file used to run de void finder.
+    work_dir_path : str
+        Path to the working directory.
     Returns
     -------
     output:
@@ -110,8 +130,10 @@ def spherical_popcorn_void_finder(*,mpi_flags,bin_path,conf_file_path):
     '''
     # Reference to mpi
     #https://docs.oracle.com/cd/E19356-01/820-3176-10/ExecutingPrograms.html
-    params = mpi_flags.split(' ') + [str(bin_path),str(conf_file_path)]
-    svf_mpi = sh.Command('mpirun')
-    output = svf_mpi(*params)
+    svf_mpi = sh.Command('svf',search_paths=[bin_path])
+    params = 'config='+str(conf_file_path / "vars.conf")
+    # Command will be executed from work_dir_path path.
+    with chdir(work_dir_path):
+        output = svf_mpi(params)
     return output
     #subprocess.run(["mpirun", "-np", "1","--bind-to","none", "./svf", "./configuration/vars.conf"])
