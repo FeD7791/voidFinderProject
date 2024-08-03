@@ -1,12 +1,11 @@
-from astropy import units as u
+import grispy as gsp
 
 import numpy as np
 
 import pandas as pd
 
-import grispy as gsp
-
 import uttr
+
 
 @uttr.s(repr=False)
 class VoidProperties:
@@ -41,8 +40,6 @@ class VoidProperties:
     z = uttr.ib(converter=np.float32)
     delta_r = uttr.ib(converter=np.float32)
 
-
-
     def __repr__(self):
         """
         Return a string representation of the VoidProperties object.
@@ -56,7 +53,7 @@ class VoidProperties:
         return f"<{cls_name} void_number={self.id}>"
 
 
-def get_void_properties(*,popcorn_output_file_path):
+def get_void_properties(*, popcorn_output_file_path):
     """
     Read void properties from a file and return them as a tuple of
     `VoidProperties` objects.
@@ -84,14 +81,7 @@ def get_void_properties(*,popcorn_output_file_path):
 
     with open(popcorn_output_file_path, "r") as f:
         voids = f.readlines()
-    parameters = [
-        "id",
-        "r",
-        "x",
-        "y",
-        "z",
-        "delta_r"
-    ]
+    parameters = ["id", "r", "x", "y", "z", "delta_r"]
     all_void_properties = []
     for void in voids:
         properties = dict(zip(parameters, void.split()))
@@ -99,6 +89,7 @@ def get_void_properties(*,popcorn_output_file_path):
         all_void_properties.append(void_properties)
 
     return tuple(all_void_properties)
+
 
 def get_tracers_in_voids(*, box, popcorn_output_file_path):
     """
@@ -137,15 +128,15 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     x = box.x.value
     y = box.y.value
     z = box.z.value
-    xyz = np.column_stack((x,y,z))
+    xyz = np.column_stack((x, y, z))
 
     # Get radius and centers
     df = pd.read_csv(
         popcorn_output_file_path,
-        sep="\s+",
-        names= ["id","rad","x","y","z","delta"]
-        )
-    void_xyz = df[["x","y","z"]].to_numpy()
+        delim_whitespace=True,
+        names=["id", "rad", "x", "y", "z", "delta"]
+    )
+    void_xyz = df[["x", "y", "z"]].to_numpy()
     void_rad = df["rad"].to_numpy()
 
     # Build grispy grid
