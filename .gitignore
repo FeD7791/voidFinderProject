@@ -68,7 +68,7 @@ log_file.txt
 main_pipeline.py
 voids_file.dat
 
-# main voidfiles
+# zobov
 
 voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
@@ -77,3 +77,9 @@ voidfindertk/zobov/qhull/
 
 # Popcorn
 voidfindertk/svf_popcorn/popcorn_void_finder/*
+
+# dive
+voidfindertk/dive/CosmoBolognaLib/*
+
+# run
+run/
