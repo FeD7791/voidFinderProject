@@ -378,16 +378,16 @@ class ZobovVF(ModelABC):
             )
 
         # b) divide the output
-        particle_by_voids, zobov_voids = [], []
+        tracers_in_voids, zobov_voids = [], []
         for void_properties, particle_in_void in zobov_vp_and_part:
-            particle_by_voids.append(particle_in_void)
+            tracers_in_voids.append(particle_in_void)
             zobov_voids.append(void_properties)
 
         # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
             "zobov_voids": tuple(zobov_voids),
-            "files_dir": run_work_dir
+            "files_directory_path": run_work_dir
         }
 
-        return tuple(particle_by_voids), extra
+        return tuple(tracers_in_voids), extra
