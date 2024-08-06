@@ -1,6 +1,11 @@
+import ctypes
+import os
+import pathlib
 import struct
 
 import numpy as np
+
+import pandas as pd
 
 
 def read_volume_file(*, filename):
@@ -139,9 +144,9 @@ def _calculate_r_eff(*, void_volumes):
 
 def get_center_and_radii(
         *,
-        void_properties,
+        void_properties, ## change this
         tracer_volumes,
-        particle_by_voids,
+        tracers_in_voids,
         box
         ):
     """
@@ -153,7 +158,7 @@ def get_center_and_radii(
         List of objects VoidProperties.
     tracer_volumes : list
         List of the voronoi cell volumes holding each particle.
-    particle_by_voids : list
+    tracers_in_voids : list
         List of particles within voids.
     box : Object
         Box Object that holds information about the tracers data.
@@ -178,11 +183,69 @@ def get_center_and_radii(
 
     # Get centers
     centers = []
-    for tracers_in_void in particle_by_voids:
+    for tracers_in_void in tracers_in_voids:
         center = _calculate_barycentre(
             tracers_xyz=tracers_xyz,
             tracers=tracers_in_void,
             tracer_volumes=tracer_volumes,
         )
         centers.append(center)
+    centers = np.array(centers)
     return void_r_eff, centers
+
+def save_r_eff_center(*,centers,r_eff,path):
+    df = pd.DataFrame(centers)
+    df.columns = ["x","y","z"]
+    df["r_eff"] = r_eff
+    df.to_csv(path,index=False,sep='\t')
+
+def cbl_cleaner(
+        file_voids,
+        file_tracers,
+        ratio,
+        initial_radius,
+        delta_r,
+        threshold,
+        output_path
+        ):
+
+    # Prepare variables
+    file_voids_bytes = file_voids.encode('utf-8')
+    file_tracers_bytes = file_tracers.encode('utf-8')
+    delta_r_array = np.array(delta_r, dtype=np.float64)
+    delta_r_ctypes = delta_r_array.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    output_path_bytes = output_path.encode('utf-8')
+
+
+    # Path to the library
+    path = os.path.abspath(__file__)
+    clibrary = ctypes.CDLL(
+        str(pathlib.Path(path) / "libcleaner.so"), mode=ctypes.RTLD_GLOBAL
+    )
+
+    # Input arguments
+    clibrary.process_catalogues.argtypes = [
+        ctypes.c_char_p, # file_voids
+        ctypes.c_char_p, # file_tracers
+        ctypes.c_double, # ratio
+        ctypes.c_bool, # initial_radius
+        ctypes.POINTER(ctypes.c_double), # delta_r (pointer to double array)
+        ctypes.c_int,     # delta_r_size
+        ctypes.c_double,   # threshold
+        ctypes.c_char_p   # output_path
+        ]
+
+    # Output Arguments
+    clibrary.process_catalogues.restype = None
+
+    # Call the C++ function
+    clibrary.process_catalogues(
+        file_voids_bytes,
+        file_tracers_bytes,
+        ratio,
+        initial_radius,
+        delta_r_ctypes,
+        len(delta_r),
+        threshold,
+        output_path_bytes
+    )
