@@ -180,7 +180,7 @@ def create_zobov_voids_properties_and_particles(
     jozov_text_file_output_path : str
         Path to the JOZOV text file output.
     particle_in_voids : dict
-        Dictionary of particles in voids from get_particles_in_voids.
+        Dictionary of particles in voids from _get_particles_in_void.
 
     Returns
     -------

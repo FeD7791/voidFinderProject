@@ -18,14 +18,24 @@ import pathlib
 import shutil
 import tempfile
 
+import attr
+
 import numpy as np
 
 from . import _postprocessing
 from . import _wrapper as _wrap
 from ..vfinder_abc import ModelABC
 
+@attr.define(frozen=True)
+class Names:
+    """
+    Holds Names to suffix inputs for files created using ZOBOV
 
-class _Names:
+    Parameters
+    ----------
+        OUTPUT_VOZINIT : str
+        Suffix of the name used as vozinit input.
+    """
     OUTPUT_VOZINIT = "output_vozinit"
     OUTPUT_JOZOV_VOIDS = "output_txt"
     PARTICLES_IN_ZONES = "part_vs_zone"
@@ -40,11 +50,11 @@ class _Files:
 
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
-    PARTICLES_VS_ZONES_RAW = f"{_Names.PARTICLES_IN_ZONES}.dat"
-    PARTICLES_VS_ZONES_ASCII = f"{_Names.PARTICLES_IN_ZONES}_ascii.txt"
-    OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
-    ZONES_VS_VOID_RAW = f"{_Names.ZONES_IN_VOID}.dat"
-    ZONES_VS_VOID_ASCII = f"{_Names.ZONES_IN_VOID}_ascii.txt"
+    PARTICLES_VS_ZONES_RAW = f"{Names.PARTICLES_IN_ZONES}.dat"
+    PARTICLES_VS_ZONES_ASCII = f"{Names.PARTICLES_IN_ZONES}_ascii.txt"
+    OUTPUT_JOZOV_VOIDS_DAT = f"{Names.OUTPUT_JOZOV_VOIDS}.dat"
+    ZONES_VS_VOID_RAW = f"{Names.ZONES_IN_VOID}.dat"
+    ZONES_VS_VOID_ASCII = f"{Names.ZONES_IN_VOID}_ascii.txt"
 
 
 class _ExecutableNames:
@@ -292,7 +302,7 @@ class ZobovVF(ModelABC):
             buffer_size=self.buffer_size,
             box_size=self.box_size,
             number_of_divisions=self.number_of_divisions,
-            executable_name=_Names.OUTPUT_VOZINIT,
+            executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
         )
 
@@ -301,7 +311,7 @@ class ZobovVF(ModelABC):
 
         _wrap.run_voz_step(
             preprocess_dir_path=run_work_dir,
-            executable_name=_Names.OUTPUT_VOZINIT,
+            executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
             voz_executables_path=_Paths.ZOBOV
             / "src",  # this is the path where voz1b1 and voztie exe are
@@ -310,10 +320,10 @@ class ZobovVF(ModelABC):
         # JOZOV ===============================================================
         _wrap.run_jozov(
             jozov_dir_path=_Paths.ZOBOV / "src",
-            executable_name=_Names.OUTPUT_VOZINIT,
-            output_name_particles_in_zones=_Names.PARTICLES_IN_ZONES,
-            output_name_zones_in_void=_Names.ZONES_IN_VOID,
-            output_name_text_file=_Names.OUTPUT_JOZOV_VOIDS,
+            executable_name=Names.OUTPUT_VOZINIT,
+            output_name_particles_in_zones=Names.PARTICLES_IN_ZONES,
+            output_name_zones_in_void=Names.ZONES_IN_VOID,
+            output_name_text_file=Names.OUTPUT_JOZOV_VOIDS,
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
