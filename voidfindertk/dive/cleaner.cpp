@@ -29,6 +29,21 @@ void process_catalogues(const char* file_voids, const char* file_tracers,
         auto input_tracersCata = std::make_shared<cbl::catalogue::Catalogue>(cbl::catalogue::Catalogue(std::move(tracers_catalogue)));
 
         void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
+        // About clean_void_catalogue
+        // Parameters
+        // data_numdensity	2D matrix containing the sampled values of the mean number density as a function of redshift. These data will be interpolated to finf the value of the number desnity of the tracers at a specific redshift
+        // method_interpolation	the type of method used for the interpolation: "Linear" → linear interpolation; "Poly" → polynomial interpolation; "Spline" → cubic spline interpolation; "Rat" → diagonal rational function interpolation; "BaryRat" → barycentric rational interpolation
+        // initial_radius	erase voids outside a given interval delta_r of initial radius;
+        // delta_r	the interval of accepted radii
+        // threshold	the density threshold
+        // rescale	true = for each void finds the larger radius enclosing density = threshold, false = skip the step
+        // tracers_catalogue	object of class Catalogue with the tracers defining the void distribution (necessary if rescale = true)
+        // ChM	object of ChainMesh3D class
+        // ratio	distance from the void centre at which the density contrast is evaluated in units of the void radius. Ex: ratio = 0.1 \(\rightarrow\) 10% of the void radius lenght
+        // checkoverlap	true \(\rightarrow\) erase all the voids wrt a given criterion, false \(\rightarrow\) skip the step
+        // ol_criterion	the criterion for the overlap step (valid criteria: Var::DensityContrast, Var::CentralDensity)
+
+
 
         var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
         
@@ -43,177 +58,3 @@ void process_catalogues(const char* file_voids, const char* file_tracers,
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #include "Catalogue.h"
-// #include <vector>
-// #include <string>
-
-// using namespace cbl;
-// using namespace catalogue;
-
-// extern "C" {
-
-// void process_catalogues(const char* file_voids, const char* file_tracers, 
-//                         double ratio, bool initial_radius, const double* delta_r, int delta_r_size, double threshold) {
-
-//     try {
-//         std::vector<double> delta_r_vec(delta_r, delta_r + delta_r_size);
-
-//         // Load the input void catalogue
-//         std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
-//         std::vector<int> columns_voids = {1, 2, 3, 4};
-//         cbl::catalogue::Catalogue void_catalogue = Catalogue(cbl::catalogue::ObjectType::_Void_, cbl::CoordinateType::_comoving_, var_names_voids, columns_voids, {file_voids}, 0);
-
-//         // Build the tracer catalogue
-//         std::vector<cbl::catalogue::Var> var_names_tracers = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_};
-//         std::vector<int> columns_tracers = {1, 2, 3};
-//         cbl::catalogue::Catalogue tracers_catalogue = Catalogue(cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 0);
-
-//         double mps = tracers_catalogue.mps();
-//         cbl::chainmesh::ChainMesh3D ChM(2*mps, tracers_catalogue.var(cbl::catalogue::Var::_X_), tracers_catalogue.var(cbl::catalogue::Var::_Y_), tracers_catalogue.var(cbl::catalogue::Var::_Z_), void_catalogue.Max(cbl::catalogue::Var::_Radius_));
-//         auto input_tracersCata = std::make_shared<cbl::catalogue::Catalogue>(cbl::catalogue::Catalogue(std::move(tracers_catalogue)));
-
-//         void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
-
-//         var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
-//         std::string mkdir = "mkdir -p ../output/";
-//         if (system(mkdir.c_str())) {}
-
-//         std::string cata_out = "../output/cleaned_void_catalogue.out";
-//         void_catalogue.write_data(cata_out, var_names_voids);
-
-//     } catch (cbl::glob::Exception &exc) {
-//         std::cerr << exc.what() << std::endl;
-//         exit(1);
-//     }
-// }
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #include "Catalogue.h"
-
-// using namespace cbl;
-// using namespace catalogue;
-
-// extern "C"{
-
-// void process_catalogues(const std::string& file_voids, const std::string& file_tracers,
-//                         double ratio, bool initial_radius, const std::vector<double>& delta_r, double threshold) {
-
-//   try {
-
-//     // ------------------------------------------
-//     // ----- load the input void catalogue ------
-//     // ------------------------------------------
-
-//     // std::vector containing the variable name list to read from file
-//     std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
-    
-//     // std::vector containing the columns corresponding to each attribute
-//     std::vector<int> columns_voids = {1, 2, 3, 4};
-    
-//     // catalogue constructor
-//     cbl::catalogue::Catalogue void_catalogue = Catalogue(cbl::catalogue::ObjectType::_Void_, cbl::CoordinateType::_comoving_, var_names_voids, columns_voids, {file_voids}, 0);
-     
-//     // ---------------------------------------
-//     // ----- build the tracer catalogue ------
-//     // ---------------------------------------
-      
-//     // std::vector containing the variable name list to read from file
-//     std::vector<cbl::catalogue::Var> var_names_tracers = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_};
-      
-//     // std::vector containing the column corresponding to each attribute
-//     std::vector<int> columns_tracers = {1, 2, 3};
-
-//     // catalogue constructor
-//     cbl::catalogue::Catalogue tracers_catalogue = Catalogue(cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 0);
-
-//     // store the mean particle separation of the simulation
-//     double mps = tracers_catalogue.mps();      
-
-//     // generate the chain mesh of the input tracer catalogue
-//     cbl::chainmesh::ChainMesh3D ChM(2*mps, tracers_catalogue.var(cbl::catalogue::Var::_X_), tracers_catalogue.var(cbl::catalogue::Var::_Y_), tracers_catalogue.var(cbl::catalogue::Var::_Z_), void_catalogue.Max(cbl::catalogue::Var::_Radius_));
-
-//     // make a shared pointer to tracers_catalogue
-//     auto input_tracersCata = std::make_shared<cbl::catalogue::Catalogue>(cbl::catalogue::Catalogue(std::move(tracers_catalogue)));
-
-//     // --------------------------------------------
-//     // ----- build the cleaned void catalogue -----
-//     // --------------------------------------------
-
-//     // catalogue constructor
-//     void_catalogue.clean_void_catalogue(initial_radius, delta_r, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
-
-//     // store the obtained catalogue in an ASCII file
-//     var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
-//     std::string mkdir = "mkdir -p ../output/";
-//     if (system(mkdir.c_str())) {}
-
-//     std::string cata_out = "../output/cleaned_void_catalogue.out";
-//     void_catalogue.write_data(cata_out, var_names_voids);
-    
-//   }
-//   catch (cbl::glob::Exception &exc) { 
-//     std::cerr << exc.what() << std::endl; 
-//     exit(1); 
-//   }
-// }
-// }
-
-// int main() {
-//   // Define the parameters
-//   std::string file_voids = "../input/void_catalogue.txt";
-//   std::string file_tracers = "../input/halo_catalogue.txt";
-//   double ratio = 1.5;
-//   bool initial_radius = true;
-//   std::vector<double> delta_r = {17., 150.};
-//   double threshold = 0.3;
-
-//   // Call the function with the parameters
-//   process_catalogues(file_voids, file_tracers, ratio, initial_radius, delta_r, threshold);
-
-//   return 0;
-// }

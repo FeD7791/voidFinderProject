@@ -327,7 +327,7 @@ class ZobovVF(ModelABC):
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
-        return {"run_work_dir": run_work_dir}
+        return {"run_work_dir": run_work_dir, "box":box}
 
     def build_voids(self, model_find_parameters):
         """

@@ -197,7 +197,16 @@ def save_r_eff_center(*,centers,r_eff,path):
     df = pd.DataFrame(centers)
     df.columns = ["x","y","z"]
     df["r_eff"] = r_eff
-    df.to_csv(path,index=False,sep='\t')
+    df.to_csv(path, index=False, header=False, sep='\t')
+
+def save_xyz_tracers(*,box,path):
+    x = box.x.value
+    y = box.y.value
+    z = box.z.value
+    xyz = np.column_stack((x,y,z))
+    df = pd.DataFrame(xyz)
+    df.to_csv(path, index=False, header=False, sep='\t')
+
 
 def cbl_cleaner(
         file_voids,
@@ -208,6 +217,52 @@ def cbl_cleaner(
         threshold,
         output_path
         ):
+    """
+    Performs the CBL cleaning over a Procesed ZOBOV catalogue.
+
+    Parameters
+    ----------
+        file_voids : str
+        Path to the file that holds the procesed ZOBOV catalogue. By default
+        the first 4 columns are going tobe considered as inputs for
+        x,y,z,r_eff where x,y,z are the barycentre of the void (see
+        get_center_and_radii).
+
+        file_tracers : str
+        Path to the file that holds the input tracers. By default the first 3
+        columns of the file are considered as inputs x,y,z refering to the
+        positions of each tracer.
+
+        ratio : float (ratio < 1)
+        Variable used to compute the central density and the density contrast
+        of a void.
+
+        initial_radius : bool
+        If true erase voids with effective radii outside a given range delta_r.
+
+        delta_r : list
+        Interval of accepted radii.
+
+        threshold : float
+        Value of the spherically-averaged density contrast (rho/rho_med + 1)
+        that each void will contain after the rescaling procedure.
+
+        output_path : str
+        Path to the output cleaned catalogue.
+
+        Notes
+        -----
+        This function calculates the central density and the density contrast
+        automatically using the ratio input variable.
+
+        The central density (in units of the average density) is
+        computed as the density of a sphere centred in the void centre and
+        with radius R = ratio * R_eff.
+
+        The density contrast is the ratio between the central density and the
+        density within the sphere centred in the void centre and with radius:
+        R = R_eff
+    """
 
     # Prepare variables
     file_voids_bytes = file_voids.encode('utf-8')
