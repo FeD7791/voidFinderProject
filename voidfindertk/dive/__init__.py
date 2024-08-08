@@ -15,6 +15,6 @@ top of the classic ZOBOV code.
 
 """
 
-from ._processing import get_center_and_radii
+from ._dive import DiveVF
 
-__all__ = ["get_center_and_radii"]
+__all__ = ["DiveVF"]

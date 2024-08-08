@@ -3,6 +3,8 @@ import os
 import pathlib
 import struct
 
+import grispy as gsp
+
 import numpy as np
 
 import pandas as pd
@@ -143,12 +145,8 @@ def _calculate_r_eff(*, void_volumes):
 
 
 def get_center_and_radii(
-        *,
-        void_properties, ## change this
-        tracer_volumes,
-        tracers_in_voids,
-        box
-        ):
+    *, void_properties, tracer_volumes, tracers_in_voids, box
+):
     """
     Calculates the center and the effective radii of each void.
 
@@ -193,30 +191,82 @@ def get_center_and_radii(
     centers = np.array(centers)
     return void_r_eff, centers
 
-def save_r_eff_center(*,centers,r_eff,path):
-    df = pd.DataFrame(centers)
-    df.columns = ["x","y","z"]
-    df["r_eff"] = r_eff
-    df.to_csv(path, index=False, header=False, sep='\t')
 
-def save_xyz_tracers(*,box,path):
+def save_r_eff_center(*, centers, r_eff, path):
+    """
+    Save centers and effective radii to a tab-separated values file.
+
+    Parameters
+    ----------
+    centers : array-like, shape (n_samples, 3)
+        An array or list of coordinates representing the centers. Each entry
+        should be a sequence of three values, corresponding to x, y, and z
+        coordinates.
+
+    r_eff : array-like, shape (n_samples,)
+        An array or list of effective radii, where each value corresponds to
+        the effective radius for the respective center.
+
+    path : str
+        The file path where the tab-separated values file will be saved.
+
+    Returns
+    -------
+    None
+        This function does not return any value.
+
+    Notes
+    -----
+    The output file will have columns for x, y, z coordinates and r_eff,
+    separated by tabs. The file will not include an index or header row.
+    """
+    df = pd.DataFrame(centers)
+    df.columns = ["x", "y", "z"]
+    df["r_eff"] = r_eff
+    df.to_csv(path, index=False, header=False, sep="\t")
+
+
+def save_xyz_tracers(*, box, path):
+    """
+    Save x, y, and z coordinates from a box object to a tab-separated values
+    file.
+
+    Parameters
+    ----------
+    box : object
+        An object with attributes `x`, `y`, and `z`, each of which should have
+        a `value` attribute that is an array-like sequence of coordinates.
+
+    path : str
+        The file path where the tab-separated values file will be saved.
+
+    Returns
+    -------
+    None
+        This function does not return any value.
+
+    Notes
+    -----
+    The output file will have columns for x, y, and z coordinates, separated
+    by tabs. The file will not include an index or header row.
+    """
     x = box.x.value
     y = box.y.value
     z = box.z.value
-    xyz = np.column_stack((x,y,z))
+    xyz = np.column_stack((x, y, z))
     df = pd.DataFrame(xyz)
-    df.to_csv(path, index=False, header=False, sep='\t')
+    df.to_csv(path, index=False, header=False, sep="\t")
 
 
 def cbl_cleaner(
-        file_voids,
-        file_tracers,
-        ratio,
-        initial_radius,
-        delta_r,
-        threshold,
-        output_path
-        ):
+    *,
+    file_voids,
+    file_tracers,
+    ratio, initial_radius,
+    delta_r,
+    threshold,
+    output_path
+):
     """
     Performs the CBL cleaning over a Procesed ZOBOV catalogue.
 
@@ -265,30 +315,31 @@ def cbl_cleaner(
     """
 
     # Prepare variables
-    file_voids_bytes = file_voids.encode('utf-8')
-    file_tracers_bytes = file_tracers.encode('utf-8')
+    file_voids_bytes = file_voids.encode("utf-8")
+    file_tracers_bytes = file_tracers.encode("utf-8")
     delta_r_array = np.array(delta_r, dtype=np.float64)
-    delta_r_ctypes = delta_r_array.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-    output_path_bytes = output_path.encode('utf-8')
-
+    delta_r_ctypes = delta_r_array.ctypes.data_as(
+        ctypes.POINTER(ctypes.c_double)
+        )
+    output_path_bytes = output_path.encode("utf-8")
 
     # Path to the library
-    path = os.path.abspath(__file__)
+    path = os.path.dirname(os.path.abspath(__file__))
     clibrary = ctypes.CDLL(
         str(pathlib.Path(path) / "libcleaner.so"), mode=ctypes.RTLD_GLOBAL
     )
 
     # Input arguments
     clibrary.process_catalogues.argtypes = [
-        ctypes.c_char_p, # file_voids
-        ctypes.c_char_p, # file_tracers
-        ctypes.c_double, # ratio
-        ctypes.c_bool, # initial_radius
-        ctypes.POINTER(ctypes.c_double), # delta_r (pointer to double array)
-        ctypes.c_int,     # delta_r_size
-        ctypes.c_double,   # threshold
-        ctypes.c_char_p   # output_path
-        ]
+        ctypes.c_char_p,  # file_voids
+        ctypes.c_char_p,  # file_tracers
+        ctypes.c_double,  # ratio
+        ctypes.c_bool,  # initial_radius
+        ctypes.POINTER(ctypes.c_double),  # delta_r (pointer to double array)
+        ctypes.c_int,  # delta_r_size
+        ctypes.c_double,  # threshold
+        ctypes.c_char_p,  # output_path
+    ]
 
     # Output Arguments
     clibrary.process_catalogues.restype = None
@@ -302,5 +353,61 @@ def cbl_cleaner(
         delta_r_ctypes,
         len(delta_r),
         threshold,
-        output_path_bytes
+        output_path_bytes,
     )
+
+
+def get_tracers_in_voids(*, box, cbl_cleaned_path):
+    """
+    Finds particles inside each void using Grispy.
+
+    Parameters
+    ----------
+    box : object
+        Box object (see box)
+
+    cbl_cleaned_path : str
+        Path to the file containing void properties. The file should
+        have columns: 'x', 'y', 'z', 'rad','delta'. Each row
+        represents a void with its properties including radius and
+        center coordinates.
+
+    Returns
+    -------
+    np.ndarray
+        An array of indices of particles (refered to the Box object that are
+        within each void. The shape of the array depends on the implementation
+        of `grid.bubble_neighbors`.
+
+    Notes
+    -----
+    The function reads the void properties from the specified file,
+    including void centers and radii. It then creates a Grispy grid
+    using the provided particle coordinates and finds particles that
+    lie within the voids based on the radius of each void.
+
+    The `grid.bubble_neighbors` method is used to determine which
+    particles fall within the specified distance (radius) from each
+    void center.
+    """
+    # First get x,y,z array elements and combine them into a np.array(x,y,z):
+    x = box.x.value
+    y = box.y.value
+    z = box.z.value
+    xyz = np.column_stack((x, y, z))
+
+    # Get radius and centers
+    df = pd.read_csv(
+        cbl_cleaned_path,
+        delim_whitespace=True,
+        names=["x", "y", "z", "rad", "delta"]
+    )
+    void_xyz = df[["x", "y", "z"]].to_numpy()
+    void_rad = df["rad"].to_numpy()
+
+    # Build grispy grid
+    grid = gsp.GriSPy(xyz)
+
+    # Get tracers
+    dist, ind = grid.bubble_neighbors(void_xyz, distance_upper_bound=void_rad)
+    return ind

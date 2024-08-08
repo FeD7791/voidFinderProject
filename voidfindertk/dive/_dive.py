@@ -1,8 +1,7 @@
+
 from . import _processing
+from ..zobov import Names, ZobovVF
 
-import attr
-
-from ..zobov import ZobovVF, Names
 
 class _Files:
     VOL_FILE_RAW = f"vol{Names.OUTPUT_VOZINIT}.dat"
@@ -15,31 +14,33 @@ class _Files:
 class DiveVF(ZobovVF):
 
     def __init__(
-            self,
-            *,
-            ratio,
-            initial_radius,
-            delta_r,
-            threshold,
-            **kwargs
-            ):
-        
+        self,
+        *,
+        ratio=1.5,
+        initial_radius=True,
+        delta_r=[17.0, 150.0],
+        threshold=0.3,
+        **kwargs,
+    ):
+
         super().__init__(**kwargs)
         self._ratio = ratio
         self._initial_radius = initial_radius
         self._delta_r = delta_r
         self._threshold = threshold
 
-
     @property
     def ratio(self):
         return self._ratio
+
     @property
     def initial_radius(self):
         return self._initial_radius
+
     @property
     def delta_r(self):
         return self._delta_r
+
     @property
     def threshold(self):
         return self._threshold
@@ -54,10 +55,10 @@ class DiveVF(ZobovVF):
         box = model_find_parameters["box"]
         # Get tracer volumes
         tracer_volumes = _processing.read_volume_file(
-            filename= run_work_dir / _Files.VOL_FILE_RAW
+            filename=run_work_dir / _Files.VOL_FILE_RAW
         )
         # get center and radii
-        centers, radii = _processing.get_center_and_radii(
+        radii, centers = _processing.get_center_and_radii(
             void_properties=void_properties,
             tracer_volumes=tracer_volumes,
             tracers_in_voids=tracers_in_voids,
@@ -68,12 +69,11 @@ class DiveVF(ZobovVF):
         _processing.save_r_eff_center(
             centers=centers,
             r_eff=radii,
-            path=str(run_work_dir / _Files.XYZ_R_EFF_VOIDS_FILE)
-            )
+            path=str(run_work_dir / _Files.XYZ_R_EFF_VOIDS_FILE),
+        )
         # 2) xyz box
         _processing.save_xyz_tracers(
-            box=box,
-            path=str(run_work_dir / _Files.XYZ_TRACERS_FILE)
+            box=box, path=str(run_work_dir / _Files.XYZ_TRACERS_FILE)
         )
         # Perform cleaning
         _processing.cbl_cleaner(
@@ -83,7 +83,12 @@ class DiveVF(ZobovVF):
             initial_radius=self._initial_radius,
             delta_r=self._delta_r,
             threshold=self._threshold,
-            output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE)
+            output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
         )
-        return centers
-
+        # Get tracers in voids
+        tracers_in_voids_cleaned_catalogue = _processing.get_tracers_in_voids(
+            box=box, cbl_cleaned_path=str(
+                run_work_dir / _Files.CLEANED_CATALOGUE
+                )
+        )
+        return tuple(tracers_in_voids_cleaned_catalogue), extra

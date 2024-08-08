@@ -29,10 +29,8 @@ void process_catalogues(const char* file_voids, const char* file_tracers,
         auto input_tracersCata = std::make_shared<cbl::catalogue::Catalogue>(cbl::catalogue::Catalogue(std::move(tracers_catalogue)));
 
         void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
-        // About clean_void_catalogue
+        // About clean_void_catalogue --cbl version 1-- Definition at line 1328 of file VoidCatalogue.cpp.
         // Parameters
-        // data_numdensity	2D matrix containing the sampled values of the mean number density as a function of redshift. These data will be interpolated to finf the value of the number desnity of the tracers at a specific redshift
-        // method_interpolation	the type of method used for the interpolation: "Linear" → linear interpolation; "Poly" → polynomial interpolation; "Spline" → cubic spline interpolation; "Rat" → diagonal rational function interpolation; "BaryRat" → barycentric rational interpolation
         // initial_radius	erase voids outside a given interval delta_r of initial radius;
         // delta_r	the interval of accepted radii
         // threshold	the density threshold
