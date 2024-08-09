@@ -1,5 +1,5 @@
 
-from . import _processing
+from . import _postprocessing
 from ..zobov import Names, ZobovVF
 
 
@@ -54,11 +54,11 @@ class DiveVF(ZobovVF):
         # Get box
         box = model_find_parameters["box"]
         # Get tracer volumes
-        tracer_volumes = _processing.read_volume_file(
+        tracer_volumes = _postprocessing.read_volume_file(
             filename=run_work_dir / _Files.VOL_FILE_RAW
         )
         # get center and radii
-        radii, centers = _processing.get_center_and_radii(
+        radii, centers = _postprocessing.get_center_and_radii(
             void_properties=void_properties,
             tracer_volumes=tracer_volumes,
             tracers_in_voids=tracers_in_voids,
@@ -66,17 +66,17 @@ class DiveVF(ZobovVF):
         )
         # Save to file
         # 1) center and radii
-        _processing.save_r_eff_center(
+        _postprocessing.save_r_eff_center(
             centers=centers,
             r_eff=radii,
             path=str(run_work_dir / _Files.XYZ_R_EFF_VOIDS_FILE),
         )
         # 2) xyz box
-        _processing.save_xyz_tracers(
+        _postprocessing.save_xyz_tracers(
             box=box, path=str(run_work_dir / _Files.XYZ_TRACERS_FILE)
         )
         # Perform cleaning
-        _processing.cbl_cleaner(
+        _postprocessing.cbl_cleaner(
             file_voids=str(run_work_dir / _Files.XYZ_R_EFF_VOIDS_FILE),
             file_tracers=str(run_work_dir / _Files.XYZ_TRACERS_FILE),
             ratio=self._ratio,
@@ -86,13 +86,13 @@ class DiveVF(ZobovVF):
             output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
         )
         # Get tracers in voids
-        tracers_in_voids_cleaned_catalogue = _processing.get_tracers_in_voids(
+        tinv_cleaned_catalogue = _postprocessing.get_tracers_in_voids(
             box=box, cbl_cleaned_path=str(
                 run_work_dir / _Files.CLEANED_CATALOGUE
                 )
         )
         # Updating extra with void_properties
-        extra["void_properties"] = _processing.get_dive_void_properties(
+        extra["void_properties"] = _postprocessing.get_dive_void_properties(
             cleaned_catalogue_path = run_work_dir / _Files.CLEANED_CATALOGUE
             )
-        return tuple(tracers_in_voids_cleaned_catalogue), extra
+        return tuple(tinv_cleaned_catalogue), extra
