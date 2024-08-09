@@ -396,7 +396,7 @@ class ZobovVF(ModelABC):
         # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
-            "zobov_voids": tuple(zobov_voids),
+            "void_properties": tuple(zobov_voids),
             "files_directory_path": run_work_dir
         }
 
