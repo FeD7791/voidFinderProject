@@ -11,6 +11,5 @@ __version__ = "0.0.1"
 from .box import *
 from .io import *
 from .import zobov
-from .import spherical2
 from .import svf_popcorn
 from .import dive
