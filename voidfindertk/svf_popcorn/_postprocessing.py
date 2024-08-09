@@ -24,7 +24,7 @@ class VoidProperties:
         Void y coordinate center (32-bit).
     z : float
         Void z coordinate center (32-bit).
-    delta_r : float
+    density_contrast : float
         Integrated density contrast (32-bit).
 
     Methods
@@ -38,7 +38,7 @@ class VoidProperties:
     x = uttr.ib(converter=np.float32)
     y = uttr.ib(converter=np.float32)
     z = uttr.ib(converter=np.float32)
-    delta_r = uttr.ib(converter=np.float32)
+    density_contrast = uttr.ib(converter=np.float32)
 
     def __repr__(self):
         """
@@ -81,10 +81,12 @@ def get_void_properties(*, popcorn_output_file_path):
 
     with open(popcorn_output_file_path, "r") as f:
         voids = f.readlines()
-    parameters = ["id", "r", "x", "y", "z", "delta_r"]
+    parameters = ["id", "r", "x", "y", "z", "density_contrast"]
     all_void_properties = []
     for void in voids:
-        properties = dict(zip(parameters, void.split()))
+        properties = dict(
+            zip(parameters, np.array(void.split(), dtype=np.float32))
+            )
         void_properties = VoidProperties(**properties)
         all_void_properties.append(void_properties)
 
@@ -134,7 +136,7 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     df = pd.read_csv(
         popcorn_output_file_path,
         delim_whitespace=True,
-        names=["id", "rad", "x", "y", "z", "delta"]
+        names=["id", "rad", "x", "y", "z", "density_contrast"]
     )
     void_xyz = df[["x", "y", "z"]].to_numpy()
     void_rad = df["rad"].to_numpy()
