@@ -9,6 +9,52 @@ import numpy as np
 
 import pandas as pd
 
+import uttr
+
+@uttr.s(repr=False)
+class VoidProperties:
+    """
+    A class to represent properties with various numerical attributes.
+
+    Attributes
+    ----------
+    id : int
+        Id of void
+    x : float
+        Void x coordinate center (32-bit).
+    y : float
+        Void y coordinate center (32-bit).
+    z : float
+        Void z coordinate center (32-bit).
+    r : float
+        Void Radius (32-bit).
+    density_contrast : float
+        Spherically-averaged density contrast (32-bit).
+
+    Methods
+    -------
+    __repr__():
+        Return a string representation of the VoidProperties object.
+    """
+    id = uttr.ib(converter=int)
+    x = uttr.ib(converter=np.float32)
+    y = uttr.ib(converter=np.float32)
+    z = uttr.ib(converter=np.float32)
+    r = uttr.ib(converter=np.float32)
+    density_contrast = uttr.ib(converter=np.float32)
+
+    def __repr__(self):
+        """
+        Return a string representation of the VoidProperties object.
+
+        Returns
+        -------
+        str
+            String representation of the VoidProperties object.
+        """
+        cls_name = type(self).__name__
+        return f"<{cls_name} void_number={self.id}>"
+
 
 def read_volume_file(*, filename):
     """
@@ -411,3 +457,17 @@ def get_tracers_in_voids(*, box, cbl_cleaned_path):
     # Get tracers
     dist, ind = grid.bubble_neighbors(void_xyz, distance_upper_bound=void_rad)
     return ind
+
+def get_dive_void_properties(*, cleaned_catalogue_path):
+    with open(cleaned_catalogue_path, "r") as f:
+        voids = f.readlines()
+    parameters = ["id","x","y","z","r","density_contrast"]
+    all_void_properties = []
+    index = 0
+    for void in voids:
+        void = void.split()
+        void.insert(0,index) # Add index
+        properties = dict(zip(parameters, np.array(void, dtype=np.float32)))
+        all_void_properties.append(VoidProperties(**properties))
+        index = index + 1
+    return tuple(all_void_properties)

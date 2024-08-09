@@ -50,7 +50,7 @@ class DiveVF(ZobovVF):
         # Get working directory
         run_work_dir = extra["files_directory_path"]
         # Get void properties
-        void_properties = extra["zobov_voids"]
+        void_properties = extra["void_properties"]
         # Get box
         box = model_find_parameters["box"]
         # Get tracer volumes
@@ -91,4 +91,8 @@ class DiveVF(ZobovVF):
                 run_work_dir / _Files.CLEANED_CATALOGUE
                 )
         )
+        # Updating extra with void_properties
+        extra["void_properties"] = _processing.get_dive_void_properties(
+            cleaned_catalogue_path = run_work_dir / _Files.CLEANED_CATALOGUE
+            )
         return tuple(tracers_in_voids_cleaned_catalogue), extra
