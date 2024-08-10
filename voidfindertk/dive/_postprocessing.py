@@ -311,7 +311,8 @@ def cbl_cleaner(
     ratio, initial_radius,
     delta_r,
     threshold,
-    output_path
+    output_path,
+    ol_crit
 ):
     """
     Performs the CBL cleaning over a Procesed ZOBOV catalogue.
@@ -345,6 +346,11 @@ def cbl_cleaner(
 
         output_path : str
         Path to the output cleaned catalogue.
+
+        ol_crit : bool
+        The criterion for the overlap step.
+            True : The void with the lower density constrast is rejected.
+            False : The void with the higher central density is rejected.
 
         Notes
         -----
@@ -385,6 +391,7 @@ def cbl_cleaner(
         ctypes.c_int,  # delta_r_size
         ctypes.c_double,  # threshold
         ctypes.c_char_p,  # output_path
+        ctypes.c_bool, # ol_criterion
     ]
 
     # Output Arguments
@@ -400,6 +407,7 @@ def cbl_cleaner(
         len(delta_r),
         threshold,
         output_path_bytes,
+        ol_crit
     )
 
 

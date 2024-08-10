@@ -20,6 +20,7 @@ class DiveVF(ZobovVF):
         initial_radius=True,
         delta_r=[17.0, 150.0],
         threshold=0.3,
+        overlap_criterion = True,
         **kwargs,
     ):
 
@@ -28,6 +29,7 @@ class DiveVF(ZobovVF):
         self._initial_radius = initial_radius
         self._delta_r = delta_r
         self._threshold = threshold
+        self._overlap_criterion = overlap_criterion
 
     @property
     def ratio(self):
@@ -44,6 +46,10 @@ class DiveVF(ZobovVF):
     @property
     def threshold(self):
         return self._threshold
+    
+    @property
+    def threshold(self):
+        return self._overlap_criterion
 
     def build_voids(self, model_find_parameters):
         tracers_in_voids, extra = super().build_voids(model_find_parameters)
@@ -84,6 +90,7 @@ class DiveVF(ZobovVF):
             delta_r=self._delta_r,
             threshold=self._threshold,
             output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
+            ol_crit=self._overlap_criterion
         )
         # Get tracers in voids
         tinv_cleaned_catalogue = _postprocessing.get_tracers_in_voids(

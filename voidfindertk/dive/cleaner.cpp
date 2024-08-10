@@ -9,7 +9,7 @@ extern "C" {
 
 void process_catalogues(const char* file_voids, const char* file_tracers, 
                         double ratio, bool initial_radius, const double* delta_r, int delta_r_size, 
-                        double threshold, const char* output_path) {
+                        double threshold, const char* output_path, bool ol_crit) {
 
     try {
         std::vector<double> delta_r_vec(delta_r, delta_r + delta_r_size);
@@ -28,7 +28,13 @@ void process_catalogues(const char* file_voids, const char* file_tracers,
         cbl::chainmesh::ChainMesh3D ChM(2*mps, tracers_catalogue.var(cbl::catalogue::Var::_X_), tracers_catalogue.var(cbl::catalogue::Var::_Y_), tracers_catalogue.var(cbl::catalogue::Var::_Z_), void_catalogue.Max(cbl::catalogue::Var::_Radius_));
         auto input_tracersCata = std::make_shared<cbl::catalogue::Catalogue>(cbl::catalogue::Catalogue(std::move(tracers_catalogue)));
 
-        void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
+        if (ol_crit){
+            void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_DensityContrast_);
+            var_names_voids.emplace_back(cbl::catalogue::Var::_DensityContrast_);
+        }else{
+            void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_);
+            var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
+        }
         // About clean_void_catalogue --cbl version 1-- Definition at line 1328 of file VoidCatalogue.cpp.
         // Parameters
         // initial_radius	erase voids outside a given interval delta_r of initial radius;
@@ -43,8 +49,7 @@ void process_catalogues(const char* file_voids, const char* file_tracers,
 
 
 
-        var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
-        
+
         // Save the catalogue data to the provided output path
         void_catalogue.write_data(output_path, var_names_voids);
 
