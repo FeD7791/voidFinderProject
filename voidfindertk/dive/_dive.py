@@ -52,6 +52,18 @@ class DiveVF(ZobovVF):
         return self._overlap_criterion
 
     def build_voids(self, model_find_parameters):
+        """
+        Method that postprocess the outputs from ZOBOV Finder.
+
+        Parameters
+        ----------
+            model_find_parameters : dict
+            Dict object with the following keys:
+                run_work_dir : pathlib.Path
+                path to run work directory inside workdir.
+                box : object
+                box object
+        """
         tracers_in_voids, extra = super().build_voids(model_find_parameters)
         # Get working directory
         run_work_dir = extra["files_directory_path"]
@@ -102,4 +114,4 @@ class DiveVF(ZobovVF):
         extra["void_properties"] = _postprocessing.get_dive_void_properties(
             cleaned_catalogue_path = run_work_dir / _Files.CLEANED_CATALOGUE
             )
-        return tuple(tinv_cleaned_catalogue), extra
+        return tuple(tinv_cleaned_catalogue), centers, extra
