@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pathlib
 import shutil
@@ -282,9 +283,12 @@ class PopCornVF(ModelABC):
                 run_work_dir / _FileNames.SPHFILE
                 )
         )
+        # Get centers coordinates
+        centers = np.array(properties[['x','y','z']])
+
         # Build extra
         extra = {
             "svf_voids_properties": properties,
             "files_directory_path": run_work_dir,
         }
-        return tuple(tracers_in_voids), extra
+        return tuple(tracers_in_voids), centers, extra
