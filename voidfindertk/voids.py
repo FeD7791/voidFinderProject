@@ -3,6 +3,8 @@ import numpy as np
 from .utils import Bunch
 
 
+
+
 class Voids:
     """
     Class used to represent voids as the particles inside of them.
@@ -50,7 +52,7 @@ class Voids:
 
     """
 
-    def __init__(self, *, method, tracers, tracers_in_voids, extra):
+    def __init__(self, *, method, tracers, tracers_in_voids, centers, extra):
         if len(tracers) <= len(tracers_in_voids):
             raise ValueError(
                 "Number of tracers must be lesser than the numbers of voids"
@@ -59,6 +61,7 @@ class Voids:
         self._method = str(method)
         self._tracers = tracers.copy()  # the tracers
         self._tracers_in_voids = tuple(tracers_in_voids)  # tuple of arrays
+        self._centers = tuple(centers)
         self._extra = Bunch("extra", extra)  # dict with zaraza
 
     @property
@@ -70,6 +73,10 @@ class Voids:
     def tracers(self):
         """Box object: Box object that holds the properties of the tracers."""
         return self._tracers
+    
+    @property
+    def centers(self):
+        return self._centers
 
     @property
     def tracers_in_voids_(self):
@@ -118,3 +125,5 @@ class Voids:
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
+
+

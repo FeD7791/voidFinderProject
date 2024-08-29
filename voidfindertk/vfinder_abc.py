@@ -12,12 +12,15 @@ class ModelABC(ABC):
     def find(self, databox: DataBox):
         preprocess_parameters = self.preprocess(databox)
         model_find_parameters = self.model_find(preprocess_parameters)
-        tracers_in_voids, extra = self.build_voids(model_find_parameters)
+        tracers_in_voids, centers, extra = self.build_voids(
+            model_find_parameters
+            )
 
         voids = Voids(
             method=type(self).__name__,
             tracers=databox.box,
             tracers_in_voids=tracers_in_voids,
+            centers=centers,
             extra=extra,
         )
 
