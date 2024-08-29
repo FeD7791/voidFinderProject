@@ -342,3 +342,26 @@ def _get_particles_in_void(
             )
         particles_in_void[str(array[0])] = array
     return particles_in_void
+
+def get_void_xyz_centers(*,box, txt_path):
+    """
+    Finds xyz coordinates of the CoreParticle of each void
+
+    Parameters
+    ----------
+        box : object
+            Box object with the tracers properties
+        txt_path : str
+            Path to the jozov txt with void properties
+
+    Returns
+    -------
+        xyz : np.array
+            Array of [x,y,z] elements for each CoreParticle
+
+
+    """
+    xyz = np.column_stack((box.x.value,box.y.value,box.z.value))
+    fv_cp = _get_file_void_and_core_particle(txt_path=txt_path)
+    fv_cp = fv_cp.T
+    return xyz[fv_cp[1]]
