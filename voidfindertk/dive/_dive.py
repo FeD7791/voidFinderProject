@@ -64,7 +64,9 @@ class DiveVF(ZobovVF):
                 box : object
                 box object
         """
-        tracers_in_voids, extra = super().build_voids(model_find_parameters)
+        tracers_in_voids, zobov_centers, extra = super().build_voids(
+            model_find_parameters
+            )
         # Get working directory
         run_work_dir = extra["files_directory_path"]
         # Get void properties

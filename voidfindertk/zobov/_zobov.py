@@ -403,7 +403,7 @@ class ZobovVF(ModelABC):
         # d) Get centers
         centers = _postprocessing.get_void_xyz_centers(
             box=model_find_parameters['box'],
-            txt_path=_Files.OUTPUT_JOZOV_VOIDS_DAT
+            txt_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
             )
 
         return tuple(tracers_in_voids), centers, extra
