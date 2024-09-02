@@ -1,3 +1,4 @@
+import grispy as gsp
 import numpy as np
 
 from .utils import Bunch
@@ -11,17 +12,7 @@ class Voids:
 
     Parameters
     ----------
-        method : str
-            Name of the Method used to find the voids.
-        tracers : Box object
-            Box object that holds the properties of the tracers.
-        voids : tuple
-            Collection of arrays that contains the IDs of the particles
-            that are inside a void. Each element holds the IDs of particles in
-            a void in ascending void number (see VoidProperties
-            class in _postprocessing module).
-        extra :
-            Holds extra results and information of the run.
+
 
     Attributes
     ----------
