@@ -261,9 +261,12 @@ class PopCornVF(ModelABC):
 
         Returns
         -------
-            tracers_in_voids : tuple of
+            tracers_in_voids : tuple
             List of indexes of tracers (Regarding to the Box object index)
             inside each void.
+
+            centers : numpy 2D array 
+            (x,y,z) coordinates of each center for each void.
 
             extra : Dict
             Dictionary with extra parameters, varying from properties to path

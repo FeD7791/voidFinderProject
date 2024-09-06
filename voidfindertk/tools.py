@@ -70,7 +70,7 @@ def calculate_r_eff(*,centers,n_neighbors=100,box,delta=-0.9):
         box : Box Object
         Object with the tracer properties.
 
-        delta : float < 0
+        delta : float -1< delta < 0
         Integrated density contrast.
 
     Returns
@@ -78,7 +78,7 @@ def calculate_r_eff(*,centers,n_neighbors=100,box,delta=-0.9):
         rad_new : numpy array
         Radius calculated for each void.
 
-        tracers_new : list of list of int
+        tracers_new : tuple of lists
         List of indexes listing the tracers inside each void
 
         density_values : list of arrays
@@ -93,11 +93,11 @@ def calculate_r_eff(*,centers,n_neighbors=100,box,delta=-0.9):
     tracers_new = []
     rad_new = []
     density_values = []
-    n_nat = np.arange(len(dist[0]))
-    crit_density = (1-delta)*(len(box)/(box.size()**3))
+    n_nat = np.arange(1,n_neighbors+1)
+    crit_density = (1+delta)*(len(box)/(box.size()**3))
     for n,d in enumerate(dist):
         # Find density values for n_nat particles at radius d
-        density_n_nat_d = (3*n_nat[1:])/(4*np.pi*d[1:]**3)
+        density_n_nat_d = (3*n_nat)/(4*np.pi*d**3)
         density_values.append(density_n_nat_d)
         # Find all density values that are less than crit_density
         dens_values = np.where(density_n_nat_d <crit_density)[0]
@@ -106,20 +106,23 @@ def calculate_r_eff(*,centers,n_neighbors=100,box,delta=-0.9):
         else:
             # From the values that fulfill the latter condition find the index of the
             # value with max radii
-            dist_max_index = np.where(d[dens_values + 1]==max(d[dens_values + 1]))[0][0]
+            dist_max_index = np.where(d == max(d[dens_values]))[0][0]
 
-            # Give the all the tracers whose distance is lesser than the found radii
-            tracers_new.append(nn[n][:dist_max_index])
+
             # Final radii is half distance between distk_max_index and dist_max_index +1
             try:
                 rad_new.append((d[dist_max_index+1]+d[dist_max_index])/2)
             except IndexError:
                 print(
-                    f"All density values under crit density for void center{n} increase n_neighbors to find right number of tracers in void"
+                    f"All density values under crit density for void center {n} increase n_neighbors to find right number of tracers in void"
                     )
+            else:
+            # Give the all the tracers whose distance is lesser than the found radii
+                tracers_new.append(nn[n][:dist_max_index])
     ##For testing
     #Demostrar que la densidad , calculada con rad_new y len(tracers_new) da menor a la densidad critica
     #Demostrar que cada trazador generado esta dentro del radio dado, lo que significa que se respeta el orden del box
     #Para finders como el esferico, demostrar que se obtienen los mismos trazadores
     #Para finders como el esferico, demostrar que la cantidad de voids son los mismos
-    return rad_new,tracers_new,density_values
+    return rad_new,tuple(tracers_new),density_values
+
