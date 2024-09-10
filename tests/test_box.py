@@ -19,9 +19,9 @@ def test_Box_initialization(mkbox):
     assert box.x.unit == u.Mpc
     assert box.y.unit == u.Mpc
     assert box.z.unit == u.Mpc
-    assert box.vx.unit == u.Mpc / u.h
-    assert box.vy.unit == u.Mpc / u.h
-    assert box.vz.unit == u.Mpc / u.h
+    assert box.vx.unit == u.Mpc / u.second
+    assert box.vy.unit == u.Mpc / u.second
+    assert box.vz.unit == u.Mpc / u.second
     assert box.m.unit == u.M_sun
     assert len(box) == 1000
     assert repr(box) == "<Box size=1000>"
@@ -53,4 +53,4 @@ def test_box_equality(mkbox):
     box3 = mkbox(seed=42, size=999)
     assert box1 == box2
     assert not box1 == box3
-    
+
