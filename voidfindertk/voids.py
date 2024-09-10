@@ -1,9 +1,7 @@
 import grispy as gsp
 import numpy as np
 
-from .utils import Bunch
-
-
+from .utils import Bunch, vsf
 
 
 class Voids:
@@ -64,7 +62,7 @@ class Voids:
     def tracers(self):
         """Box object: Box object that holds the properties of the tracers."""
         return self._tracers
-    
+
     @property
     def centers(self):
         return self._centers
@@ -116,5 +114,26 @@ class Voids:
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
+
+    def all_effective_radius(self, *, delta=-0.9, n_neighbors=100, n_cells=32):
+        return vsf.effective_radius(
+            self.centers,
+            self.box,
+            delta=delta,
+            n_neighbors=n_neighbors,
+            n_cells=n_cells,
+        )
+
+    def effective_radius(self, void_idx, *, delta=-0.9, n_neighbors=100, n_cells=32):
+        errors, radius, tracers, densities = self.all_effective_radius(
+            delta=delta, n_neighbors=n_neighbors, n_cells=n_cells
+        )
+        return (
+            errors[void_idx],
+            radius[void_idx],
+            tracers[void_idx],
+            densities[void_idx],
+        )
+
 
 
