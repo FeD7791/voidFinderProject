@@ -11,7 +11,7 @@ from ..utils import make_workdir
 from ..vfinder_abc import ModelABC
 
 
-class _Paths:
+class Paths:
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
@@ -20,7 +20,7 @@ class _Paths:
     CONFFILE = SVF / "configuration"
 
 
-class _FileNames:
+class FileNames:
     CONFIG = "vars.conf"
     TRSFILE = "trsfile.dat"
     SPHFILE = "sphfile.dat"
@@ -116,7 +116,7 @@ class PopCornVF(ModelABC):
 
         # svf_path
         self._svf_path = pathlib.Path(
-            _Paths.SVF if self._svf_path is None else self._svf_path
+            Paths.SVF if self._svf_path is None else self._svf_path
         )
 
         # Set workdir path
@@ -218,14 +218,14 @@ class PopCornVF(ModelABC):
         # Create config file on Workdir
         _wrapper.config_file_maker(
             # Files
-            trsfile=str(run_work_dir / _FileNames.TRSFILE),
+            trsfile=str(run_work_dir / FileNames.TRSFILE),
             filefmt="ASCII",
             num_file=str(1),
-            sphfile=str(run_work_dir / _FileNames.SPHFILE),
-            popfile=str(run_work_dir / _FileNames.POPFILE),
+            sphfile=str(run_work_dir / FileNames.SPHFILE),
+            popfile=str(run_work_dir / FileNames.POPFILE),
             auxfiles=str(self._auxfiles),
-            rawpopfile=str(run_work_dir / _FileNames.RAWPOPFILE),
-            pairsfile=str(run_work_dir / _FileNames.PAIRSFILE),
+            rawpopfile=str(run_work_dir / FileNames.RAWPOPFILE),
+            pairsfile=str(run_work_dir / FileNames.PAIRSFILE),
             # Parameters
             boxsize=str(self._boxsize),
             densth=str(self._densth),
@@ -233,17 +233,17 @@ class PopCornVF(ModelABC):
             maxradius=str(self._maxradius),
             massmin=str(self._massmin),
             eps=str(1e-5),
-            path=str(run_work_dir / _FileNames.CONFIG),  # Workdir path
+            path=str(run_work_dir / FileNames.CONFIG),  # Workdir path
         )
         # Generate dataset file from box
         _wrapper.popcorn_svf_input_data_builder(
-            box=box, file_path=str(run_work_dir / _FileNames.TRSFILE)
+            box=box, file_path=str(run_work_dir / FileNames.TRSFILE)
         )  # Save File to workdir
         # Run Void Finder
         _wrapper.spherical_popcorn_void_finder(
             mpi_flags=self._mpi_flags,
-            bin_path=_Paths.SVF,
-            conf_file_path=run_work_dir,
+            bin_path=Paths.SVF,
+            conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir,
         )
         return {"run_work_dir": run_work_dir, "box": box}
@@ -278,12 +278,12 @@ class PopCornVF(ModelABC):
         run_work_dir = model_find_parameters["run_work_dir"]
         # Get void Properties
         properties = _postprocessing.get_void_properties(
-            popcorn_output_file_path=str(run_work_dir / _FileNames.SPHFILE)
+            popcorn_output_file_path=str(run_work_dir / FileNames.SPHFILE)
         )
         # Get tracers in void
         tracers_in_voids = _postprocessing.get_tracers_in_voids(
             box=box, popcorn_output_file_path=str(
-                run_work_dir / _FileNames.SPHFILE
+                run_work_dir / FileNames.SPHFILE
                 )
         )
         # Get centers coordinates

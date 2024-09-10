@@ -130,7 +130,7 @@ def spherical_popcorn_void_finder(
     # Reference to mpi
     # https://docs.oracle.com/cd/E19356-01/820-3176-10/ExecutingPrograms.html
     svf_mpi = sh.Command("svf", search_paths=[bin_path])
-    params = "config=" + str(conf_file_path / "vars.conf")
+    params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
     with chdir(work_dir_path):
         output = svf_mpi(params)
