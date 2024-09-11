@@ -116,6 +116,27 @@ class Voids:
         return np.array(voids_w_tracer)
 
     def effective_radius(self, *, delta=-0.9, n_neighbors=100, n_cells=64):
+        """Calculate the effective radius of the voids.
+
+        Parameters
+        ----------
+        delta : float
+            The delta parameter for the effective radius calculation.
+            Defaults to -0.9.
+        n_neighbors : int
+            The number of neighbors to consider for the effective radius
+            calculation. Defaults to 100.
+        n_cells : int
+            The number of cells to consider for the effective radius
+            calculation. Defaults to 64.
+
+        Returns
+        -------
+        effective_radius :
+            A dataclass containing the effective radius results.
+
+        """
+
         return vsf.effective_radius(
             self.centers,
             self.box,
