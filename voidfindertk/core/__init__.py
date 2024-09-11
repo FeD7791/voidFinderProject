@@ -1,7 +1,7 @@
 from .box import Box
 from .vfinder_abc import VoidFinderABC
 from .voids import Voids
-from .vsf import EffectivRadiusErrors
+from .vsf import EffectiveRadiusErrors
 
 
-__all__ = ["Box", "EffectivRadiusErrors", "VoidFinderABC", "Voids"]
+__all__ = ["Box", "EffectiveRadiusErrors", "VoidFinderABC", "Voids"]

@@ -1,3 +1,4 @@
+import dataclasses as dtclss
 import warnings
 
 import grispy as gsp
@@ -5,11 +6,48 @@ import grispy as gsp
 import numpy as np
 
 
-class EffectivRadiusErrors:
+class EffectiveRadiusErrors:
     NO_ERROR = 0
     MAYBE_NEAR_ANOTHER_VOID = 1
     EXEED_CRITICAL = 2
     UNDER_CRITICAL = 3
+
+
+@dtclss.dataclass(frozen=True, slots=True, repr=False)
+class _EffectiveRadius:
+    delta: float
+    n_neighbors: int
+    n_cells: int
+    errors: np.ndarray
+    radius: np.ndarray
+    tracers: np.ndarray
+    densities: np.ndarray
+
+    @property
+    def argerrors(self):
+        return self.errors != EffectiveRadiusErrors.NO_ERROR
+
+    def __repr__(self):
+        delta = self.delta
+        n_neighbors = self.n_neighbors
+        n_cells = self.n_cells
+        good = np.sum(~self.argerrors)
+        total = len(self)
+        return (
+            "<effective_radius "
+            f"{delta=} {n_neighbors=} {n_cells=} | {good}/{total}>"
+        )
+
+    def __len__(self):
+        return len(self.errors)
+
+    def __getitem__(self, slicer):
+        return (
+            self.errors.__getitem__(slicer),
+            self.radius.__getitem__(slicer),
+            self.tracers.__getitem__(slicer),
+            self.densities.__getitem__(slicer),
+        )
 
 
 def _void_effr(idx, n_neighbors, crit_density, distance, nn):
@@ -26,7 +64,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
     if len(dens_values) == 0:
         # void_error, void_radius, void_tracers, void_density
         return (
-            EffectivRadiusErrors.EXEED_CRITICAL,
+            EffectiveRadiusErrors.EXEED_CRITICAL,
             np.nan,
             [],
             density_n_nat_d,
@@ -40,7 +78,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
         )
         # void_error, void_radius, void_tracers, void_density
         return (
-            EffectivRadiusErrors.UNDER_CRITICAL,
+            EffectiveRadiusErrors.UNDER_CRITICAL,
             np.nan,
             [],
             density_n_nat_d,
@@ -60,7 +98,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
         if distance[dist_max_index] == distance[-1]:
             # void_error, void_radius, void_tracers, void_density
             return (
-                EffectivRadiusErrors.MAYBE_NEAR_ANOTHER_VOID,
+                EffectiveRadiusErrors.MAYBE_NEAR_ANOTHER_VOID,
                 np.nan,
                 [],
                 density_n_nat_d,
@@ -77,7 +115,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
 
             # void_error, void_radius, void_tracers, void_density
             return (
-                EffectivRadiusErrors.NO_ERROR,
+                EffectiveRadiusErrors.NO_ERROR,
                 radius,
                 tracers,
                 density_n_nat_d,
@@ -133,10 +171,10 @@ def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=64):
     # index
     distances, nn = grid.nearest_neighbors(centres=centers, n=n_neighbors)
 
-    tracers = []
-    radius = []
-    errors = []
-    densities = []
+    tracers = np.zeros(len(distances), dtype=object)
+    radius = np.zeros(len(distances), dtype=float)
+    errors = np.zeros(len(distances), dtype=int)
+    densities = np.zeros(len(distances), dtype=object)
 
     # es la densidad por la cual todos los voids deberian estar por debajo
     # para considerarse una subdensidad
@@ -151,12 +189,24 @@ def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=64):
             nn=nn,
         )
 
-        errors.append(void_error)
-        radius.append(void_radius)
-        tracers.append(void_tracers)
-        densities.append(void_density)
+        errors[idx] = void_error
+        radius[idx] = void_radius
+        tracers[idx] = void_tracers
+        densities[idx] = void_density
 
-    return errors, radius, tuple(tracers), densities
+    eradius = _EffectiveRadius(
+        delta,
+        n_neighbors,
+        n_cells,
+        errors,
+        radius,
+        tracers,
+        densities,
+    )
+    import ipdb
+
+    ipdb.set_trace()
+    return eradius
 
 
 # =============================================================================
