@@ -106,6 +106,7 @@ def run_vozinit(
 
     return output
 
+
 # =============================================================================
 # VOZ STEP : VOZ1B1 + VOZTIE
 # =============================================================================
@@ -159,6 +160,7 @@ def run_voz_step(
         output = preprocess()
 
     return output
+
 
 # =============================================================================
 # VOZ 1b1
@@ -234,6 +236,7 @@ def run_voz1b1(
     with chdir(work_dir_path):
         output = voz1b1(*args)
     return output
+
 
 # =============================================================================
 # VOZ TIE
@@ -352,11 +355,7 @@ def run_jozov(
     return output
 
 
-def write_input(*,
-                box,
-                path_executable,
-                raw_file_path,
-                txt_file_path):
+def write_input(*, box, path_executable, raw_file_path, txt_file_path):
     """
     This module create the position file used in the ZOBOV
     void finder from the input Box object of tracers.

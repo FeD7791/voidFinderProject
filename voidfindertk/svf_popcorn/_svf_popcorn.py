@@ -12,8 +12,6 @@ from ..utils import make_workdir
 from . import _postprocessing, _wrapper
 
 
-
-
 class Paths:
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))

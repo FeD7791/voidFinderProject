@@ -87,12 +87,12 @@ def get_void_properties(*, popcorn_output_file_path):
     #         )
     #     void_properties = VoidProperties(**properties)
     #     all_void_properties.append(void_properties)
-    
+
     df_properties = pd.read_csv(
         popcorn_output_file_path,
         names=["id", "r", "x", "y", "z", "density_contrast"],
-        delim_whitespace=True
-        )
+        delim_whitespace=True,
+    )
     # return tuple(all_void_properties)
     return df_properties
 
@@ -140,7 +140,7 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     df = pd.read_csv(
         popcorn_output_file_path,
         delim_whitespace=True,
-        names=["id", "rad", "x", "y", "z", "density_contrast"]
+        names=["id", "rad", "x", "y", "z", "density_contrast"],
     )
     void_xyz = df[["x", "y", "z"]].to_numpy()
     void_rad = df["rad"].to_numpy()

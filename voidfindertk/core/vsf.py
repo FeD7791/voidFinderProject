@@ -49,7 +49,9 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
     else:
         # From the values that fulfill the latter condition find the index
         # of the value with max radii
-        dist_max_index = np.where(distance == np.max(distance[dens_values]))[0][0]
+        dist_max_index = np.where(distance == np.max(distance[dens_values]))[
+            0
+        ][0]
 
         # This would mean that the biggest
         # radius is asociated to a density
@@ -68,7 +70,9 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
         # dist_max_index +1
         else:
             # void_error, void_radius, void_tracers, void_density
-            radius = (distance[dist_max_index + 1] + distance[dist_max_index]) / 2
+            radius = (
+                distance[dist_max_index + 1] + distance[dist_max_index]
+            ) / 2
             tracers = nn[idx][:dist_max_index]
 
             # void_error, void_radius, void_tracers, void_density
@@ -158,4 +162,3 @@ def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=64):
 # =============================================================================
 # VSF
 # =============================================================================
-

@@ -14,7 +14,7 @@ class VoidFinderABC(ABC):
         model_find_parameters = self.model_find(preprocess_parameters)
         tracers_in_voids, centers, box, extra = self.build_voids(
             model_find_parameters
-            )
+        )
 
         voids = Voids(
             method=type(self).__name__,
@@ -25,7 +25,6 @@ class VoidFinderABC(ABC):
         )
 
         return voids
-
 
     @abstractmethod
     def preprocess(self, databox):
@@ -38,4 +37,3 @@ class VoidFinderABC(ABC):
     @abstractmethod
     def build_voids(self, model_find_parameters):
         pass
-

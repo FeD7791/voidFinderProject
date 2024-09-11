@@ -11,6 +11,7 @@ import pandas as pd
 
 import uttr
 
+
 @uttr.s(repr=False)
 class VoidProperties:
     """
@@ -36,6 +37,7 @@ class VoidProperties:
     __repr__():
         Return a string representation of the VoidProperties object.
     """
+
     id = uttr.ib(converter=int)
     x = uttr.ib(converter=np.float32)
     y = uttr.ib(converter=np.float32)
@@ -218,7 +220,7 @@ def get_center_and_radii(
     # Get the void_volumes
     void_volumes = _get_volumes_from_properties(
         void_properties=void_properties
-        )
+    )
     # Get r_eff
     void_r_eff = _calculate_r_eff(void_volumes=void_volumes)
 
@@ -308,11 +310,12 @@ def cbl_cleaner(
     *,
     file_voids,
     file_tracers,
-    ratio, initial_radius,
+    ratio,
+    initial_radius,
     delta_r,
     threshold,
     output_path,
-    ol_crit
+    ol_crit,
 ):
     """
     Performs the CBL cleaning over a Procesed ZOBOV catalogue.
@@ -372,7 +375,7 @@ def cbl_cleaner(
     delta_r_array = np.array(delta_r, dtype=np.float64)
     delta_r_ctypes = delta_r_array.ctypes.data_as(
         ctypes.POINTER(ctypes.c_double)
-        )
+    )
     output_path_bytes = output_path.encode("utf-8")
 
     # Path to the library
@@ -391,7 +394,7 @@ def cbl_cleaner(
         ctypes.c_int,  # delta_r_size
         ctypes.c_double,  # threshold
         ctypes.c_char_p,  # output_path
-        ctypes.c_bool, # ol_criterion
+        ctypes.c_bool,  # ol_criterion
     ]
 
     # Output Arguments
@@ -407,7 +410,7 @@ def cbl_cleaner(
         len(delta_r),
         threshold,
         output_path_bytes,
-        ol_crit
+        ol_crit,
     )
 
 
@@ -454,7 +457,7 @@ def get_tracers_in_voids(*, box, cbl_cleaned_path):
     df = pd.read_csv(
         cbl_cleaned_path,
         delim_whitespace=True,
-        names=["x", "y", "z", "rad", "delta"]
+        names=["x", "y", "z", "rad", "delta"],
     )
     void_xyz = df[["x", "y", "z"]].to_numpy()
     void_rad = df["rad"].to_numpy()
@@ -466,15 +469,16 @@ def get_tracers_in_voids(*, box, cbl_cleaned_path):
     dist, ind = grid.bubble_neighbors(void_xyz, distance_upper_bound=void_rad)
     return ind
 
+
 def get_dive_void_properties(*, cleaned_catalogue_path):
     with open(cleaned_catalogue_path, "r") as f:
         voids = f.readlines()
-    parameters = ["id","x","y","z","r","density_contrast"]
+    parameters = ["id", "x", "y", "z", "r", "density_contrast"]
     all_void_properties = []
     index = 0
     for void in voids:
         void = void.split()
-        void.insert(0,index) # Add index
+        void.insert(0, index)  # Add index
         properties = dict(zip(parameters, np.array(void, dtype=np.float32)))
         all_void_properties.append(VoidProperties(**properties))
         index = index + 1

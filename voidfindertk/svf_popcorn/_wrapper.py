@@ -25,7 +25,7 @@ def config_file_maker(
     massmin,
     eps,
     # Directory path to place the file
-    path
+    path,
 ):
     """
     Generates the configuration file with the parameters to run the void

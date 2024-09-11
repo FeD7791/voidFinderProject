@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from ..utils import Bunch
@@ -42,8 +41,7 @@ class Voids:
 
     """
 
-    def __init__(
-            self, *, method, box, tracers_in_voids, centers, extra):
+    def __init__(self, *, method, box, tracers_in_voids, centers, extra):
         if len(box) <= len(tracers_in_voids):
             raise ValueError(
                 "Number of box must be lesser than the numbers of voids"
@@ -126,7 +124,9 @@ class Voids:
             n_cells=n_cells,
         )
 
-    def effective_radius(self, void_idx, *, delta=-0.9, n_neighbors=100, n_cells=64):
+    def effective_radius(
+        self, void_idx, *, delta=-0.9, n_neighbors=100, n_cells=64
+    ):
         errors, radius, box, densities = self.all_effective_radius(
             delta=delta, n_neighbors=n_neighbors, n_cells=n_cells
         )
@@ -136,6 +136,3 @@ class Voids:
             box[void_idx],
             densities[void_idx],
         )
-
-
-

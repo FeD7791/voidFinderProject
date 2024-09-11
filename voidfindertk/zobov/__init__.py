@@ -32,5 +32,5 @@ __all__ = [
     "Names",
     "process_and_extract_void_properties_and_particles",
     "parse_tracers_in_zones_output",
-    "parse_zones_in_void_output"
-    ]
+    "parse_zones_in_void_output",
+]
