@@ -13,7 +13,7 @@ import pandas as pd
 import pytest
 
 from voidfindertk.box import Box
-from voidfindertk.models import DataBox
+
 
 
 

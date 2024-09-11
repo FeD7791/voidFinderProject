@@ -18,14 +18,26 @@ import pathlib
 import shutil
 import tempfile
 
+import attr
+
 import numpy as np
 
+from ..core import VoidFinderABC
 from . import _postprocessing
 from . import _wrapper as _wrap
-from ..vfinder_abc import ModelABC
 
 
-class _Names:
+@attr.define(frozen=True)
+class Names:
+    """
+    Holds Names to suffix inputs for files created using ZOBOV
+
+    Parameters
+    ----------
+        OUTPUT_VOZINIT : str
+        Suffix of the name used as vozinit input.
+    """
+
     OUTPUT_VOZINIT = "output_vozinit"
     OUTPUT_JOZOV_VOIDS = "output_txt"
     PARTICLES_IN_ZONES = "part_vs_zone"
@@ -40,11 +52,11 @@ class _Files:
 
     TRACERS_RAW = "tracers_zobov.raw"
     TRACERS_TXT = "tracers_zobov.txt"
-    PARTICLES_VS_ZONES_RAW = f"{_Names.PARTICLES_IN_ZONES}.dat"
-    PARTICLES_VS_ZONES_ASCII = f"{_Names.PARTICLES_IN_ZONES}_ascii.txt"
-    OUTPUT_JOZOV_VOIDS_DAT = f"{_Names.OUTPUT_JOZOV_VOIDS}.dat"
-    ZONES_VS_VOID_RAW = f"{_Names.ZONES_IN_VOID}.dat"
-    ZONES_VS_VOID_ASCII = f"{_Names.ZONES_IN_VOID}_ascii.txt"
+    PARTICLES_VS_ZONES_RAW = f"{Names.PARTICLES_IN_ZONES}.dat"
+    PARTICLES_VS_ZONES_ASCII = f"{Names.PARTICLES_IN_ZONES}_ascii.txt"
+    OUTPUT_JOZOV_VOIDS_DAT = f"{Names.OUTPUT_JOZOV_VOIDS}.dat"
+    ZONES_VS_VOID_RAW = f"{Names.ZONES_IN_VOID}.dat"
+    ZONES_VS_VOID_ASCII = f"{Names.ZONES_IN_VOID}_ascii.txt"
 
 
 class _ExecutableNames:
@@ -65,7 +77,7 @@ class _Paths:
     ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
 
-class ZobovVF(ModelABC):
+class ZobovVF(VoidFinderABC):
     """
     ZobovVF class for running ZOBOV Void Finder.
 
@@ -82,9 +94,11 @@ class ZobovVF(ModelABC):
         Range of positions of particles in each dimension (default is 500).
     number_of_divisions : int, optional
         Number of divisions in each dimension of the box (default is 2).
-    density_threshold : int, optional
-        The density threshold is an optional parameter, which can limit the
-        growth of voids into high-density regions. (default is 0).
+    density_threshold : float (0< density_threshold <1), optional
+        Limits the growth in density of a Void in density_threshold*mean,
+        where mean is the mean density of the box. A value of 0.2 is
+        equivalent to a density contrast of -0.8.
+        (default is 0.2)
     zobov_path : str or None, optional
         Path to ZOBOV executable (default is None, uses internal path).
     workdir : str or None, optional
@@ -155,7 +169,7 @@ class ZobovVF(ModelABC):
         buffer_size=0.08,
         box_size=500,
         number_of_divisions=2,
-        density_threshold=0,
+        density_threshold=0.2,
         zobov_path=None,
         workdir=None,
         workdir_clean=False,
@@ -292,7 +306,7 @@ class ZobovVF(ModelABC):
             buffer_size=self.buffer_size,
             box_size=self.box_size,
             number_of_divisions=self.number_of_divisions,
-            executable_name=_Names.OUTPUT_VOZINIT,
+            executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
         )
 
@@ -301,7 +315,7 @@ class ZobovVF(ModelABC):
 
         _wrap.run_voz_step(
             preprocess_dir_path=run_work_dir,
-            executable_name=_Names.OUTPUT_VOZINIT,
+            executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
             voz_executables_path=_Paths.ZOBOV
             / "src",  # this is the path where voz1b1 and voztie exe are
@@ -310,14 +324,14 @@ class ZobovVF(ModelABC):
         # JOZOV ===============================================================
         _wrap.run_jozov(
             jozov_dir_path=_Paths.ZOBOV / "src",
-            executable_name=_Names.OUTPUT_VOZINIT,
-            output_name_particles_in_zones=_Names.PARTICLES_IN_ZONES,
-            output_name_zones_in_void=_Names.ZONES_IN_VOID,
-            output_name_text_file=_Names.OUTPUT_JOZOV_VOIDS,
+            executable_name=Names.OUTPUT_VOZINIT,
+            output_name_particles_in_zones=Names.PARTICLES_IN_ZONES,
+            output_name_zones_in_void=Names.ZONES_IN_VOID,
+            output_name_text_file=Names.OUTPUT_JOZOV_VOIDS,
             density_threshold=0,
             work_dir_path=run_work_dir,
         )
-        return {"run_work_dir": run_work_dir}
+        return {"run_work_dir": run_work_dir, "box": box}
 
     def build_voids(self, model_find_parameters):
         """
@@ -344,39 +358,51 @@ class ZobovVF(ModelABC):
         """
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
-
+        # Get box
+        box = model_find_parameters["box"]
+        # Process 1:
+        # a) Parse tracers in zones raw file in the work directory
+        _postprocessing.parse_tracers_in_zones_output(
+            executable_path=_Paths.ZOBOV
+            / _ExecutableNames.TRACERS_IN_ZONES_BIN,
+            input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
+            output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII,
+        )
+        # b) Parse zones in voids raw file in the work directory
+        _postprocessing.parse_zones_in_void_output(
+            executable_path=_Paths.ZOBOV / _ExecutableNames.ZONES_IN_VOIDS_BIN,
+            input_file_path=run_work_dir / _Files.ZONES_VS_VOID_RAW,
+            output_file_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
+        )
+        # Process 2:
+        # a) Get Tuple of (VoidProperties, particles)
         zobov_vp_and_part = (
             _postprocessing.process_and_extract_void_properties_and_particles(
-                tinz_executable_path=_Paths.ZOBOV
-                / _ExecutableNames.TRACERS_IN_ZONES_BIN,
-                zinv_executable_path=_Paths.ZOBOV
-                / _ExecutableNames.ZONES_IN_VOIDS_BIN,
-
-                tinz_input_file_path=run_work_dir
-                / _Files.PARTICLES_VS_ZONES_RAW,
                 tinz_output_file_path=run_work_dir
                 / _Files.PARTICLES_VS_ZONES_ASCII,
-
-                zinv_input_file_path=run_work_dir
-                / _Files.ZONES_VS_VOID_RAW,
                 zinv_output_file_path=run_work_dir
                 / _Files.ZONES_VS_VOID_ASCII,
-
                 jozov_text_file_output_path=run_work_dir
-                / _Files.OUTPUT_JOZOV_VOIDS_DAT
+                / _Files.OUTPUT_JOZOV_VOIDS_DAT,
             )
-            )
+        )
 
-        # divide the output
-        particle_by_voids, zobov_voids = [], []
+        # b) divide the output
+        tracers_in_voids, zobov_voids = [], []
         for void_properties, particle_in_void in zobov_vp_and_part:
-            particle_by_voids.append(particle_in_void)
+            tracers_in_voids.append(particle_in_void)
             zobov_voids.append(void_properties)
 
+        # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
-            "zobov_voids": tuple(zobov_voids),
-            "files_dir": run_work_dir
+            "void_properties": tuple(zobov_voids),
+            "files_directory_path": run_work_dir,
         }
 
-        return tuple(particle_by_voids), extra
+        # d) Get centers
+        centers = _postprocessing.get_void_xyz_centers(
+            box=box, txt_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
+        )
+
+        return tuple(tracers_in_voids), centers, extra

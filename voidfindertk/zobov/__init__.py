@@ -16,11 +16,21 @@
 # IMPORTS
 # =============================================================================
 
-from ._zobov import ZobovVF
-from ._postprocessing import process_and_extract_void_properties_and_particles
+from ._postprocessing import (
+    parse_tracers_in_zones_output,
+    parse_zones_in_void_output,
+    process_and_extract_void_properties_and_particles,
+)
+from ._zobov import ZobovVF, Names
 
 # =============================================================================
 # ALL
 # =============================================================================
 
-__all__ = ["ZobovVF", "process_and_extract_void_properties_and_particles"]
+__all__ = [
+    "ZobovVF",
+    "Names",
+    "process_and_extract_void_properties_and_particles",
+    "parse_tracers_in_zones_output",
+    "parse_zones_in_void_output",
+]

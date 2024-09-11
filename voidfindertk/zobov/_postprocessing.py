@@ -140,7 +140,7 @@ def parse_tracers_in_zones_output(
     )
 
 
-def get_particles_in_zones(*, particles_in_zones_path):
+def _get_particles_in_zones(*, particles_in_zones_path):
     """
     Extract particles in voids from a parsed file.
 
@@ -180,7 +180,7 @@ def create_zobov_voids_properties_and_particles(
     jozov_text_file_output_path : str
         Path to the JOZOV text file output.
     particle_in_voids : dict
-        Dictionary of particles in voids from get_particles_in_voids.
+        Dictionary of particles in voids from _get_particles_in_void.
 
     Returns
     -------
@@ -216,11 +216,7 @@ def create_zobov_voids_properties_and_particles(
 
 def process_and_extract_void_properties_and_particles(
     *,
-    tinz_executable_path,
-    zinv_executable_path,
-    tinz_input_file_path,
     tinz_output_file_path,
-    zinv_input_file_path,
     zinv_output_file_path,
     jozov_text_file_output_path,
 ):
@@ -233,16 +229,8 @@ def process_and_extract_void_properties_and_particles(
 
     Parameters
     ----------
-    tinz_executable_path : str
-        Path to the C library executable for parsing tracers vs zones file.
-    zinv_executable_path : str
-        Path to the C library executable for parsing zones vs voids file.
-    tinz_input_file_path : str
-        Path to the input file with tracers vs zones data.
     tinz_output_file_path : str
         Path where the parsed tracers vs zones output will be saved.
-    zinv_input_file_path : str
-        Path to the input file with zones vs voids data.
     zinv_output_file_path : str
         Path where the parsed zones vs voids output will be saved.
     jozov_text_file_output_path : str
@@ -253,21 +241,9 @@ def process_and_extract_void_properties_and_particles(
     tuple
         Tuple of (VoidProperties, particles) pairs for voids found by ZOBOV.
     """
-    # Process 1:
-    # a) Parse tracers in zones raw file in the work directory
-    parse_tracers_in_zones_output(
-        executable_path=tinz_executable_path,
-        input_file_path=tinz_input_file_path,
-        output_file_path=tinz_output_file_path,
-    )
-    # b) Parse zones in voids raw file in the work directory
-    parse_zones_in_void_output(
-        executable_path=zinv_executable_path,
-        input_file_path=zinv_input_file_path,
-        output_file_path=zinv_output_file_path,
-    )
-    # Process 2: Create dictionary of array of particles
-    p_in_v = get_particles_in_void(
+
+    # Create dictionary of array of particles
+    p_in_v = _get_particles_in_void(
         txt_path=jozov_text_file_output_path,
         tracers_in_zones_path=tinz_output_file_path,
         zones_in_void_path=zinv_output_file_path,
@@ -318,7 +294,7 @@ def _get_file_void_and_core_particle(*, txt_path):
     return fv_cp
 
 
-def get_particles_in_void(
+def _get_particles_in_void(
     *, txt_path, tracers_in_zones_path, zones_in_void_path
 ):
     """
@@ -342,7 +318,7 @@ def get_particles_in_void(
     -----
     """
     # Get the tracers in zones from the parsed file
-    tracers_in_zones = get_particles_in_zones(
+    tracers_in_zones = _get_particles_in_zones(
         particles_in_zones_path=tracers_in_zones_path
     )
     # Get the zones in each void from the parsed file
@@ -366,3 +342,27 @@ def get_particles_in_void(
             )
         particles_in_void[str(array[0])] = array
     return particles_in_void
+
+
+def get_void_xyz_centers(*, box, txt_path):
+    """
+    Finds xyz coordinates of the CoreParticle of each void
+
+    Parameters
+    ----------
+        box : object
+            Box object with the tracers properties
+        txt_path : str
+            Path to the jozov txt with void properties
+
+    Returns
+    -------
+        xyz : np.array
+            Array of [x,y,z] elements for each CoreParticle
+
+
+    """
+    xyz = np.column_stack((box.x.value, box.y.value, box.z.value))
+    fv_cp = _get_file_void_and_core_particle(txt_path=txt_path)
+    fv_cp = fv_cp.T
+    return xyz[fv_cp[1]]

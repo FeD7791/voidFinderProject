@@ -1,3 +1,7 @@
+[tool.black]
+line-length = 79
+target-version = ['py311']
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
@@ -12,7 +16,7 @@ name = "voidfindertk"
 description = "A package to compare void finders"
 version = "0.0.1"
 readme = "README.md"
-dependencies = ["numpy","pandas","scipy","attrs","uttrs","sh","astropy"]
+dependencies = ["numpy","pandas","scipy","attrs","uttrs","sh","astropy","grispy"]
 authors = [
     {name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"},
     {name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar"}]

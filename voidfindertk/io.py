@@ -7,7 +7,7 @@
 """Table reader module."""
 import pandas as pd
 
-from . import box
+from .core import box
 
 # from .popcornvf import popcorn_tools
 #
