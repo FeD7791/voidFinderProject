@@ -1,43 +1,66 @@
 import numpy as np
 
-from ..utils import Bunch
 from . import vsf
+from ..utils import Bunch
 
 
 class Voids:
     """
-    Class used to represent voids as the particles inside of them.
+    A class to represent and manage voids in a system of particles.
+
+    This class provides methods to analyze voids and the particles within them,
+    including retrieving the method used to find the voids, accessing the box
+    properties, and finding specific voids associated with tracer particles.
 
     Parameters
     ----------
-
+    method : str
+        The name of the method used to find the voids.
+    box : Box
+        The Box object containing properties of the box.
+    tracers_in_voids : tuple of numpy.ndarray
+        A tuple of arrays, where each array contains the IDs of particles
+        inside a void.
+    centers : array-like
+        Coordinates of the centers of the voids.
+    extra : dict
+        Additional results and information of the run.
 
     Attributes
     ----------
     method : str
-        Name of the method used to find the voids.
-    box : Box object
-        Box object that holds the properties of the box.
-    tracers_in_voids : tuple
-        Collection of arrays that contains the IDs of the particles
-        that are inside a void.
+        The name of the method used to find the voids.
+    box : Box
+        A copy of the Box object containing tracer properties.
+    centers : numpy.ndarray
+        Array of coordinates of the centers of the voids.
+    tracers_in_voids : tuple of numpy.ndarray
+        Collection of arrays that contains the IDs of particles inside voids.
+    numbers_of_voids : int
+        The number of voids.
     extra : dict
-        Holds extra results and information of the run.
+        Dictionary with additional results and information of the run.
 
     Methods
     -------
-    method : str
-        Returns the name of the method used to find the voids.
-    box : Box object
-        Returns a copy of the Box object containing the tracer properties.
-    tracers_in_voids : tuple
-        Returns the collection of arrays containing particle IDs inside voids.
-    numbers_of_voids : int
-        Returns the number of voids.
-    extra : dict
-        Returns a dictionary with extra results and information of the run.
-    void_of(tracer)
+    void_of(tracer) :
         Returns indices of voids containing a specific tracer particle.
+    all_effective_radius(delta=-0.9, n_neighbors=100, n_cells=64) :
+        Computes the effective radius for all voids.
+    effective_radius(void_idx, delta=-0.9, n_neighbors=100, n_cells=64) :
+        Computes the effective radius of a specific void.
+
+    Raises
+    ------
+    ValueError
+        If the number of boxes is not lesser than the number of voids.
+
+    Notes
+    -----
+    - The `extra` attribute is managed using a `Bunch` object, which is
+    essentially a dictionary.
+    - The `tracers_in_voids` attribute is a tuple of arrays where each array
+    contains IDs of particles inside a void.
 
     """
 

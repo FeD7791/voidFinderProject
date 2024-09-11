@@ -1,6 +1,6 @@
-from collections.abc import Sequence
 import dataclasses as dtclss
 import warnings
+from collections.abc import Sequence
 
 import grispy as gsp
 
@@ -8,7 +8,32 @@ import numpy as np
 
 
 class EffectiveRadiusErrors:
-    """Enum of effective radius calculation errors."""
+    """
+    Enumeration for error codes related to the computation of effective radii
+    of voids.
+
+    This class defines a set of error codes used to indicate the status or
+    issues encountered during the calculation of effective radii for voids in
+    a system. These codes help in diagnosing and understanding the results of
+    the radius computation process.
+
+    Attributes
+    ----------
+    NO_ERROR : int
+        Error code indicating that the effective radius computation completed
+        successfully without issues.
+    MAYBE_NEAR_ANOTHER_VOID : int
+        Error code indicating that the void might be near another void,
+        leading to potential inaccuracies.
+    EXEED_CRITICAL : int
+        Error code indicating that the computed densities exceeded the
+        critical density, suggesting the region is not considered a void.
+    UNDER_CRITICAL : int
+        Error code indicating that all computed densities are below the
+        critical density, which imply that the number of nearest neighbors
+        parameter should be increased to find the right radius of the void.
+
+    """
 
     NO_ERROR = 0
     MAYBE_NEAR_ANOTHER_VOID = 1
@@ -205,26 +230,48 @@ def _sigle_void_eradius(idx, n_neighbors, crit_density, distance, nn):
 
 
 def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
-    """Calculate the effective radius for multiple void centers.
+    """
+    Compute the effective radius of voids based on nearest neighbor distances
+    using grispy.
+
+    This function calculates the effective radius of voids by considering
+    the distances to the nearest neighbors for each center and comparing
+    against a critical density. It returns the effective radius, error,
+    tracer particles within the void, and density map for each void.
 
     Parameters
     ----------
-    centers : array-like
-        Array of void center coordinates.
-    box : object
-        Object representing the simulation box, with x, y, z attributes and a
-        size() method.
+    centers : array-like, shape (n_centers, 3)
+        Coordinates of the centers for which the effective radius is to be
+        computed.
+    box : Box
+        Box object containing the properties of the spatial domain.
     delta : float, optional
-        Density contrast parameter.
+        Parameter to adjust the critical density. The critical density is
+        calculated as (1 + delta) * (number of tracers / (box volume)^3).
+        Default is -0.9.
     n_neighbors : int, optional
-        Number of neighbors to consider.
+        Number of nearest neighbors to consider for each center.
+        Default is 100.
     n_cells : int, optional
-        Number of cells for spatial gridding.
+        Number of cells used for the spatial grid. Default is 64.
 
     Returns
     -------
-    effectiveradius
-        An object containing the results of the effective radius calculations.
+    errors : list of float
+        List of errors associated with each void, posble values are:
+        0 : No error
+        1 : Local overdensity, maybe related to two near underdensities.
+        2 : Densitie map over the crital density minima. Probably not a void
+        3 : Densitie map under the critical density minima. Increase the
+        number of nearest neighbors used to perform the search.
+    radius : list of float
+        List of effective radii for each void.
+    tracers : tuple of numpy.ndarray
+        Tuple where each element is an array containing the IDs of the tracers
+        within the corresponding void.
+    densities : list of float
+        List of densities for each void.
 
     """
     # Create spatial gridding
