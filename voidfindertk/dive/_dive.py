@@ -1,4 +1,3 @@
-
 from . import _postprocessing
 from ..zobov import Names, ZobovVF
 
@@ -20,7 +19,7 @@ class DiveVF(ZobovVF):
         initial_radius=True,
         delta_r=[17.0, 150.0],
         threshold=0.3,
-        overlap_criterion = True,
+        overlap_criterion=True,
         **kwargs,
     ):
 
@@ -46,7 +45,7 @@ class DiveVF(ZobovVF):
     @property
     def threshold(self):
         return self._threshold
-    
+
     @property
     def threshold(self):
         return self._overlap_criterion
@@ -66,7 +65,7 @@ class DiveVF(ZobovVF):
         """
         tracers_in_voids, zobov_centers, extra = super().build_voids(
             model_find_parameters
-            )
+        )
         # Get working directory
         run_work_dir = extra["files_directory_path"]
         # Get void properties
@@ -104,16 +103,15 @@ class DiveVF(ZobovVF):
             delta_r=self._delta_r,
             threshold=self._threshold,
             output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
-            ol_crit=self._overlap_criterion
+            ol_crit=self._overlap_criterion,
         )
         # Get tracers in voids
         tinv_cleaned_catalogue = _postprocessing.get_tracers_in_voids(
-            box=box, cbl_cleaned_path=str(
-                run_work_dir / _Files.CLEANED_CATALOGUE
-                )
+            box=box,
+            cbl_cleaned_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
         )
         # Updating extra with void_properties
         extra["void_properties"] = _postprocessing.get_dive_void_properties(
-            cleaned_catalogue_path = run_work_dir / _Files.CLEANED_CATALOGUE
-            )
+            cleaned_catalogue_path=run_work_dir / _Files.CLEANED_CATALOGUE
+        )
         return tuple(tinv_cleaned_catalogue), centers, extra

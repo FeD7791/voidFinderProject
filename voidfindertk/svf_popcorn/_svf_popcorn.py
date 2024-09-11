@@ -1,4 +1,3 @@
-import numpy as np
 import os
 import pathlib
 import shutil
@@ -6,9 +5,13 @@ import tempfile
 
 import attr
 
-from . import _postprocessing, _wrapper
+import numpy as np
+
+from ..core import VoidFinderABC
 from ..utils import make_workdir
-from ..vfinder_abc import ModelABC
+from . import _postprocessing, _wrapper
+
+
 
 
 class Paths:
@@ -30,7 +33,7 @@ class FileNames:
 
 
 @attr.define
-class PopCornVF(ModelABC):
+class PopCornVF(VoidFinderABC):
     """
     PopCornVF class for void finding and analysis.
 
@@ -173,7 +176,7 @@ class PopCornVF(ModelABC):
     def _create_run_work_dir(self):
         run_workdir = make_workdir.create_run_work_dir(
             workdir_path=self._workdir
-            )
+        )
         return run_workdir
 
     # Directory Cleaner
@@ -265,7 +268,7 @@ class PopCornVF(ModelABC):
             List of indexes of tracers (Regarding to the Box object index)
             inside each void.
 
-            centers : numpy 2D array 
+            centers : numpy 2D array
             (x,y,z) coordinates of each center for each void.
 
             extra : Dict
@@ -282,12 +285,11 @@ class PopCornVF(ModelABC):
         )
         # Get tracers in void
         tracers_in_voids = _postprocessing.get_tracers_in_voids(
-            box=box, popcorn_output_file_path=str(
-                run_work_dir / FileNames.SPHFILE
-                )
+            box=box,
+            popcorn_output_file_path=str(run_work_dir / FileNames.SPHFILE),
         )
         # Get centers coordinates
-        centers = np.array(properties[['x','y','z']])
+        centers = np.array(properties[["x", "y", "z"]])
 
         # Build extra
         extra = {

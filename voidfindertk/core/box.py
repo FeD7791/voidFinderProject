@@ -92,10 +92,10 @@ class Box:
         )
         if len(box_side) != 1:
             raise ValueError(
-                "Not a cube:"
-                + f" xmax: {math.ceil(np.max(self.x.value))}"
-                + f" ymax: {math.ceil(np.max(self.y.value))}"
-                + f" zmax: {math.ceil(np.max(self.z.value))}"
+                "Not a cube: "
+                f"xmax: {math.ceil(np.max(self.x.value))} "
+                f"ymax: {math.ceil(np.max(self.y.value))} "
+                f"zmax: {math.ceil(np.max(self.z.value))}"
             )
 
     def __len__(self):
@@ -179,115 +179,5 @@ class Box:
             vy=self.vy,
             vz=self.vz,
             m=self.m,
-        )
-        return new_tracers
-
-
-@uttr.s(repr=False, frozen=True, cmp=False)
-class XYZBox:
-    x = uttr.ib(converter=np.array, unit=u.Mpc)
-    y = uttr.ib(converter=np.array, unit=u.Mpc)
-    z = uttr.ib(converter=np.array, unit=u.Mpc)
-    _len = uttr.ib(init=False)
-
-    def __attrs_post_init__(self):
-        """Post init method.
-
-        Checks that the lenght of the inputs are the same
-        """
-        lengths = set(())
-        for e in (
-            self.x,
-            self.y,
-            self.z,
-        ):
-            lengths.add(len(e))
-
-        if len(lengths) != 1:
-            raise ValueError("Arrays should be of the same size")
-
-        super().__setattr__("_len", lengths.pop())
-
-        # check if the box is a cube
-        box_side = set(
-            (
-                math.ceil(np.max(self.x.value)),
-                math.ceil(np.max(self.y.value)),
-                math.ceil(np.max(self.z.value)),
-            )
-        )
-        if len(box_side) != 1:
-            raise ValueError(
-                "Not a cube:"
-                + f" xmax: {math.ceil(np.max(self.x.value))}"
-                + f" ymax: {math.ceil(np.max(self.y.value))}"
-                + f" zmax: {math.ceil(np.max(self.z.value))}"
-            )
-
-    def __len__(self):
-        """Length method.
-
-        Returns
-        -------
-            int
-                the number of elements in the box
-        """
-        return self._len
-
-    def __eq__(self, other):
-        """
-        Return True if the two objects are equal, False otherwise.
-
-        Objects are considered equal if their `x`, `y`, `z`, `vx`, `vy`, `vz`,
-        and `m` attributes are all equal.
-
-        Parameters
-        ----------
-        other : object
-            The other object to compare to.
-
-        Returns
-        -------
-        bool
-        True if the two objects are equal, False otherwise.
-        """
-        return all(
-            [
-                np.array_equal(self.x, other.x),
-                np.array_equal(self.y, other.y),
-                np.array_equal(self.z, other.z),
-            ]
-        )
-
-    def __repr__(self):
-        """
-        Representation method.
-
-        Returns
-        -------
-            str
-                Name plus number of points in the box
-        """
-        cls_name = type(self).__name__
-        length = len(self)
-        return f"<{cls_name} size={length}>"
-
-    def size(self):
-        size = math.ceil(np.max(self.z.value))
-        return size
-
-    def copy(self):
-        """
-        Method used to perform a deep copy of the class Box.
-
-        Retruns
-        -------
-            Box object with a copy of Box Parameters.
-        """
-        cls = type(self)
-        new_tracers = cls(
-            x=self.x,
-            y=self.y,
-            z=self.z,
         )
         return new_tracers

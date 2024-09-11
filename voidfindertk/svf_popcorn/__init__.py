@@ -19,11 +19,10 @@
 # IMPORTS
 # =============================================================================
 
-from ._svf_popcorn import PopCornVF,Paths,FileNames
+from ._svf_popcorn import PopCornVF, Paths, FileNames
 
 # =============================================================================
 # ALL
 # =============================================================================
 
-__all__ = ["PopCornVF","Paths","FileNames"]
-
+__all__ = ["PopCornVF", "Paths", "FileNames"]

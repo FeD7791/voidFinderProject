@@ -1,7 +1,8 @@
-import grispy as gsp
+
 import numpy as np
 
-from .utils import Bunch, vsf
+from ..utils import Bunch
+from . import vsf
 
 
 class Voids:

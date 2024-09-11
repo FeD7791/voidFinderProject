@@ -7,7 +7,7 @@ import scipy
 import scipy.spatial
 # from voidfindertk.tools import ctypes_input_params_builder, ctypes_output_builder, process_output_from_finder, preprocess_data_box
 from voidfindertk import io, svf_popcorn
-from voidfindertk.tools import calculate_r_eff
+from voidfindertk.tools import effective_radius
 
 def test_calculate_r_eff(mkbox):
     box = mkbox(seed=42, size=3000000, coordinates_scale=1000)
@@ -20,7 +20,7 @@ def test_calculate_r_eff(mkbox):
     np.where(dist<20,xyz)
 
     # Calculate r eff
-    rad_new,tracers_new,density_values = calculate_r_eff(
+    rad_new,tracers_new,density_values = effective_radius(
     centers=centers,
     n_neighbors=400,
     box=box,
@@ -46,7 +46,7 @@ def test_calculate_r_eff(mkbox):
 #         "RadIncrement", "BoxSize",
 #         "MaxRadiusSearch", "ProxyGridSize",
 #         "FracRadius", "DeltaThreshold",
-#         "DeltaSeed", "OverlapTol", 
+#         "DeltaSeed", "OverlapTol",
 #         "Redshift", "OmegaMatter",
 #         "OmegaLambda", "Hubble",
 #         "FidOmegaMatter", "FidOmegaLambda",
@@ -70,7 +70,7 @@ def test_calculate_r_eff(mkbox):
 #     params_dict = dict(list(zip(params,values)))
 #     output = ctypes_input_params_builder('spherical',**params_dict)
 #     assert output['params_dict'] == params_dict
-#     assert output['InputParams_class']._fields_ == list(zip(params,ctypes_values)) 
+#     assert output['InputParams_class']._fields_ == list(zip(params,ctypes_values))
 
 
 # def test_ctypes_output_builder(make_spherical_voids_params):
@@ -78,7 +78,7 @@ def test_calculate_r_eff(mkbox):
 #     ctypes_values = [ctypes.c_int] + [ctypes.c_float] + 2*[ctypes.c_float*3] + 3*[ctypes.c_float] + [ctypes.c_int]
 #     voids_output = list(zip(params,ctypes_values))
 #     output = ctypes_output_builder('spherical')
-#     assert output['voidArray_class']._fields_[0][1]._type_._fields_ == voids_output   
+#     assert output['voidArray_class']._fields_[0][1]._type_._fields_ == voids_output
 
 # def test_process_output_from_finder():
 #     array_of_voids = [
@@ -139,7 +139,7 @@ def test_calculate_r_eff(mkbox):
 #     assert len(output.box.vz) == len(input_data['vz'][input_data['vz'] >= 50])
 
 #     # Test max mass
-#     output = preprocess_data_box(d_b,m_max = 50) 
+#     output = preprocess_data_box(d_b,m_max = 50)
 #     assert len(output.box.m) == len(input_data['m'][input_data['m'] <= 50])
 #     assert len(output.box.x) == len(input_data['x'][input_data['x'] <= 50])
 #     assert len(output.box.y) == len(input_data['y'][input_data['y'] <= 50])
@@ -164,7 +164,7 @@ def test_calculate_r_eff(mkbox):
 #                   }
 #     b = box.Box(**input_data) # creating box from input data
 #     d_b = DataBox(b) # creating data_box from box
-#     output = preprocess_data_box(d_b) 
+#     output = preprocess_data_box(d_b)
 #     assert all(output.box.m.value == np.array([2,3]))
 #     assert all(output.box.x.value == np.array([2,3]))
 #     assert all(output.box.y.value == np.array([2,3]))
@@ -172,4 +172,3 @@ def test_calculate_r_eff(mkbox):
 #     assert all(output.box.vx.value == np.array([2,3]))
 #     assert all(output.box.vy.value == np.array([2,3]))
 #     assert all(output.box.vz.value == np.array([2,3]))
-    

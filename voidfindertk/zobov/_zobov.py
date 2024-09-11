@@ -22,9 +22,9 @@ import attr
 
 import numpy as np
 
+from ..core import VoidFinderABC
 from . import _postprocessing
 from . import _wrapper as _wrap
-from ..vfinder_abc import ModelABC
 
 @attr.define(frozen=True)
 class Names:
@@ -75,7 +75,7 @@ class _Paths:
     ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
 
 
-class ZobovVF(ModelABC):
+class ZobovVF(VoidFinderABC):
     """
     ZobovVF class for running ZOBOV Void Finder.
 

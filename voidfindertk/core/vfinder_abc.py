@@ -4,7 +4,7 @@ from .box import DataBox
 from .voids import Voids
 
 
-class ModelABC(ABC):
+class VoidFinderABC(ABC):
 
     def __init__(self):
         pass
