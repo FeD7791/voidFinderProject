@@ -123,46 +123,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
 
 
 def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=64):
-    """
-    Calculates the radius for a void when the center and box of tracers are
-    provided.
 
-    The final radius is the arithmetic mean between density(n,r_n) and
-    density(n+1,r_n+1), where density(n,r_n) < crit_density < density(n+1,
-    r_n+1)
-    where density(n,r_n) = n/(4*pi*r_n**3)/3 (Spherical Volume)
-
-    Parameters
-    ----------
-        centers : array of (x,y,z)
-        Array of tracers coordinates.
-
-        n_neighbors : int
-        Maximun number of tracers in each void used to perform the search.
-
-        box : Box Object
-        Object with the tracer properties.
-
-        delta : float -1< delta < 0
-        Integrated density contrast.
-
-    Returns
-    -------
-        rad_new : numpy array
-        Radius calculated for each void.The radius could have 4 values:
-            0 : Radius so thath density < crit_density, but had some radius
-                that had density > crit_density.
-            -2 : density < crit_density it is necesary to increment number
-                of neighbors
-            -1 : All radii have that crit_density < density. Probably not
-                a void.
-
-        tracers_new : tuple of lists
-        List of indexes listing the tracers inside each void
-
-        density_values : list of arrays
-        For each void gives 1 < n <= n_neighbors density(n,r_n) calculations.
-    """
 
     xyz = np.column_stack((box.x.value, box.y.value, box.z.value))
     grid = gsp.GriSPy(xyz, copy_data=False, N_cells=n_cells)
