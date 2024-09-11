@@ -80,7 +80,7 @@ def _void_effr(idx, n_neighbors, crit_density, distance, nn):
             )
 
 
-def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=32):
+def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=64):
     """
     Calculates the radius for a void when the center and box of tracers are
     provided.
@@ -123,7 +123,7 @@ def effective_radius(centers, box, *, delta=-0.9, n_neighbors=100, n_cells=32):
     """
 
     xyz = np.column_stack((box.x.value, box.y.value, box.z.value))
-    grid = gsp.GriSPy(xyz, copy_data=False, n_cells=n_cells)
+    grid = gsp.GriSPy(xyz, copy_data=False, N_cells=n_cells)
 
     # For each center, get the distance for the n nearest tracers and their
     # index

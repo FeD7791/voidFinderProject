@@ -16,8 +16,8 @@ class Voids:
     ----------
     method : str
         Name of the method used to find the voids.
-    tracers : Box object
-        Box object that holds the properties of the tracers.
+    box : Box object
+        Box object that holds the properties of the box.
     tracers_in_voids : tuple
         Collection of arrays that contains the IDs of the particles
         that are inside a void.
@@ -28,7 +28,7 @@ class Voids:
     -------
     method : str
         Returns the name of the method used to find the voids.
-    tracers : Box object
+    box : Box object
         Returns a copy of the Box object containing the tracer properties.
     tracers_in_voids : tuple
         Returns the collection of arrays containing particle IDs inside voids.
@@ -41,16 +41,17 @@ class Voids:
 
     """
 
-    def __init__(self, *, method, tracers, tracers_in_voids, centers, extra):
-        if len(tracers) <= len(tracers_in_voids):
+    def __init__(
+            self, *, method, box, tracers_in_voids, centers, extra):
+        if len(box) <= len(tracers_in_voids):
             raise ValueError(
-                "Number of tracers must be lesser than the numbers of voids"
+                "Number of box must be lesser than the numbers of voids"
             )
 
         self._method = str(method)
-        self._tracers = tracers.copy()  # the tracers
+        self._tracers = box.copy()  # the box
         self._tracers_in_voids = tuple(tracers_in_voids)  # tuple of arrays
-        self._centers = tuple(centers)
+        self._centers = np.array(centers)
         self._extra = Bunch("extra", extra)  # dict with zaraza
 
     @property
@@ -59,8 +60,8 @@ class Voids:
         return self._method
 
     @property
-    def tracers(self):
-        """Box object: Box object that holds the properties of the tracers."""
+    def box(self):
+        """Box object: Box object that holds the properties of the box."""
         return self._tracers
 
     @property
@@ -89,7 +90,7 @@ class Voids:
     def __repr__(self):
         return (
             f"<Voids '{self.method}' "
-            f"{self.numbers_of_voids_}V, {len(self.tracers)}T>"
+            f"{self.numbers_of_voids_}V, {len(self.box)}T>"
         )
 
     # utilities ===============================================================
@@ -115,7 +116,7 @@ class Voids:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
 
-    def all_effective_radius(self, *, delta=-0.9, n_neighbors=100, n_cells=32):
+    def all_effective_radius(self, *, delta=-0.9, n_neighbors=100, n_cells=64):
         return vsf.effective_radius(
             self.centers,
             self.box,
@@ -124,14 +125,14 @@ class Voids:
             n_cells=n_cells,
         )
 
-    def effective_radius(self, void_idx, *, delta=-0.9, n_neighbors=100, n_cells=32):
-        errors, radius, tracers, densities = self.all_effective_radius(
+    def effective_radius(self, void_idx, *, delta=-0.9, n_neighbors=100, n_cells=64):
+        errors, radius, box, densities = self.all_effective_radius(
             delta=delta, n_neighbors=n_neighbors, n_cells=n_cells
         )
         return (
             errors[void_idx],
             radius[void_idx],
-            tracers[void_idx],
+            box[void_idx],
             densities[void_idx],
         )
 

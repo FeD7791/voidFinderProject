@@ -92,9 +92,11 @@ class ZobovVF(ModelABC):
         Range of positions of particles in each dimension (default is 500).
     number_of_divisions : int, optional
         Number of divisions in each dimension of the box (default is 2).
-    density_threshold : int, optional
-        The density threshold is an optional parameter, which can limit the
-        growth of voids into high-density regions. (default is 0).
+    density_threshold : float (0< density_threshold <1), optional
+        Limits the growth in density of a Void in density_threshold*mean,
+        where mean is the mean density of the box. A value of 0.2 is
+        equivalent to a density contrast of -0.8.
+        (default is 0.2)
     zobov_path : str or None, optional
         Path to ZOBOV executable (default is None, uses internal path).
     workdir : str or None, optional
@@ -165,7 +167,7 @@ class ZobovVF(ModelABC):
         buffer_size=0.08,
         box_size=500,
         number_of_divisions=2,
-        density_threshold=0,
+        density_threshold=0.2,
         zobov_path=None,
         workdir=None,
         workdir_clean=False,
@@ -354,7 +356,8 @@ class ZobovVF(ModelABC):
         """
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
-
+        # Get box
+        box = model_find_parameters['box']
         # Process 1:
         # a) Parse tracers in zones raw file in the work directory
         _postprocessing.parse_tracers_in_zones_output(
@@ -402,7 +405,7 @@ class ZobovVF(ModelABC):
 
         # d) Get centers
         centers = _postprocessing.get_void_xyz_centers(
-            box=model_find_parameters['box'],
+            box=box,
             txt_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
             )
 
