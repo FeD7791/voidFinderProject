@@ -2,7 +2,11 @@ import dataclasses as dtclss
 import warnings
 from collections.abc import Sequence
 
+from attrs import define,field
+
 import grispy as gsp
+
+import matplotlib.pyplot as plt
 
 import numpy as np
 
@@ -62,7 +66,6 @@ class _EffectiveRadius(Sequence):
         Array of tracer particles for each void.
     densities : np.ndarray
         Array of density values for each void.
-
     """
 
     delta: float
@@ -323,3 +326,188 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 # =============================================================================
 # VSF
 # =============================================================================
+
+@define
+class VSF():
+    """
+    A class representing the SvdW Void Size Function (VSF) Model.
+
+    Attributes
+    ----------
+    _log_of_radius : numpy.ndarray
+        An array of logarithm of radius values.
+    _counts : numpy.ndarray
+        An array of counts corresponding to the radius values.
+    _unit : str
+        The unit of measurement for the radius.
+    _delta : float
+        The density contrast of the model.
+
+    Properties
+    ----------
+    log_of_radius : numpy.ndarray
+        Returns the logarithm of radius values.
+    counts : numpy.ndarray
+        Returns the counts corresponding to the radius values.
+    unit : str
+        Returns the unit of measurement for the radius.
+    delta : float
+        Returns the density contrast of the model.
+
+    Methods
+    -------
+    plot(save=False)
+        Plots the Void Size Function using matplotlib. Optionally saves the
+        plot to a file.
+        
+        Parameters
+        ----------
+        save : bool, optional
+            If True, saves the plot as 'void_size_function.jpg'. Default is
+            False.
+        
+        Returns
+        -------
+        None
+    """
+    _log_of_radius = field()
+    _counts = field()
+    _unit = field()
+    _delta = field()
+
+    @property
+    def log_of_radius(self):
+        """Returns the logarithm of radius values."""
+        return self._log_of_radius
+    @property
+    def counts(self):
+        """Returns the counts corresponding to the radius values."""
+        return self._counts
+    @property
+    def unit(self):
+        """Returns the unit of measurement for the radius."""
+        return self._unit
+    @property
+    def delta(self):
+        """Returns the density contrast of the model."""
+        return self._delta
+
+    
+    def plot(self,*,save=False,fname='void_size_function.jpg'):
+        """
+        Plots the Void Size Function using matplotlib.
+
+        Parameters
+        ----------
+        save : bool, optional
+            If True, saves the plot as 'void_size_function.jpg'. Default is
+            False.
+
+        Returns
+        -------
+        None
+        """
+        plt.figure(figsize=(8, 8))
+        plt.plot(self._log_of_radius, self._counts, marker='o', linestyle='-',
+                 label='Void Size Function')
+        plt.xlabel(r'$log_{10}(R)$' f'{self._unit}')
+        plt.ylabel(r'$\frac{1}{V} \frac{dN_v}{dlnR_v}$', fontsize=20)
+        plt.yscale('log')
+        plt.title('Void Size Function')
+        plt.grid(True)
+        plt.legend()
+        plt.text(
+            min(self._log_of_radius),
+            min(self._counts), f"Model: SvdW\n Density Contrast {self._delta}",
+            fontsize = 22, bbox = dict(facecolor = 'cyan', alpha = 0.5))
+        if save:
+            plt.savefig(fname)
+        plt.show()
+
+
+
+def void_size_function(
+    radius, box, delta,
+    *, scale_1_num_samples=7, scale_2_num_samples=2
+    ):
+    """
+    Computes the SvdW Void Size Function (VSF) model.
+
+    This function calculates the VSF by creating a histogram of the logarithm
+    of radii, using a specified number of histogram bins for different scales.
+    The resulting void size function is returned as an instance of the `VSF`
+    class.
+
+    Parameters
+    ----------
+    radius : numpy.ndarray
+        Array of radii for which the void size function is to be computed.
+    box : Box
+        An object representing the simulation box.
+    delta : float
+        Density contrast of the model used for scaling the radii.
+    scale_1_num_samples : int, optional
+        Number of bins to use in the first scaling range. Default is 7.
+    scale_2_num_samples : int, optional
+        Number of bins to use in the second scaling range. Default is 2.
+
+    Returns
+    -------
+    VSF
+        An instance of the `VSF` class containing the computed void size
+        function with attributes:
+        - `log_of_radius`: Logarithm of radius values.
+        - `counts`: Density of voids as a function of logarithm of radius.
+        - `unit`: Unit of measurement for the radius, derived from `box`.
+        - `delta`: Density contrast used in the scaling.
+    """
+    # Volume of the simulation (Box volume)
+    vol = box.size() ** 3
+
+    # Mean density of tracers
+    rhomed = len(box) / vol
+
+    # Number of tracers
+    # n = np.concatenate([np.arange(6, 11, 2), np.arange(12, 53, 10)])
+    n = np.concatenate(
+        [np.arange(6, 11, 2), np.arange(12, round(max(radius)), 10)])
+
+    # Scaling calculation
+    # Radius in function of rhomed, tracers n and delta: R(rhomed, n , delta)
+    scl = np.log10((3 / (4 * np.pi) * n / rhomed / (1 + delta)) ** (1 / 3))
+
+    mxlg = np.log10(max(radius))
+    mxlg_scl_diff = mxlg - max(scl)
+
+    # Histogram bins calculation
+    bins = np.concatenate([
+    scl[:-1],
+    np.linspace(
+        max(scl),
+        max(scl) + mxlg_scl_diff*0.5,
+        scale_1_num_samples),
+    np.linspace(
+        max(scl) + mxlg_scl_diff*0.5 + mxlg_scl_diff*0.1,
+        mxlg,
+        scale_2_num_samples)
+    ])
+
+    # Histogram calculation
+    h, bin_edges = np.histogram(np.log10(radius), bins=bins)
+
+    # Mid values of the histogram
+    mids = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+    # Density calculation
+    density = h / np.diff(bins) / vol
+
+    # Clean values
+    # Remove zeros
+    index = np.where(density > 0.0)[0]  # Non zero elements index
+
+    return VSF(
+        log_of_radius = mids[index],
+        counts = density[index],
+        unit = box.x[0].unit,
+        delta = delta
+    )
+
