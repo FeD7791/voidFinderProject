@@ -1,6 +1,6 @@
-from voidfindertk.svf_popcorn import _svf_popcorn
-from voidfindertk import io
-from voidfindertk.voids import Voids
+from voidfindertk.svf_popcorn import PopCornVF
+from voidfindertk import read_table
+from voidfindertk.core import Voids
 import os
 import pathlib
 import time
@@ -8,10 +8,10 @@ import time
 dataset_path = pathlib.Path("./datasets")
 workdir_path = pathlib.Path(os.path.abspath("./run_popcorn"))
 
-dbox = io.read_table(dataset_path/"halos_ascii_1000_1024_npmin_10_z0.51.dat",names=["m","x", "y", "z", "vx", "vy", "vz"])
+dbox = read_table(dataset_path/"halos_ascii_1000_1024_npmin_10_z0.51.dat",names=["m","x", "y", "z", "vx", "vy", "vz"])
 
 start_time = time.time()
-model = _svf_popcorn.PopCornVF(
+model = PopCornVF(
     workdir=workdir_path,
     boxsize=1000,
     densth=-0.7,
@@ -33,7 +33,8 @@ voids = Voids(
     centers=centers,
     extra=extra,
 )
-errors, rad, tracers, density = voids.all_effective_radius()
+errors, rad, tracers, density = voids.effective_radius()
+objeto = voids.effective_radius()
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
