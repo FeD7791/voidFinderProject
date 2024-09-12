@@ -83,3 +83,7 @@ voidfindertk/dive/CosmoBolognaLib/*
 
 # run
 run/
+run_popcorn/
+
+#images
+*.jpg
