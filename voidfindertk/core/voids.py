@@ -1,9 +1,13 @@
 import numpy as np
 
-from . import vsf
+import attrs
+
 from ..utils import Bunch
+from . import vsf, plot_acc
+from .box import Box
 
 
+@attrs.define(frozen=True, repr=False)
 class Voids:
     """
     A class to represent and manage voids in a system of particles.
@@ -64,49 +68,36 @@ class Voids:
 
     """
 
-    def __init__(self, *, method, box, tracers_in_voids, centers, extra):
-        if len(box) <= len(tracers_in_voids):
+    # came from finde and data
+    method: str = attrs.field(converter=str)
+    box: Box = attrs.field(converter=Box.copy)
+
+    # if end with "_" is calculated
+    tracers_in_voids_: tuple = attrs.field(converter=tuple)
+    centers_: np.ndarray = attrs.field(converter=np.array)
+    extra_: Bunch = attrs.field(converter=lambda e: Bunch("extra", e))
+
+    # plot accessor
+    plot: plot_acc.VoidPlotter = attrs.field(
+        init=False,
+        default=attrs.Factory(plot_acc.VoidPlotter, takes_self=True),
+    )
+
+    def __attrs_post_init__(self):
+        if len(self.box) <= len(self.tracers_in_voids_):
             raise ValueError(
                 "Number of box must be lesser than the numbers of voids"
             )
 
-        self._method = str(method)
-        self._tracers = box.copy()  # the box
-        self._tracers_in_voids = tuple(tracers_in_voids)  # tuple of arrays
-        self._centers = np.array(centers)
-        self._extra = Bunch("extra", extra)  # dict with zaraza
-
-    @property
-    def method(self):
-        """str: Name of the method used to find the voids."""
-        return self._method
-
-    @property
-    def box(self):
-        """Box object: Box object that holds the properties of the box."""
-        return self._tracers
-
-    @property
-    def centers(self):
-        return self._centers
-
-    @property
-    def tracers_in_voids_(self):
-        """tuple: Collection of arrays that contains the IDs of particles
-        inside voids."""
-        return self._tracers_in_voids
-
     @property
     def numbers_of_voids_(self):
         """int: Number of voids."""
-        return len(self._tracers_in_voids)
+        return len(self.tracers_in_voids_)
 
     @property
-    def extra_(self):
+    def e_(self):
         """dict: Holds extra results and information of the run."""
-        return dict(self._extra)
-
-    e_ = extra_
+        return self.extra_
 
     # REPR ====================================================================
     def __repr__(self):
@@ -133,7 +124,7 @@ class Voids:
 
         """
         voids_w_tracer = []
-        for idx, void in enumerate(self._tracers_in_voids):
+        for idx, void in enumerate(self.tracers_in_voids):
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
@@ -161,7 +152,7 @@ class Voids:
         """
 
         return vsf.effective_radius(
-            self.centers,
+            self.centers_,
             self.box,
             delta=delta,
             n_neighbors=n_neighbors,
@@ -169,14 +160,22 @@ class Voids:
         )
 
     def void_size_function(
-        self, *, scale_1_num_samples=7, scale_2_num_samples=2
+        self,
+        *,
+        scale_1_num_samples=7,
+        scale_2_num_samples=2,
+        **kwargs,
     ):
         # Get the radii
-        effective_radius = self.effective_radius()
-        radius = effective_radius.radius
-        delta = effective_radius.delta
-        return vsf.void_size_function(
-            radius=radius,
+        effective_radius = self.effective_radius(**kwargs)
+
+        log_of_radius, count, delta = vsf.void_size_function(
+            effective_radius=effective_radius,
             box=self.box,
-            delta=delta,
+            scale_1_num_samples=scale_2_num_samples,
+            scale_2_num_samples=scale_2_num_samples,
         )
+
+        return log_of_radius, count, delta
+
+    vsf = void_size_function

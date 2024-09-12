@@ -9,9 +9,13 @@ import math
 
 from astropy import units as u
 
+import attrs
+
 import numpy as np
 
 import uttr
+
+from . import plot_acc
 
 
 class DataBox:
@@ -65,7 +69,10 @@ class Box:
     vz = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
     m = uttr.ib(converter=np.array, unit=u.M_sun)
 
-    _len = uttr.ib(init=False)
+    plot = uttr.ib(
+        init=False,
+        default=attrs.Factory(plot_acc.BoxPlotter, takes_self=True),
+    )
 
     def __attrs_post_init__(self):
         """Post init method.
@@ -79,8 +86,6 @@ class Box:
 
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
-
-        super().__setattr__("_len", lengths.pop())
 
         # check if the box is a cube
         box_side = set(
@@ -106,7 +111,7 @@ class Box:
             int
                 the number of elements in the box
         """
-        return self._len
+        return len(self.x)
 
     def __eq__(self, other):
         """

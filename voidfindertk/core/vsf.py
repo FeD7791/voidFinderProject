@@ -1,20 +1,16 @@
-import dataclasses as dtclss
-import warnings
 from collections.abc import Sequence
+import warnings
 
-from attrs import define, field
+import attrs
 
 import grispy as gsp
-
-import matplotlib.pyplot as plt
 
 import numpy as np
 
 
 class EffectiveRadiusErrors:
-    """
-    Enumeration for error codes related to the computation of effective radii
-    of voids.
+    """Enumeration for error codes related to the computation of effective
+    radii of voids.
 
     This class defines a set of error codes used to indicate the status or
     issues encountered during the calculation of effective radii for voids in
@@ -45,7 +41,7 @@ class EffectiveRadiusErrors:
     UNDER_CRITICAL = 3
 
 
-@dtclss.dataclass(frozen=True, slots=True, repr=False)
+@attrs.define(frozen=True, slots=True, repr=False)
 class _EffectiveRadius(Sequence):
     """
     A dataclass representing the effective radius calculation results.
@@ -68,13 +64,13 @@ class _EffectiveRadius(Sequence):
         Array of density values for each void.
     """
 
-    delta: float
-    n_neighbors: int
-    n_cells: int
-    errors: np.ndarray
-    radius: np.ndarray
-    tracers: np.ndarray
-    densities: np.ndarray
+    delta: float = attrs.field()
+    n_neighbors: int = attrs.field()
+    n_cells: int = attrs.field()
+    errors: np.ndarray = attrs.field()
+    radius: np.ndarray = attrs.field()
+    tracers: np.ndarray = attrs.field()
+    densities: np.ndarray = attrs.field()
 
     @property
     def argerrors(self):
@@ -328,130 +324,8 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 # =============================================================================
 
 
-@define(repr=False)
-class VSF:
-    """
-    A class representing the SvdW Void Size Function (VSF) Model.
-
-    Attributes
-    ----------
-    _log_of_radius : numpy.ndarray
-        An array of logarithm of radius values.
-    _counts : numpy.ndarray
-        An array of counts corresponding to the radius values.
-    _unit : str
-        The unit of measurement for the radius.
-    _delta : float
-        The density contrast of the model.
-
-    Properties
-    ----------
-    log_of_radius : numpy.ndarray
-        Returns the logarithm of radius values.
-    counts : numpy.ndarray
-        Returns the counts corresponding to the radius values.
-    unit : str
-        Returns the unit of measurement for the radius.
-    delta : float
-        Returns the density contrast of the model.
-
-    Methods
-    -------
-    plot(save=False)
-        Plots the Void Size Function using matplotlib. Optionally saves the
-        plot to a file.
-
-        Parameters
-        ----------
-        save : bool, optional
-            If True, saves the plot as 'void_size_function.jpg'. Default is
-            False.
-
-        Returns
-        -------
-        None
-    """
-
-    _log_of_radius = field()
-    _counts = field()
-    _unit = field()
-    _delta = field()
-
-    @property
-    def log_of_radius(self):
-        """Returns the logarithm of radius values."""
-        return self._log_of_radius
-
-    @property
-    def counts(self):
-        """Returns the counts corresponding to the radius values."""
-        return self._counts
-
-    @property
-    def unit(self):
-        """Returns the unit of measurement for the radius."""
-        return self._unit
-
-    @property
-    def delta(self):
-        """Returns the density contrast of the model."""
-        return self._delta
-
-    def __repr__(self):
-        """
-        Representation method.
-
-        Returns
-        -------
-            str
-                Name plus number of radius and unit
-        """
-        cls_name = type(self).__name__
-        unit = self._unit
-        return f"<{cls_name} Delta: {self.delta} unit: {unit}>"
-
-    def plot(self, *, save=False, fname="void_size_function.jpg"):
-        """
-        Plots the Void Size Function using matplotlib.
-
-        Parameters
-        ----------
-        save : bool, optional
-            If True, saves the plot as 'void_size_function.jpg'. Default is
-            False.
-
-        Returns
-        -------
-        None
-        """
-        plt.figure(figsize=(8, 8))
-        plt.plot(
-            self._log_of_radius,
-            self._counts,
-            marker="o",
-            linestyle="-",
-            label="Void Size Function",
-        )
-        plt.xlabel(r"$log_{10}(R)$" f"{self._unit}")
-        plt.ylabel(r"$\frac{1}{V} \frac{dN_v}{dlnR_v}$", fontsize=20)
-        plt.yscale("log")
-        plt.title("Void Size Function")
-        plt.grid(True)
-        plt.legend()
-        plt.text(
-            min(self._log_of_radius),
-            min(self._counts),
-            f"Model: SvdW\n Density Contrast {self._delta}",
-            fontsize=22,
-            bbox=dict(facecolor="cyan", alpha=0.5),
-        )
-        if save:
-            plt.savefig(fname)
-        plt.show()
-
-
 def void_size_function(
-    radius, box, delta, *, scale_1_num_samples=7, scale_2_num_samples=2
+    effective_radius, box, *, scale_1_num_samples, scale_2_num_samples
 ):
     """
     Computes the SvdW Void Size Function (VSF) model.
@@ -483,7 +357,12 @@ def void_size_function(
         - `counts`: Density of voids as a function of logarithm of radius.
         - `unit`: Unit of measurement for the radius, derived from `box`.
         - `delta`: Density contrast used in the scaling.
+
     """
+    # extract relevant variables
+    radius = effective_radius.radius
+    delta = effective_radius.delta
+
     # Volume of the simulation (Box volume)
     vol = box.size() ** 3
 
@@ -530,9 +409,7 @@ def void_size_function(
     # Remove zeros
     index = np.where(density > 0.0)[0]  # Non zero elements index
 
-    return VSF(
-        log_of_radius=mids[index],
-        counts=density[index],
-        unit=box.x[0].unit,
-        delta=delta,
-    )
+    log_of_radius = mids[index] * box.x.unit
+    counts = density[index]
+
+    return log_of_radius, counts, delta
