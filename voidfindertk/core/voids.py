@@ -167,9 +167,10 @@ class Voids:
             n_neighbors=n_neighbors,
             n_cells=n_cells,
         )
-    
+
     def void_size_function(
-        self,*,scale_1_num_samples=7, scale_2_num_samples=2):
+        self, *, scale_1_num_samples=7, scale_2_num_samples=2
+    ):
         # Get the radii
         effective_radius = self.effective_radius()
         radius = effective_radius.radius

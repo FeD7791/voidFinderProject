@@ -2,7 +2,7 @@ import dataclasses as dtclss
 import warnings
 from collections.abc import Sequence
 
-from attrs import define,field
+from attrs import define, field
 
 import grispy as gsp
 
@@ -327,8 +327,9 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 # VSF
 # =============================================================================
 
+
 @define(repr=False)
-class VSF():
+class VSF:
     """
     A class representing the SvdW Void Size Function (VSF) Model.
 
@@ -359,17 +360,18 @@ class VSF():
     plot(save=False)
         Plots the Void Size Function using matplotlib. Optionally saves the
         plot to a file.
-        
+
         Parameters
         ----------
         save : bool, optional
             If True, saves the plot as 'void_size_function.jpg'. Default is
             False.
-        
+
         Returns
         -------
         None
     """
+
     _log_of_radius = field()
     _counts = field()
     _unit = field()
@@ -379,14 +381,17 @@ class VSF():
     def log_of_radius(self):
         """Returns the logarithm of radius values."""
         return self._log_of_radius
+
     @property
     def counts(self):
         """Returns the counts corresponding to the radius values."""
         return self._counts
+
     @property
     def unit(self):
         """Returns the unit of measurement for the radius."""
         return self._unit
+
     @property
     def delta(self):
         """Returns the density contrast of the model."""
@@ -405,7 +410,7 @@ class VSF():
         unit = self._unit
         return f"<{cls_name} Delta: {self.delta} unit: {unit}>"
 
-    def plot(self,*,save=False,fname='void_size_function.jpg'):
+    def plot(self, *, save=False, fname="void_size_function.jpg"):
         """
         Plots the Void Size Function using matplotlib.
 
@@ -420,28 +425,34 @@ class VSF():
         None
         """
         plt.figure(figsize=(8, 8))
-        plt.plot(self._log_of_radius, self._counts, marker='o', linestyle='-',
-                 label='Void Size Function')
-        plt.xlabel(r'$log_{10}(R)$' f'{self._unit}')
-        plt.ylabel(r'$\frac{1}{V} \frac{dN_v}{dlnR_v}$', fontsize=20)
-        plt.yscale('log')
-        plt.title('Void Size Function')
+        plt.plot(
+            self._log_of_radius,
+            self._counts,
+            marker="o",
+            linestyle="-",
+            label="Void Size Function",
+        )
+        plt.xlabel(r"$log_{10}(R)$" f"{self._unit}")
+        plt.ylabel(r"$\frac{1}{V} \frac{dN_v}{dlnR_v}$", fontsize=20)
+        plt.yscale("log")
+        plt.title("Void Size Function")
         plt.grid(True)
         plt.legend()
         plt.text(
             min(self._log_of_radius),
-            min(self._counts), f"Model: SvdW\n Density Contrast {self._delta}",
-            fontsize = 22, bbox = dict(facecolor = 'cyan', alpha = 0.5))
+            min(self._counts),
+            f"Model: SvdW\n Density Contrast {self._delta}",
+            fontsize=22,
+            bbox=dict(facecolor="cyan", alpha=0.5),
+        )
         if save:
             plt.savefig(fname)
         plt.show()
 
 
-
 def void_size_function(
-    radius, box, delta,
-    *, scale_1_num_samples=7, scale_2_num_samples=2
-    ):
+    radius, box, delta, *, scale_1_num_samples=7, scale_2_num_samples=2
+):
     """
     Computes the SvdW Void Size Function (VSF) model.
 
@@ -482,7 +493,8 @@ def void_size_function(
     # Number of tracers
     # n = np.concatenate([np.arange(6, 11, 2), np.arange(12, 53, 10)])
     n = np.concatenate(
-        [np.arange(6, 11, 2), np.arange(12, round(max(radius)), 10)])
+        [np.arange(6, 11, 2), np.arange(12, round(max(radius)), 10)]
+    )
 
     # Scaling calculation
     # Radius in function of rhomed, tracers n and delta: R(rhomed, n , delta)
@@ -492,17 +504,19 @@ def void_size_function(
     mxlg_scl_diff = mxlg - max(scl)
 
     # Histogram bins calculation
-    bins = np.concatenate([
-    scl[:-1],
-    np.linspace(
-        max(scl),
-        max(scl) + mxlg_scl_diff*0.5,
-        scale_1_num_samples),
-    np.linspace(
-        max(scl) + mxlg_scl_diff*0.5 + mxlg_scl_diff*0.1,
-        mxlg,
-        scale_2_num_samples)
-    ])
+    bins = np.concatenate(
+        [
+            scl[:-1],
+            np.linspace(
+                max(scl), max(scl) + mxlg_scl_diff * 0.5, scale_1_num_samples
+            ),
+            np.linspace(
+                max(scl) + mxlg_scl_diff * 0.5 + mxlg_scl_diff * 0.1,
+                mxlg,
+                scale_2_num_samples,
+            ),
+        ]
+    )
 
     # Histogram calculation
     h, bin_edges = np.histogram(np.log10(radius), bins=bins)
@@ -517,9 +531,8 @@ def void_size_function(
     index = np.where(density > 0.0)[0]  # Non zero elements index
 
     return VSF(
-        log_of_radius = mids[index],
-        counts = density[index],
-        unit = box.x[0].unit,
-        delta = delta
+        log_of_radius=mids[index],
+        counts=density[index],
+        unit=box.x[0].unit,
+        delta=delta,
     )
-
