@@ -327,8 +327,8 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 # VSF
 # =============================================================================
 
-@define
-class VSF(repr=False):
+@define(repr=False)
+class VSF():
     """
     A class representing the SvdW Void Size Function (VSF) Model.
 
@@ -402,9 +402,8 @@ class VSF(repr=False):
                 Name plus number of radius and unit
         """
         cls_name = type(self).__name__
-        n_radius = len(self._log_of_radius)
         unit = self._unit
-        return f"<{cls_name} N radius: {n_radius} unit: {unit}>"
+        return f"<{cls_name} Delta: {self.delta} unit: {unit}>"
 
     def plot(self,*,save=False,fname='void_size_function.jpg'):
         """
