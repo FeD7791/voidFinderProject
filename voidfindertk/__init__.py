@@ -12,4 +12,4 @@ from .core import Box, VoidFinderABC, Voids
 from .io import read_table
 
 
-__all__ = ["Box", "ModelABC", "read_table", "Voids"]
+__all__ = ["Box", "VoidFinderABC", "read_table", "Voids"]
