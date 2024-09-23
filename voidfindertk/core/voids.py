@@ -1,10 +1,17 @@
-import numpy as np
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico, Gualpa Sebastian
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
+""" Void Class """
 import attrs
 
-from ..utils import Bunch
-from . import vsf, plot_acc
+import numpy as np
+
+from . import plot_acc, vsf
 from .box import Box
+from ..utils import Bunch
 
 
 @attrs.define(frozen=True, repr=False)
@@ -53,19 +60,6 @@ class Voids:
         Computes the effective radius for all voids.
     effective_radius(void_idx, delta=-0.9, n_neighbors=100, n_cells=64) :
         Computes the effective radius of a specific void.
-
-    Raises
-    ------
-    ValueError
-        If the number of boxes is not lesser than the number of voids.
-
-    Notes
-    -----
-    - The `extra` attribute is managed using a `Bunch` object, which is
-    essentially a dictionary.
-    - The `tracers_in_voids` attribute is a tuple of arrays where each array
-    contains IDs of particles inside a void.
-
     """
 
     # came from finde and data
@@ -162,17 +156,52 @@ class Voids:
     def void_size_function(
         self,
         *,
+        n_step1=2,
+        n_step2=10,
         scale_1_num_samples=7,
         scale_2_num_samples=2,
         **kwargs,
     ):
-        # Get the radii
+        """
+        Calculate the void size distribution based on the effective radius.
+
+        This function computes the log of radius, count of voids, and delta
+        values using the provided parameters for scaling and sampling.
+
+        Parameters
+        ----------
+        n_step1 : int, optional
+            Steps for the first scale. Default is 2. The lower the more number
+            of tracers (See vsf.void_size_function)
+        n_step2 : int, optional
+            Steps for the second scale. Default is 10.
+        scale_1_num_samples : int, optional
+            Number of the first part of bins. Default is 7.
+        scale_2_num_samples : int, optional
+            Numbers of the second part of bins. Default is 2.
+        **kwargs : keyword arguments
+            Additional keyword arguments passed to the `effective_radius`
+            method.
+
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - log_of_radius : array
+                The logarithm of the effective radius values.
+            - count : array
+                The count of voids corresponding to each radius.
+            - delta : array
+                The delta values for the void size distribution.
+        """
         effective_radius = self.effective_radius(**kwargs)
 
         log_of_radius, count, delta = vsf.void_size_function(
             effective_radius=effective_radius,
             box=self.box,
-            scale_1_num_samples=scale_2_num_samples,
+            n_step1=n_step1,
+            n_step2=n_step2,
+            scale_1_num_samples=scale_1_num_samples,
             scale_2_num_samples=scale_2_num_samples,
         )
 
