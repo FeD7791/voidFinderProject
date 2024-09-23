@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 
-# Popcorn reader
-
+# Popcorn reader (Old version - to be changed)
 def read_pop(filename):
     """
     Reads a data table of popcorn voids from an ASCII file (without header) and structures it as a dictionary.

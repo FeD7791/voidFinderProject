@@ -1,21 +1,24 @@
-from ..svf_popcorn import PopCornVF, Paths, FileNames
+from ..svf_popcorn import SVFPopCorn, Paths, FileNames
 from . import _wrapper
+from . import _postprocessing
 
 import attr
 
+import numpy as np
+
 
 @attr.define
-class PopCorn(PopCornVF):
+class PopCorn(SVFPopCorn):
     _shot_noise_threshold = attr.field(default=20)
 
     @property
     def shot_noise_threshold(self):
         return self._shot_noise_threshold
 
-    def model_find(self, databox):
-        parameters = super().model_find(databox)
-        run_work_dir = parameters["run_work_dir"]
-        box = parameters["box"]
+    def build_voids(self, model_find_parameters):
+        tracers_in_voids, centers, extra = super().build_voids(
+            model_find_parameters)
+        run_work_dir = extra["files_directory_path"]
 
         # Before continuing minradius must be re-configured
         _wrapper.read_and_modify_config(
@@ -40,40 +43,25 @@ class PopCorn(PopCornVF):
             conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir
         )
-        return {"run_work_dir": run_work_dir, "box": box}
-    
-    def build_voids(self, model_find_parameters):
-        return 1,2,3
+        # Get popvoids
+        popcorn_void_properties = _postprocessing.read_pop(
+            filename=run_work_dir / FileNames.POPFILE)
+        # Process output
+        tracers = []
+        # Get centers of the first sphere
+        # By now, the centers are the center of the spheres of heriarchy level
+        # zero
+        x = np.array([e['x'][0] for e in popcorn_void_properties["pop"]],
+                     dtype=np.float32)
+        y = np.array([e['y'][0] for e in popcorn_void_properties["pop"]],
+                     dtype=np.float32)
+        z = np.array([e['z'][0] for e in popcorn_void_properties["pop"]],
+                     dtype=np.float32)
+        centers = np.stack([x,y,z],axis=1)
+        extra = {
+            "files_directory_path": run_work_dir,
+            "r_eff": np.array([e for e in popcorn_void_properties["reff"]])
+        }
+        return tracers, centers, extra
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @attrs.define
-# class A:
-#     a: int = 1
-#     def howdy(self):
-#         print('howdy neighbor?!')
-
-
-# @attrs.define
-# class B(A):
-#     b: str = "default"
-#     c: int = 56
-#     def __attrs_post_init__(self):
-#         self.a = self.c
-#     def howdy_new(self):
-#         super().howdy()
-#         print("Hello neighbor")

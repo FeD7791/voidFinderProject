@@ -1,3 +1,41 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico, Gualpa Sebastian
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+
+"""
+Module for interacting with the Popcorn void finder and related utilities.
+
+This module provides functions to execute commands related to the Popcorn void
+finder, compute intersections, clean duplicates, and modify configuration
+files.
+
+Functions
+---------
+popcorn_void_finder(mpi_flags, bin_path, conf_file_path, work_dir_path)
+    Executes the Popcorn void finder with the specified configuration.
+
+compute_intersects(bin_path, conf_file_path, work_dir_path)
+    Executes the compute_intersecs command with the specified configuration.
+
+clean_duplicates(bin_path, conf_file_path, work_dir_path)
+    Executes the clean_duplicates command with the specified configuration.
+
+read_and_modify_config(config_file_path, section, parameter, new_value)
+    Reads a configuration file and modifies a specified parameter in a given
+    section.
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import sh
 import configparser
 from ..utils import chdir
@@ -7,6 +45,25 @@ from ..utils import chdir
 
 
 def popcorn_void_finder(*,mpi_flags,bin_path, conf_file_path, work_dir_path):
+    """
+    Executes the Popcorn void finder with the specified configuration.
+
+    Parameters
+    ----------
+    mpi_flags : str
+        Flags for MPI configuration (not currently used in the command).
+    bin_path : str
+        Path to the directory containing the Popcorn executable.
+    conf_file_path : str
+        Path to the configuration file to be used by the Popcorn void finder.
+    work_dir_path : str
+        Directory path where the command will be executed.
+
+    Returns
+    -------
+    output : str
+        The output from the Popcorn command execution.
+    """
     popcorn = sh.Command("popcorn",search_paths=[bin_path])
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
@@ -15,6 +72,24 @@ def popcorn_void_finder(*,mpi_flags,bin_path, conf_file_path, work_dir_path):
     return output
 
 def compute_intersects(*,bin_path, conf_file_path, work_dir_path):
+    """
+    Executes the compute_intersecs command with the specified configuration.
+
+    Parameters
+    ----------
+    bin_path : str
+        Path to the directory containing the compute_intersecs executable.
+    conf_file_path : str
+        Path to the configuration file to be used by the compute_intersecs
+        command.
+    work_dir_path : str
+        Directory path where the command will be executed.
+
+    Returns
+    -------
+    output : str
+        The output from the compute_intersecs command execution.
+    """
     compute_intersecs = sh.Command("compute_intersecs",search_paths=[bin_path])
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
@@ -23,6 +98,24 @@ def compute_intersects(*,bin_path, conf_file_path, work_dir_path):
     return output
 
 def clean_duplicates(*,bin_path, conf_file_path, work_dir_path):
+    """
+    Executes the clean_duplicates command with the specified configuration.
+
+    Parameters
+    ----------
+    bin_path : str
+        Path to the directory containing the clean_duplicates executable.
+    conf_file_path : str
+        Path to the configuration file to be used by the clean_duplicates
+        command.
+    work_dir_path : str
+        Directory path where the command will be executed.
+
+    Returns
+    -------
+    output : str
+        The output from the clean_duplicates command execution.
+    """
     clean_duplicates = sh.Command("clean_duplicates",search_paths=[bin_path])
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
@@ -33,6 +126,28 @@ def clean_duplicates(*,bin_path, conf_file_path, work_dir_path):
 
 
 def read_and_modify_config(*,config_file_path, section, parameter, new_value):
+    """
+    Reads a configuration file and modifies a specified parameter in a given
+    section.
+
+    Parameters
+    ----------
+    config_file_path : str
+        Path to the configuration file to be modified.
+    section : str
+        The section in the configuration file that contains the parameter to
+        modify.
+    parameter : str
+        The parameter within the section that needs to be updated.
+    new_value : str
+        The new value to set for the specified parameter.
+
+    Returns
+    -------
+    None
+        This function modifies the configuration file in place and does not
+        return a value.
+    """
     # Create a ConfigParser object
     config = configparser.ConfigParser()
     config.optionxform = str
