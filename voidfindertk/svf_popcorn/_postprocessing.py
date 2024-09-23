@@ -7,52 +7,6 @@ import pandas as pd
 import uttr
 
 
-# @uttr.s(repr=False)
-# class VoidProperties:
-#     """
-#     A class to represent properties with various numerical attributes.
-
-#     Attributes
-#     ----------
-#     id : int
-#         Void Id.
-#     r : float
-#         Void Radius (32-bit).
-#     x : float
-#         Void x coordinate center (32-bit).
-#     y : float
-#         Void y coordinate center (32-bit).
-#     z : float
-#         Void z coordinate center (32-bit).
-#     density_contrast : float
-#         Integrated density contrast (32-bit).
-
-#     Methods
-#     -------
-#     __repr__():
-#         Return a string representation of the VoidProperties object.
-#     """
-
-#     id = uttr.ib(converter=int)
-#     r = uttr.ib(converter=np.float32)
-#     x = uttr.ib(converter=np.float32)
-#     y = uttr.ib(converter=np.float32)
-#     z = uttr.ib(converter=np.float32)
-#     density_contrast = uttr.ib(converter=np.float32)
-
-#     def __repr__(self):
-#         """
-#         Return a string representation of the VoidProperties object.
-
-#         Returns
-#         -------
-#         str
-#             String representation of the VoidProperties object.
-#         """
-#         cls_name = type(self).__name__
-#         return f"<{cls_name} void_number={self.id}>"
-
-
 def get_void_properties(*, popcorn_output_file_path):
     """
     Read void properties from a file and return them as a pandas dataframe
@@ -76,17 +30,6 @@ def get_void_properties(*, popcorn_output_file_path):
     should be separated by whitespace and appear in this order.
 
     """
-
-    # with open(popcorn_output_file_path, "r") as f:
-    #     voids = f.readlines()
-    # parameters = ["id", "r", "x", "y", "z", "density_contrast"]
-    # all_void_properties = []
-    # for void in voids:
-    #     properties = dict(
-    #         zip(parameters, np.array(void.split(), dtype=np.float32))
-    #         )
-    #     void_properties = VoidProperties(**properties)
-    #     all_void_properties.append(void_properties)
 
     df_properties = pd.read_csv(
         popcorn_output_file_path,

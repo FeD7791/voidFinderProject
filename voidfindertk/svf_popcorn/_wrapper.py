@@ -99,7 +99,7 @@ def popcorn_svf_input_data_builder(*, box, file_path):
         File path to place the file.
     """
     df = pd.DataFrame(box.__dict__)
-    df.drop(labels=["_len"], axis=1, inplace=True)
+    #df.drop(labels=["_len"], axis=1, inplace=True)
     # Popcorn input file format
     df = df[["m", "x", "y", "z", "vx", "vy", "vz"]]
     df.to_csv(

@@ -31,7 +31,7 @@ class FileNames:
 
 
 @attr.define
-class PopCornVF(VoidFinderABC):
+class SVFPopCorn(VoidFinderABC):
     """
     PopCornVF class for void finding and analysis.
 
@@ -87,10 +87,10 @@ class PopCornVF(VoidFinderABC):
     __del__()
         Cleans up the temporary working directory if
         `workdir_clean` is True.
-    preprocess(databox)
-        Placeholder for preprocessing the DataBox object.
-    model_find(databox)
-        Finds voids using the provided DataBox object.
+    preprocess(box)
+        Placeholder for preprocessing the box object.
+    model_find(box)
+        Finds voids using the provided box object.
     build_voids(model_find_parameters)
         Builds voids and returns properties and tracers
         from the model find parameters.
@@ -186,10 +186,10 @@ class PopCornVF(VoidFinderABC):
         if self._workdir_clean:
             shutil.rmtree(self._workdir)
 
-    def preprocess(self, databox):
-        return databox
+    def preprocess(self, box):
+        return box
 
-    def model_find(self, databox):
+    def model_find(self, box):
         """
         Runs the POPCORN void finder by creating the input file and the
         vars.conf parameter file and then runind the binary using command line
@@ -197,8 +197,8 @@ class PopCornVF(VoidFinderABC):
 
         Parameters
         ----------
-            databox :  Object
-            DataBox object that holds the Box object with tracers properties.
+            box :  Object
+            box object that holds the Box object with tracers properties.
 
         Returns : Dict
         Dictionary with two parameters,
@@ -212,8 +212,8 @@ class PopCornVF(VoidFinderABC):
         The configuration file is built using the parameters of the class.
 
         """
-        # Retrieve box from DataBox object
-        box = databox.box
+        # Retrieve box from box object
+        box = box
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
         # Create config file on Workdir
@@ -273,7 +273,7 @@ class PopCornVF(VoidFinderABC):
             Dictionary with extra parameters, varying from properties to path
             directorys.
         """
-        # Retrieve box from DataBox object
+        # Retrieve box from box object
         box = model_find_parameters["box"]
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
