@@ -77,6 +77,11 @@ voidfindertk/zobov/qhull/
 
 # Popcorn
 voidfindertk/svf_popcorn/popcorn_void_finder/*
+run_real_popcorn/
+runz/
+run_dive/
+re_run_popcorn/
+models/
 
 # dive
 voidfindertk/dive/CosmoBolognaLib/*

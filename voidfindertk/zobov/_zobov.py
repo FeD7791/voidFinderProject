@@ -134,10 +134,10 @@ class ZobovVF(VoidFinderABC):
 
     Methods
     -------
-    preprocess(databox)
+    preprocess(box)
         Placeholder method for data preprocessing.
-    model_find(databox)
-        Executes the ZOBOV Void Finder algorithm on the provided DataBox
+    model_find(box)
+        Executes the ZOBOV Void Finder algorithm on the provided    Box
         object.
         This step follows these steps:
             1. Build the input data from the input box. This step will parse
@@ -253,34 +253,34 @@ class ZobovVF(VoidFinderABC):
         if self._workdir_clean:
             shutil.rmtree(self._workdir)
 
-    def preprocess(self, databox):
+    def preprocess(self, box):
         """
         Placeholder method for data preprocessing.
 
         Parameters
         ----------
-        databox : object
-            DataBox object containing data to be preprocessed.
+        box : object
+            Box object containing data to be preprocessed.
 
         Returns
         -------
         object
             Preprocessed data.
         """
-        return databox
+        return box
 
-    def model_find(self, databox):
+    def model_find(self, box):
         """
-        Execute the ZOBOV Void Finder algorithm on the provided DataBox
+        Execute the ZOBOV Void Finder algorithm on the provided Box
         object.
 
         Parameters
         ----------
-        databox : object
-            DataBox object containing the data box to be analyzed.
+        box : object
+            Box object containing the data box to be analyzed.
         """
-        # Retrieve box from DataBox object
-        box = databox.box
+        # Retrieve box from Box object
+        box = box
 
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
@@ -348,7 +348,7 @@ class ZobovVF(VoidFinderABC):
                 These properties are:
                 - run_work_dir: Directory path where the current run is
                 performed.
-                - databox : Object class DataBox (See DataBox in box module)
+                - box : Object class    Box (See   Box in box module)
                 with the tracers information.
         Returns
         -------
