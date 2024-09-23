@@ -1,5 +1,11 @@
-from collections.abc import Sequence
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico, Gualpa Sebastian
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 import warnings
+from collections.abc import Sequence
 
 import attrs
 
@@ -325,7 +331,8 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 
 
 def void_size_function(
-    effective_radius, box, *, scale_1_num_samples, scale_2_num_samples
+    effective_radius, box, *,
+    n_step1, n_step2, scale_1_num_samples, scale_2_num_samples
 ):
     """
     Computes the SvdW Void Size Function (VSF) model.
@@ -370,9 +377,8 @@ def void_size_function(
     rhomed = len(box) / vol
 
     # Number of tracers
-    # n = np.concatenate([np.arange(6, 11, 2), np.arange(12, 53, 10)])
     n = np.concatenate(
-        [np.arange(6, 11, 2), np.arange(12, round(max(radius)), 10)]
+        [np.arange(6, 11, n_step1), np.arange(12, round(max(radius)), n_step2)]
     )
 
     # Scaling calculation

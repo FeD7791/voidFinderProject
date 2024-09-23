@@ -4,7 +4,16 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
 """Class Box object constructor."""
+
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import math
 
 from astropy import units as u
@@ -16,13 +25,6 @@ import numpy as np
 import uttr
 
 from . import plot_acc
-
-
-class DataBox:
-    box = None
-
-    def __init__(self, aux_box):
-        self.box = aux_box
 
 
 @uttr.s(repr=False, frozen=True, cmp=False)

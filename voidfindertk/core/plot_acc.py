@@ -1,6 +1,34 @@
-import matplotlib.pyplot as plt
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (c) 2023, Bustillos Rava Jorge Federico, Gualpa Sebastian
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 
-import numpy as np
+# =============================================================================
+# DOCS
+# =============================================================================
+"""
+Module for plotting data related to boxes and voids using Matplotlib and
+Seaborn.
+
+This module contains classes that facilitate the visualization of data 
+from box and void objects through various plotting functions.
+
+Classes
+-------
+BoxPlotter
+    A class for plotting histograms of data contained in a box.
+
+VoidPlotter
+    A class for plotting void size functions.
+
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+import matplotlib.pyplot as plt
 
 import seaborn as sns
 
@@ -63,14 +91,10 @@ class VoidPlotter(accabc.AccessorABC):
 
         ax.set_yscale("log")
 
-        ax.set_title(f"Void Size Function\nSvdW Density Contrast {delta}")
+        ax.set_title(f"Void Size Function\n Density Contrast {delta}")
 
         ax.grid(True)
 
         return ax
 
     vsf = void_size_function
-
-
-
-
