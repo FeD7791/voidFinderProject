@@ -68,5 +68,4 @@ def read_table(
         vz=data.loc[:, "vz"],
         m=data.loc[:, "m"],
     )
-    the_box = box.DataBox(the_box)
     return the_box
