@@ -333,19 +333,21 @@ def cbl_cleaner(
         columns of the file are considered as inputs x,y,z refering to the
         positions of each tracer.
 
-        ratio : float (ratio < 1)
-        Variable used to compute the central density and the density contrast
-        of a void.
+        ratio : float (0 < ratio < 1)
+        Distance from the void centre at which the density contrast is
+        evaluated in units of the void radius. Ex: ratio = 0.1
+        =>  10% of the void radius lenght
 
         initial_radius : bool
         If true erase voids with effective radii outside a given range delta_r.
 
         delta_r : list
-        Interval of accepted radii.
+        Interval of accepted radii. Voids whose effective radius do not belong
+        to a selected range delta_r = [r_min,r_max] are erased.
 
         threshold : float
-        Value of the spherically-averaged density contrast (rho/rho_med + 1)
-        that each void will contain after the rescaling procedure.
+        Erase voids with underdensities higher than a given threshold.
+
 
         output_path : str
         Path to the output cleaned catalogue.
@@ -414,7 +416,7 @@ def cbl_cleaner(
     )
 
 
-def get_tracers_in_voids(*, box, cbl_cleaned_path):
+def get_tracers_and_center(*, box, cbl_cleaned_path):
     """
     Finds particles inside each void using Grispy.
 
@@ -467,7 +469,7 @@ def get_tracers_in_voids(*, box, cbl_cleaned_path):
 
     # Get tracers
     dist, ind = grid.bubble_neighbors(void_xyz, distance_upper_bound=void_rad)
-    return ind
+    return ind,void_xyz
 
 
 def get_dive_void_properties(*, cleaned_catalogue_path):

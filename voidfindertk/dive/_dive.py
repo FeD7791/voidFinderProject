@@ -15,7 +15,7 @@ class DiveVF(ZobovVF):
     def __init__(
         self,
         *,
-        ratio=1.5,
+        ratio=0.1,
         initial_radius=True,
         delta_r=[17.0, 150.0],
         threshold=0.3,
@@ -105,8 +105,8 @@ class DiveVF(ZobovVF):
             output_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
             ol_crit=self._overlap_criterion,
         )
-        # Get tracers in voids
-        tinv_cleaned_catalogue = _postprocessing.get_tracers_in_voids(
+        # Get tracers in voids and center
+        clean_tracers,clean_centers = _postprocessing.get_tracers_and_center(
             box=box,
             cbl_cleaned_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
         )
@@ -114,4 +114,4 @@ class DiveVF(ZobovVF):
         extra["void_properties"] = _postprocessing.get_dive_void_properties(
             cleaned_catalogue_path=run_work_dir / _Files.CLEANED_CATALOGUE
         )
-        return tuple(tinv_cleaned_catalogue), centers, extra
+        return tuple(clean_tracers), clean_centers, extra
