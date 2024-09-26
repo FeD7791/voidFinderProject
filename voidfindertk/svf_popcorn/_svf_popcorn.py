@@ -16,8 +16,8 @@ class Paths:
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
-    # Path to the src folder of Zobov
-    SVF = CURRENT / "popcorn_void_finder" / "Source"
+    # Path to the src folder of Popcorn
+    SVF = CURRENT / "popcorn_void_finder" / "src"
     CONFFILE = SVF / "configuration"
 
 
