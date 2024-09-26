@@ -1,12 +1,11 @@
-#!/usr/bin/env python
+###############################################################################
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-# This file is part of the
-#   Void-Finder-Toolkit Project (https://github.com/FeD7791/voidFinderProject).
-# Copyright (c) 2023-2024, Bustillos, J.F.; Cabral, Juan
-# License: BSD 3-Clause
-# Full Text:
-#   https://raw.githubusercontent.com/FeD7791/voidFinderProject/dev/LICENSE.txt
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
+###############################################################################
 
 # =============================================================================
 # DOCS

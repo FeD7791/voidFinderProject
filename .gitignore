@@ -67,6 +67,9 @@ plot_tools.py
 log_file.txt
 main_pipeline.py
 voids_file.dat
+.isort.cfg
+header.txt
+script_re_run_popcorn.py
 
 # zobov
 
