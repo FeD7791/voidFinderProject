@@ -73,7 +73,8 @@ voids_file.dat
 voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
 voidfindertk/zobov/src/src/*
-voidfindertk/zobov/qhull/
+voidfindertk/zobov/src/qhull/
+
 
 # Popcorn
 voidfindertk/svf_popcorn/popcorn_void_finder/*
