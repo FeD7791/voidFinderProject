@@ -73,6 +73,7 @@ voids_file.dat
 voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
 voidfindertk/zobov/src/src/*
+voidfindertk/zobov/src/bin/
 voidfindertk/zobov/src/qhull/
 
 
