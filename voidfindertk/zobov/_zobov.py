@@ -22,9 +22,9 @@ import attr
 
 import numpy as np
 
-from ..core import VoidFinderABC
 from . import _postprocessing
 from . import _wrapper as _wrap
+from ..core import VoidFinderABC
 
 
 @attr.define(frozen=True)

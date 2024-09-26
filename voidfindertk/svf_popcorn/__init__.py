@@ -19,7 +19,7 @@
 # IMPORTS
 # =============================================================================
 
-from ._svf_popcorn import SVFPopCorn, Paths, FileNames
+from ._svf_popcorn import FileNames, Paths, SVFPopCorn
 
 # =============================================================================
 # ALL

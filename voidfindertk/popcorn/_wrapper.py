@@ -33,18 +33,20 @@ read_and_modify_config(config_file_path, section, parameter, new_value)
     section.
 """
 
+import configparser
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
 import sh
-import configparser
+
 from ..utils import chdir
 
 # Reference:
 # https://gitlab.com/dante.paz/popcorn_void_finder#43-popcorn-void-finder
 
 
-def popcorn_void_finder(*,mpi_flags,bin_path, conf_file_path, work_dir_path):
+def popcorn_void_finder(*, mpi_flags, bin_path, conf_file_path, work_dir_path):
     """
     Executes the Popcorn void finder with the specified configuration.
 
@@ -64,14 +66,15 @@ def popcorn_void_finder(*,mpi_flags,bin_path, conf_file_path, work_dir_path):
     output : str
         The output from the Popcorn command execution.
     """
-    popcorn = sh.Command("popcorn",search_paths=[bin_path])
+    popcorn = sh.Command("popcorn", search_paths=[bin_path])
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
     with chdir(work_dir_path):
         output = popcorn(params)
     return output
 
-def compute_intersects(*,bin_path, conf_file_path, work_dir_path):
+
+def compute_intersects(*, bin_path, conf_file_path, work_dir_path):
     """
     Executes the compute_intersecs command with the specified configuration.
 
@@ -90,14 +93,17 @@ def compute_intersects(*,bin_path, conf_file_path, work_dir_path):
     output : str
         The output from the compute_intersecs command execution.
     """
-    compute_intersecs = sh.Command("compute_intersecs",search_paths=[bin_path])
+    compute_intersecs = sh.Command(
+        "compute_intersecs", search_paths=[bin_path]
+    )
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
     with chdir(work_dir_path):
         output = compute_intersecs(params)
     return output
 
-def clean_duplicates(*,bin_path, conf_file_path, work_dir_path):
+
+def clean_duplicates(*, bin_path, conf_file_path, work_dir_path):
     """
     Executes the clean_duplicates command with the specified configuration.
 
@@ -116,7 +122,7 @@ def clean_duplicates(*,bin_path, conf_file_path, work_dir_path):
     output : str
         The output from the clean_duplicates command execution.
     """
-    clean_duplicates = sh.Command("clean_duplicates",search_paths=[bin_path])
+    clean_duplicates = sh.Command("clean_duplicates", search_paths=[bin_path])
     params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
     with chdir(work_dir_path):
@@ -124,8 +130,7 @@ def clean_duplicates(*,bin_path, conf_file_path, work_dir_path):
     return output
 
 
-
-def read_and_modify_config(*,config_file_path, section, parameter, new_value):
+def read_and_modify_config(*, config_file_path, section, parameter, new_value):
     """
     Reads a configuration file and modifies a specified parameter in a given
     section.
@@ -168,5 +173,5 @@ def read_and_modify_config(*,config_file_path, section, parameter, new_value):
     config.set(section, parameter, new_value)
 
     # Save the changes back to the configuration file
-    with open(config_file_path, 'w') as configfile:
+    with open(config_file_path, "w") as configfile:
         config.write(configfile)

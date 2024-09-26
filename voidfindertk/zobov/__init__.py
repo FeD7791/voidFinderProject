@@ -21,7 +21,7 @@ from ._postprocessing import (
     parse_zones_in_void_output,
     process_and_extract_void_properties_and_particles,
 )
-from ._zobov import ZobovVF, Names
+from ._zobov import Names, ZobovVF
 
 # =============================================================================
 # ALL

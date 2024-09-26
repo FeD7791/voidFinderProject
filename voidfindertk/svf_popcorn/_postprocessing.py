@@ -4,8 +4,6 @@ import numpy as np
 
 import pandas as pd
 
-import uttr
-
 
 def get_void_properties(*, popcorn_output_file_path):
     """

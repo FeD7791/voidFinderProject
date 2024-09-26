@@ -34,6 +34,7 @@ class VoidFinderABC(ABC):
         Abstract method to build voids from the model find parameters.
         Must be implemented by subclass.
     """
+
     def __init__(self):
         """Initialize the VoidFinderABC instance."""
         pass

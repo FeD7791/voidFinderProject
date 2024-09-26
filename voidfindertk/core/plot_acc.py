@@ -12,7 +12,7 @@
 Module for plotting data related to boxes and voids using Matplotlib and
 Seaborn.
 
-This module contains classes that facilitate the visualization of data 
+This module contains classes that facilitate the visualization of data
 from box and void objects through various plotting functions.
 
 Classes

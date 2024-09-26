@@ -11,5 +11,4 @@ __version__ = "0.0.1"
 from .core import Box, VoidFinderABC, Voids
 from .io import read_table
 
-
 __all__ = ["Box", "VoidFinderABC", "read_table", "Voids"]

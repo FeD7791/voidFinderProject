@@ -1,10 +1,9 @@
-from ..svf_popcorn import SVFPopCorn, Paths, FileNames
-from . import _wrapper
-from . import _postprocessing
-
 import attr
 
 import numpy as np
+
+from . import _postprocessing, _wrapper
+from ..svf_popcorn import FileNames, Paths, SVFPopCorn
 
 
 @attr.define
@@ -17,7 +16,8 @@ class PopCorn(SVFPopCorn):
 
     def build_voids(self, model_find_parameters):
         tracers_in_voids, centers, extra = super().build_voids(
-            model_find_parameters)
+            model_find_parameters
+        )
         run_work_dir = extra["files_directory_path"]
 
         # Before continuing minradius must be re-configured
@@ -25,43 +25,48 @@ class PopCorn(SVFPopCorn):
             config_file_path=run_work_dir / FileNames.CONFIG,
             section="INPUT_PARAMS",
             parameter="MINRADIUS",
-            new_value=str(self._shot_noise_threshold)
+            new_value=str(self._shot_noise_threshold),
         )
         _wrapper.popcorn_void_finder(
             mpi_flags=self._mpi_flags,
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir
-            )
+            work_dir_path=run_work_dir,
+        )
         _wrapper.compute_intersects(
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir
+            work_dir_path=run_work_dir,
         )
         _wrapper.clean_duplicates(
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir
+            work_dir_path=run_work_dir,
         )
         # Get popvoids
         popcorn_void_properties = _postprocessing.read_pop(
-            filename=run_work_dir / FileNames.POPFILE)
+            filename=run_work_dir / FileNames.POPFILE
+        )
         # Process output
         tracers = []
         # Get centers of the first sphere
         # By now, the centers are the center of the spheres of heriarchy level
         # zero
-        x = np.array([e['x'][0] for e in popcorn_void_properties["pop"]],
-                     dtype=np.float32)
-        y = np.array([e['y'][0] for e in popcorn_void_properties["pop"]],
-                     dtype=np.float32)
-        z = np.array([e['z'][0] for e in popcorn_void_properties["pop"]],
-                     dtype=np.float32)
-        centers = np.stack([x,y,z],axis=1)
+        x = np.array(
+            [e["x"][0] for e in popcorn_void_properties["pop"]],
+            dtype=np.float32,
+        )
+        y = np.array(
+            [e["y"][0] for e in popcorn_void_properties["pop"]],
+            dtype=np.float32,
+        )
+        z = np.array(
+            [e["z"][0] for e in popcorn_void_properties["pop"]],
+            dtype=np.float32,
+        )
+        centers = np.stack([x, y, z], axis=1)
         extra = {
             "files_directory_path": run_work_dir,
-            "r_eff": np.array([e for e in popcorn_void_properties["reff"]])
+            "r_eff": np.array([e for e in popcorn_void_properties["reff"]]),
         }
         return tracers, centers, extra
-
-

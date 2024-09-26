@@ -1,6 +1,6 @@
+import datetime as dt
 import pathlib
 import tempfile
-import datetime as dt
 
 
 def create_run_work_dir(*, workdir_path):

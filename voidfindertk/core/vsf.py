@@ -331,8 +331,13 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 
 
 def void_size_function(
-    effective_radius, box, *,
-    n_step1, n_step2, scale_1_num_samples, scale_2_num_samples
+    effective_radius,
+    box,
+    *,
+    n_step1,
+    n_step2,
+    scale_1_num_samples,
+    scale_2_num_samples,
 ):
     """
     Computes the SvdW Void Size Function (VSF) model.

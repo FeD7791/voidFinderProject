@@ -7,9 +7,9 @@ import attr
 
 import numpy as np
 
+from . import _postprocessing, _wrapper
 from ..core import VoidFinderABC
 from ..utils import make_workdir
-from . import _postprocessing, _wrapper
 
 
 class Paths:

@@ -10,9 +10,7 @@ import pandas as pd
 from .core import box
 
 
-def read_table(
-    path_or_buffer, **kwargs
-):
+def read_table(path_or_buffer, **kwargs):
     """Input reader.
 
     Read a table from a file or buffer and returns a `box.Box` object.
