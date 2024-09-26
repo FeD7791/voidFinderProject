@@ -47,7 +47,7 @@ class DiveVF(ZobovVF):
         return self._threshold
 
     @property
-    def threshold(self):
+    def overlap_criterion(self):
         return self._overlap_criterion
 
     def build_voids(self, model_find_parameters):
@@ -106,7 +106,7 @@ class DiveVF(ZobovVF):
             ol_crit=self._overlap_criterion,
         )
         # Get tracers in voids and center
-        clean_tracers,clean_centers = _postprocessing.get_tracers_and_center(
+        clean_tracers, clean_centers = _postprocessing.get_tracers_and_center(
             box=box,
             cbl_cleaned_path=str(run_work_dir / _Files.CLEANED_CATALOGUE),
         )
