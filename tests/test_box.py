@@ -14,8 +14,10 @@ from voidfindertk.box import Box
 
 
 def test_Box_initialization(mkbox):
-    box = mkbox(seed=42, size=1000)# mkbox inmediatamente retorna _maker(**kwargs)
-    #mkbox(seed=42, size=1000) --> _maker(**kwargs)
+    box = mkbox(
+        seed=42, size=1000
+    )  # mkbox inmediatamente retorna _maker(**kwargs)
+    # mkbox(seed=42, size=1000) --> _maker(**kwargs)
     assert box.x.unit == u.Mpc
     assert box.y.unit == u.Mpc
     assert box.z.unit == u.Mpc
@@ -41,9 +43,14 @@ def test_Box_different_length_tracers(mkbox_params):
     with pytest.raises(ValueError, match="Arrays should be of the same size"):
         Box(**params)
 
+
 def test_Box_different_length_side_box(mkbox_params):
-    params = mkbox_params(seed=43, size=1000) #for this seed math.ceil(max(box.x)) = 499 instead default vaule of 500
-    with pytest.raises(ValueError, match="Not a cube: xmax: 499 ymax: 500 zmax: 500"):
+    params = mkbox_params(
+        seed=43, size=1000
+    )  # for this seed math.ceil(max(box.x)) = 499 instead default vaule of 500
+    with pytest.raises(
+        ValueError, match="Not a cube: xmax: 499 ymax: 500 zmax: 500"
+    ):
         Box(**params)
 
 
@@ -53,4 +60,3 @@ def test_box_equality(mkbox):
     box3 = mkbox(seed=42, size=999)
     assert box1 == box2
     assert not box1 == box3
-
