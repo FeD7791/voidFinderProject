@@ -1,11 +1,12 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
 import os
 import pathlib
 import shutil
@@ -21,6 +22,19 @@ from ..utils import make_workdir
 
 
 class Paths:
+    """
+    A class to store paths used in the Popcorn void finder.
+
+    Attributes
+    ----------
+    CURRENT : pathlib.Path
+        The absolute path to the current directory of the module.
+    SVF : pathlib.Path
+        Path to the source folder of the Popcorn void finder.
+    CONFFILE : pathlib.Path
+        Path to the configuration folder within the SVF directory.
+    """
+
     CURRENT = pathlib.Path(
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
@@ -30,6 +44,25 @@ class Paths:
 
 
 class FileNames:
+    """
+    A class to hold the file names used in the Popcorn void finder project.
+
+    Attributes
+    ----------
+    CONFIG : str
+        Name of the configuration file.
+    TRSFILE : str
+        Name of the tracer file.
+    SPHFILE : str
+        Name of the spherical voids catalogue file.
+    POPFILE : str
+        Name of the popcorn voids catalogue file.
+    RAWPOPFILE : str
+        Name of the raw popcorn voids file before cleaning.
+    PAIRSFILE : str
+        Name of the file containing pairs of touching popcorn voids.
+    """
+
     CONFIG = "vars.conf"
     TRSFILE = "trsfile.dat"
     SPHFILE = "sphfile.dat"
@@ -122,7 +155,12 @@ class SVFPopCorn(VoidFinderABC):
 
     # Set path to extra files
     def __attrs_post_init__(self):
+        """
+        Post inicialization method.
 
+        Initializes paths for SVF and working directory after attribute
+        initialization.
+        """
         # svf_path
         self._svf_path = pathlib.Path(
             Paths.SVF if self._svf_path is None else self._svf_path
@@ -139,47 +177,65 @@ class SVFPopCorn(VoidFinderABC):
 
     @property
     def auxfiles(self):
+        """Returns the flag for auxiliary files."""
         return self._auxfiles
 
     @property
     def boxsize(self):
+        """Returns the length of the box."""
         return self._boxsize
 
     @property
     def densth(self):
+        """Returns the density threshold."""
         return self._densth
 
     @property
     def minradius(self):
+        """Returns the minimum radius for void detection."""
         return self._minradius
 
     @property
     def maxradius(self):
+        """Returns the maximum radius for void detection."""
         return self._maxradius
 
     @property
     def massmin(self):
+        """Returns the minimum mass threshold."""
         return self._massmin
 
     @property
     def svf_path(self):
+        """Returns the path to the SVF directory."""
         return self._svf_path
 
     @property
     def mpi_flags(self):
+        """Returns the MPI flags."""
         return self._mpi_flags
 
     @property
     def workdir(self):
+        """Returns the working directory path."""
         return self._workdir
 
     @property
     def workdir_clean(self):
+        """Returns the flag for cleaning the working directory."""
         return self._workdir_clean
 
     # INTERNAL ================================================================
     # Directory Creator
     def _create_run_work_dir(self):
+        """
+        Creates and returns a temporary working directory.
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the created working directory.
+        """
         run_workdir = make_workdir.create_run_work_dir(
             workdir_path=self._workdir
         )
@@ -188,6 +244,8 @@ class SVFPopCorn(VoidFinderABC):
     # Directory Cleaner
     def __del__(self):
         """
+        Workdir Cleaner.
+
         Destructor that cleans up the temporary working directory
         if workdir_clean is True.
         """
@@ -195,30 +253,44 @@ class SVFPopCorn(VoidFinderABC):
             shutil.rmtree(self._workdir)
 
     def preprocess(self, box):
+        """
+        Placeholder for preprocessing the box object.
+
+        Parameters
+        ----------
+        box : Object
+            The box object to preprocess.
+
+        Returns
+        -------
+        Object
+            The processed box object.
+        """
         return box
 
     def model_find(self, box):
         """
+        Performs Void Finding with PopCorn Void Finder.
+
         Runs the POPCORN void finder by creating the input file and the
-        vars.conf parameter file and then runind the binary using command line
+        vars.conf parameter file and then running the binary using command line
         instructions.
 
         Parameters
         ----------
-            box :  Object
-            box object that holds the Box object with tracers properties.
+            box : Object
+                Box object that holds the tracer properties.
 
         Returns : Dict
-        Dictionary with two parameters,
-            run_work_dir : path to the working directory.
-            box : Box Object.
+            Dictionary with two parameters:
+                - run_work_dir : path to the working directory.
+                - box : Box Object.
 
         Notes
         -----
-        To run POPCORN void finder an input tracer and a configuration file
-        are needed. The input tracer file is built using the Box Object.
+        To run the POPCORN void finder, an input tracer and a configuration
+        file are needed. The input tracer file is built using the Box Object.
         The configuration file is built using the parameters of the class.
-
         """
         # Retrieve box from box object
         box = box
@@ -259,27 +331,29 @@ class SVFPopCorn(VoidFinderABC):
 
     def build_voids(self, model_find_parameters):
         """
-        Postprocess the outputs of POPCORN (spherical) void finder to get the
-        list of tracers inside each void (if any) and properties foud by this
-        method.
+        Postprocess outputs from PopCorn Void Finder output files.
+
+        Postprocesses the outputs of the POPCORN (spherical) void finder to get
+        the list of tracers inside each void (if any) and properties found by
+        this method.
 
         Parameters
         ----------
             model_find_parameters : Dict
-            Parameters got from the model_find step.
+                Parameters obtained from the model_find step.
 
         Returns
         -------
             tracers_in_voids : tuple
-            List of indexes of tracers (Regarding to the Box object index)
-            inside each void.
+                List of indexes of tracers (relative to the Box object index)
+                inside each void.
 
             centers : numpy 2D array
-            (x,y,z) coordinates of each center for each void.
+                (x, y, z) coordinates of each center for each void.
 
             extra : Dict
-            Dictionary with extra parameters, varying from properties to path
-            directorys.
+                Dictionary with extra parameters, varying from properties to
+                directory paths.
         """
         # Retrieve box from box object
         box = model_find_parameters["box"]

@@ -1,11 +1,12 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
 from configparser import ConfigParser
 
 import pandas as pd
@@ -36,43 +37,47 @@ def config_file_maker(
     path,
 ):
     """
+    Builds configuration file with void run parameters.
+
     Generates the configuration file with the parameters to run the void
     finder in the desired path.
+
     Parameters
     ----------
-    trsfile(str):
+    trsfile : str
         Input tracer file.
-    filefmt(str):
-        File format options: "ASCII" "STREAM" "HDF5" "HDF5_SUBFIND_GROUPS"
-        "HDF5_SUBFIND_SUBHALOS" "GADGET1" "GADGET2" "GADGET4_TYPE1"
-    num_file(str):
-        Number of files for the tracer catalogue, specially important for
+    filefmt : str
+        File format options: "ASCII", "STREAM", "HDF5",
+        "HDF5_SUBFIND_GROUPS", "HDF5_SUBFIND_SUBHALOS", "GADGET1",
+        "GADGET2", "GADGET4_TYPE1".
+    num_file : str
+        Number of files for the tracer catalogue, especially important for
         Gadget outputs.
-    sphfile(str):
+    sphfile : str
         Output Spherical voids catalogue.
-    popfile(str):
-        Output Popcorn voids catalogue (after cleaning overlappings).
-    auxfiles(str):
-        Whether or not use auxilary files:{true , false}
-    rawpopfile(str):
-        File with Popcorn voids before cleaning overlappings.
-    pairsfile(str):
-        File with Pairs of touching Popcorn voids.
-    boxsize(str):
-        Length of the box in the same units of the tracer input file
-        (required only for ascii inputs, otherwise ignored).
-    densth(str):
+    popfile : str
+        Output Popcorn voids catalogue (after cleaning overlaps).
+    auxfiles : str
+        Whether to use auxiliary files: {"true", "false"}.
+    rawpopfile : str
+        File with Popcorn voids before cleaning overlaps.
+    pairsfile : str
+        File with pairs of touching Popcorn voids.
+    boxsize : str
+        Length of the box in the same units as the tracer input file
+        (required only for ASCII inputs, otherwise ignored).
+    densth : str
         Integrated density threshold for identification.
-    minradius(str):
+    minradius : str
         Minimal radii allowed for a sphere member in input units.
-    maxradius(str):
+    maxradius : str
         Maximal radii allowed for a sphere member in input units.
-    massmin(str):
+    massmin : str
         Minimal halo mass allowed (set to 0 if not applicable).
-    eps(str):
-        Obsolete flag, don't modify.
-    path(pathlib.Path):
-        Path where the file is going to be generated.
+    eps : str
+        Obsolete flag; do not modify.
+    path : pathlib.Path
+        Path where the file will be generated.
     """
     config = ConfigParser(allow_no_value=True)
     config.optionxform = str
@@ -99,12 +104,13 @@ def config_file_maker(
 def popcorn_svf_input_data_builder(*, box, file_path):
     """
     Generates input file from box in the desired file path.
+
     Parameters
     ----------
-    box(Box object):
-        Box object with the tracers and their properties.
-    file_path(pathlib.Path):
-        File path to place the file.
+    box : Box
+        Box object containing the tracers and their properties.
+    file_path : pathlib.Path
+        File path to place the generated input file.
     """
     df = pd.DataFrame(box.__dict__)
     # df.drop(labels=["_len"], axis=1, inplace=True)
@@ -119,21 +125,23 @@ def spherical_popcorn_void_finder(
     *, mpi_flags, bin_path, conf_file_path, work_dir_path
 ):
     """
-    Runs the Popcorn-Spherical Void Finder using mpi.
+    Runs the Popcorn-Spherical Void Finder using MPI.
+
     Parameters
     ----------
-    mpi_flags(str):
-        mpi flags.
-    bin_path(pathlib.Path):
-        Path to the folder where the binary file that runs the void finder is.
-    conf_file_path(pathlib.Path):
-        Path to the configuration file used to run de void finder.
+    mpi_flags : str
+        MPI flags for execution.
+    bin_path : pathlib.Path
+        Path to the folder containing the binary file for the void finder.
+    conf_file_path : pathlib.Path
+        Path to the configuration file used to run the void finder.
     work_dir_path : str
         Path to the working directory.
+
     Returns
     -------
-    output:
-        sh output of the run.
+    output : str
+        Standard output from the run.
     """
     # Reference to mpi
     # https://docs.oracle.com/cd/E19356-01/820-3176-10/ExecutingPrograms.html

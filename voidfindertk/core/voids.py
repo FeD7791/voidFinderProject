@@ -1,13 +1,16 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
 
-""" Void Class """
+
+"""Void Class"""
+
 import attrs
 
 import numpy as np
@@ -81,6 +84,7 @@ class Voids:
     )
 
     def __attrs_post_init__(self):
+        """Post init method"""
         if len(self.box) <= len(self.tracers_in_voids_):
             raise ValueError(
                 "Number of box must be lesser than the numbers of voids"

@@ -1,11 +1,13 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
+
 import attr
 
 import numpy as np
@@ -16,13 +18,45 @@ from ..svf_popcorn import FileNames, Paths, SVFPopCorn
 
 @attr.define
 class PopCorn(SVFPopCorn):
+    """
+    A class to represent a popcorn void finder which processes spatial data.
+
+    Attributes
+    ----------
+    _shot_noise_threshold : int
+        The threshold value for shot noise, default is 20.
+
+    Methods
+    -------
+    shot_noise_threshold
+        Property that returns the shot noise threshold.
+    build_voids(model_find_parameters)
+        Builds voids in the model using specified parameters and updates
+        configuration as necessary.
+    """
+
     _shot_noise_threshold = attr.field(default=20)
 
     @property
     def shot_noise_threshold(self):
+        """Return the shot noise threshold value."""
         return self._shot_noise_threshold
 
     def build_voids(self, model_find_parameters):
+        """
+        Builds voids in the model based on provided parameters.
+
+        Parameters
+        ----------
+        model_find_parameters : dict
+            A dictionary of parameters used to locate model features.
+
+        Returns
+        -------
+        tuple
+            A tuple containing tracers, centers, and additional information
+            regarding the files directory and effective radii.
+        """
         tracers_in_voids, centers, extra = super().build_voids(
             model_find_parameters
         )

@@ -1,16 +1,43 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
+
 from . import _postprocessing
 from ..zobov import Names, ZobovVF
 
 
 class _Files:
+    """
+    A class containing file name constants for output files.
+
+    This class defines several constants that specify the names of
+    various output files used in the processing of void and tracer data.
+
+    Attributes
+    ----------
+    VOL_FILE_RAW : str
+        The name of the raw volume file, formatted with the output name.
+    ADJ_FILE_RAW : str
+        The name of the raw adjacency file, formatted with the output name.
+    XYZ_R_EFF_VOIDS_FILE : str
+        The name of the file containing void coordinates and effective radius.
+    XYZ_TRACERS_FILE : str
+        The name of the file containing tracer coordinates.
+    CLEANED_CATALOGUE : str
+        The name of the cleaned catalogue file containing processed void data.
+
+    Notes
+    -----
+    The `Names.OUTPUT_VOZINIT` should be defined elsewhere in the code to
+    provide a valid output name used in the volume and adjacency file names.
+    """
+
     VOL_FILE_RAW = f"vol{Names.OUTPUT_VOZINIT}.dat"
     ADJ_FILE_RAW = f"adj{Names.OUTPUT_VOZINIT}.dat"
     XYZ_R_EFF_VOIDS_FILE = "xyz_r_eff_file.txt"
@@ -19,6 +46,46 @@ class _Files:
 
 
 class DiveVF(ZobovVF):
+    """
+    Class for processing voids using the ZOBOV Finder algorithm.
+
+    This class extends the `ZobovVF` class to implement specific parameters
+    and methods for building voids from tracer data.
+
+    Parameters
+    ----------
+    ratio : float, optional
+        The ratio used in void cleaning (default is 0.1).
+    initial_radius : bool, optional
+        Flag to indicate if the initial radius should be used (default is
+        True).
+    delta_r : list of float, optional
+        Range of delta radii for processing (default is [17.0, 150.0]).
+    threshold : float, optional
+        Threshold value for void detection (default is 0.3).
+    overlap_criterion : bool, optional
+        Flag to determine if overlap criterion is applied (default is True).
+    **kwargs :
+        Additional keyword arguments passed to the parent class.
+
+    Attributes
+    ----------
+    ratio : float
+        The ratio used in void cleaning.
+    initial_radius : bool
+        Indicates whether the initial radius is used.
+    delta_r : list of float
+        The delta radii range.
+    threshold : float
+        The threshold for void detection.
+    overlap_criterion : bool
+        Indicates whether to apply the overlap criterion.
+
+    Methods
+    -------
+    build_voids(model_find_parameters)
+        Postprocess outputs from the ZOBOV Finder to extract voids.
+    """
 
     def __init__(
         self,
@@ -30,7 +97,7 @@ class DiveVF(ZobovVF):
         overlap_criterion=True,
         **kwargs,
     ):
-
+        """Init class method."""
         super().__init__(**kwargs)
         self._ratio = ratio
         self._initial_radius = initial_radius
@@ -40,22 +107,27 @@ class DiveVF(ZobovVF):
 
     @property
     def ratio(self):
+        """Get the ratio used in void cleaning."""
         return self._ratio
 
     @property
     def initial_radius(self):
+        """Get initial radius."""
         return self._initial_radius
 
     @property
     def delta_r(self):
+        """Get the range of delta radii for processing."""
         return self._delta_r
 
     @property
     def threshold(self):
+        """Get the threshold for void detection."""
         return self._threshold
 
     @property
     def overlap_criterion(self):
+        """Get overlap criterion is applied."""
         return self._overlap_criterion
 
     def build_voids(self, model_find_parameters):

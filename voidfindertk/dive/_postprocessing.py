@@ -1,11 +1,13 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
+
 import struct
 
 import grispy as gsp
@@ -65,8 +67,7 @@ class VoidProperties:
 
 def read_volume_file(*, filename):
     """
-    Read volume data from the binary volume file and return it as a NumPy
-    array.
+    Read data from the binary volume file and return it as a NumPy array.
 
     Parameters
     ----------
@@ -127,12 +128,12 @@ def _get_tracers_xyz(*, box):
 
 def _calculate_barycentre(*, tracers_xyz, tracers, tracer_volumes):
     """
-    Calucates the barycentre of a single void. A void is composed of several
-    voronoi cells. Each particle is inside a unique voronoi cell.
+    Calucates the barycentre of a single void.
 
-    The barycentre of a particular void iscalculated as the weigthed sum of
-    the particles position times the volume of its voronoi cell divided the
-    total volume of the void.
+    A void is composed of several voronoi cells. Each particle is inside a
+    unique voronoi cell. The barycentre of a particular void iscalculated as
+    the weigthed sum of the particles position times the volume of its voronoi
+    cell divided the total volume of the void.
 
     Parameters
     ----------
@@ -181,7 +182,7 @@ def _get_volumes_from_properties(*, void_properties):
 
 def _calculate_r_eff(*, void_volumes):
     """
-    Get the effective Radii for a given volume
+    Get the effective Radii for a given volume.
 
     Parameters
     ----------
@@ -281,6 +282,8 @@ def save_r_eff_center(*, centers, r_eff, path):
 
 def save_xyz_tracers(*, box, path):
     """
+    Save x,y,z coordinates from box into a file.
+
     Save x, y, and z coordinates from a box object to a tab-separated values
     file.
 
@@ -368,6 +371,41 @@ def get_tracers_and_center(*, box, cbl_cleaned_path):
 
 
 def get_dive_void_properties(*, cleaned_catalogue_path):
+    """
+    Read void properties from a cleaned catalogue file.
+
+    This function parses a file containing void data and returns a tuple
+    of `VoidProperties` objects, each representing a void's properties.
+
+    Parameters
+    ----------
+    cleaned_catalogue_path : str
+        The path to the cleaned catalogue file, which contains void data.
+        Each line in the file should represent a void with properties
+        formatted as space-separated values.
+
+    Returns
+    -------
+    tuple
+        A tuple of `VoidProperties` objects, each containing the properties
+        of a void, including an index, x, y, z coordinates, radius,
+        and density contrast.
+
+    Notes
+    -----
+    The `VoidProperties` class must be defined elsewhere in the code,
+    and it should accept the following keyword arguments:
+    - id (int)
+    - x (float)
+    - y (float)
+    - z (float)
+    - r (float)
+    - density_contrast (float)
+
+    Example
+    -------
+    >>> voids = get_dive_void_properties(cleaned_catalogue_path='path/to/file')
+    """
     with open(cleaned_catalogue_path, "r") as f:
         voids = f.readlines()
     parameters = ["id", "x", "y", "z", "r", "density_contrast"]

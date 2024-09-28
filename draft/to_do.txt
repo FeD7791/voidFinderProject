@@ -1,16 +1,14 @@
-Remove databox and leave box alone
-Finish popcorn
-
----Secondary
-add headers to ALL files
-
 
 --MUST do
 - Entender por que que voids.plot.hist2d anda.
 - Ver como cambio la estructura de voids.Voids
 - Eliminar codigo muerto
-- Sacarse de encima DataBox si no sirve para nada
+
 - Corregir toda la documentacion
 - Agregar cabeceras y comentarios que ordenen el codigo como en https://github.com/quatrope/scikit-criteria/blob/master/skcriteria/agg/__init__.py
 - endender por que cambie el nombre de void.centers a voids.centers_
 - Entender por que ahora la clase interna _EffectiveRadius es attrs en vez de dataclass
+
+- Terminar de arreglar _dive.py (Falta remover las referencias al cleaning que existe en esta clase)
+- Transformar esta clase a attrs
+- Entender el PLT acc

@@ -1,11 +1,13 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
+
 
 # =============================================================================
 # DOCS
@@ -134,8 +136,7 @@ def clean_duplicates(*, bin_path, conf_file_path, work_dir_path):
 
 def read_and_modify_config(*, config_file_path, section, parameter, new_value):
     """
-    Reads a configuration file and modifies a specified parameter in a given
-    section.
+    Modifies a specified parameter in a configuration file.
 
     Parameters
     ----------

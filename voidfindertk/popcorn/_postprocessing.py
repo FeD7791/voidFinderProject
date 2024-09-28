@@ -1,45 +1,63 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
+
 import numpy as np
 
 
 # Popcorn reader (Old version - to be changed)
 def read_pop(filename):
     """
+    Gets output from PopCorn Voidfinder from its output file.
+
     Reads a data table of popcorn voids from an ASCII file (without header)
     and structures it as a dictionary.
 
-    Parameters:
-    - filename (str): The path to the data file.
+    Parameters
+    ----------
+    filename : str
+        The path to the data file.
 
-    Returns:
-    - popcorn (dict): a dictionary with keys corresponding to popcorn voids
-    attributes.
+    Returns
+    -------
+    popcorn : dict
+        A dictionary with keys corresponding to popcorn voids attributes.
 
-    Popcorn voids attribute:
-    * id: popcorn ID (integer)
-    * nmem: number of member spheres (integer)
-    * vol: popcorn volume (float)
-    * reff: effective radius (float)
-    * npart: number of particles inside (integer)
-    * flag: for internal control, you can ignore it... (integer)
-    * pop: popcorn object with the attributes of the member spheres
-    (dictionary, length: nmem)
-        * x: x-coordinate of the centres of the member spheres (float)
-        * y: y-coordinate (float)
-        * z: z-coordinate (float)
-        * r: radii of the member spheres (float)
-        * fvol: volume contribution to the total volume (float)
-        * level: hierarchy level: 0 for main sphere, 1 for secondary spheres,
-        ... (integer)
+    Popcorn voids attributes
+    -------------------------
+    id : int
+        Popcorn ID.
+    nmem : int
+        Number of member spheres.
+    vol : float
+        Popcorn volume.
+    reff : float
+        Effective radius.
+    npart : int
+        Number of particles inside.
+    flag : int
+        For internal control, can be ignored.
+    pop : dict
+        A dictionary with attributes of the member spheres (length: nmem).
+        * x : list of float
+            x-coordinates of the centres of the member spheres.
+        * y : list of float
+            y-coordinates of the member spheres.
+        * z : list of float
+            z-coordinates of the member spheres.
+        * r : list of float
+            Radii of the member spheres.
+        * fvol : list of float
+            Volume contribution to the total volume.
+        * level : list of int
+            Hierarchy level: 0 for main sphere, 1 for secondary spheres, etc.
     """
-
     with open(filename, "r") as file:
         npop = int(
             file.readline().strip()

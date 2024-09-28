@@ -1,11 +1,12 @@
-###############################################################################
-# !/usr/bin/env python3
+#!/usr/bin/env python3
+# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan
+# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+# Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-###############################################################################
+# =============================================================================
 import grispy as gsp
 
 import numpy as np
@@ -15,7 +16,7 @@ import pandas as pd
 
 def get_void_properties(*, popcorn_output_file_path):
     """
-    Read void properties from a file and return them as a pandas dataframe
+    Read void properties from a file and return them as a pandas dataframe.
 
     Parameters
     ----------
@@ -34,9 +35,7 @@ def get_void_properties(*, popcorn_output_file_path):
     Each line in the file should contain values for the following
     attributes: 'id', 'r', 'x', 'y', 'z', 'delta_r'. The values
     should be separated by whitespace and appear in this order.
-
     """
-
     df_properties = pd.read_csv(
         popcorn_output_file_path,
         names=["id", "r", "x", "y", "z", "density_contrast"],
