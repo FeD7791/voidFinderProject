@@ -7,7 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-
+"""Module for creation of temporary directories."""
 import datetime as dt
 import pathlib
 import tempfile
@@ -15,8 +15,8 @@ import tempfile
 
 def create_run_work_dir(*, workdir_path):
     """
-    This method will create a temporal directory inside the working
-    directory of the ZobovVF class workdir.
+    Create a temporal directory inside the working directory of the ZobovVF\
+    class workdir.
 
     Returns
     -------

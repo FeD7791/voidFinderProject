@@ -1,0 +1,3 @@
+For chat gpt docstrings:
+
+from now on perform the same task, but when the first line of a previous docstring is just a line of less than 78 characters (including spaces) add another line describing the function, and if the firs line is larger than 78 characters instead, add a brief description of the function before the mentioned line and it has to be less than 78 character long (including spaces)

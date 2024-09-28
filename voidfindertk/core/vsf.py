@@ -7,7 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-
+"""Module for effective radius and Void Size Calculation."""
 import warnings
 from collections.abc import Sequence
 
@@ -19,7 +19,7 @@ import numpy as np
 
 
 class EffectiveRadiusErrors:
-    """Enumeration for error codes related to the computation of effective
+    """Enumeration for error codes related to the computation of effective \
     radii of voids.
 
     This class defines a set of error codes used to indicate the status or
@@ -240,7 +240,7 @@ def _sigle_void_eradius(idx, n_neighbors, crit_density, distance, nn):
 
 def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
     """
-    Compute the effective radius of voids based on nearest neighbor distances
+    Compute the effective radius of voids based on nearest neighbor distances\
     using grispy.
 
     This function calculates the effective radius of voids by considering

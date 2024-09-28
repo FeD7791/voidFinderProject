@@ -7,6 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
+"""Module with utilities used in modules."""
 from .bunch import Bunch
 from .context_managers import chdir
 

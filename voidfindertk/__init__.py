@@ -7,7 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-"""Voidfindertk"""
+"""Voidfindertk inicialization."""
 
 __version__ = "0.0.1"
 

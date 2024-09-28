@@ -9,7 +9,7 @@
 # =============================================================================
 
 
-"""Void Class"""
+"""Void Class."""
 
 import attrs
 
@@ -84,7 +84,7 @@ class Voids:
     )
 
     def __attrs_post_init__(self):
-        """Post init method"""
+        """Post init method."""
         if len(self.box) <= len(self.tracers_in_voids_):
             raise ValueError(
                 "Number of box must be lesser than the numbers of voids"
@@ -102,6 +102,7 @@ class Voids:
 
     # REPR ====================================================================
     def __repr__(self):
+        """Representation method."""
         return (
             f"<Voids '{self.method}' "
             f"{self.numbers_of_voids_}V, {len(self.box)}T>"
@@ -149,9 +150,7 @@ class Voids:
         -------
         effective_radius :
             A dataclass containing the effective radius results.
-
         """
-
         return vsf.effective_radius(
             self.centers_,
             self.box,

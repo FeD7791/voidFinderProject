@@ -7,7 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-
+"""Change dir context manager."""
 import contextlib
 import os
 
@@ -18,17 +18,17 @@ except AttributeError:
 
     class chdir(contextlib.AbstractContextManager):
         """Non thread-safe context manager to change the current working \
-        directory.
-
-        """
+        directory."""
 
         def __init__(self, path):
             self.path = path
             self._old_cwd = []
 
         def __enter__(self):
+            """Context manager enter method."""
             self._old_cwd.append(os.getcwd())
             os.chdir(self.path)
 
         def __exit__(self, *excinfo):
+            """Context manager exit method."""
             os.chdir(self._old_cwd.pop())
