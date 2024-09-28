@@ -7,10 +7,7 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-"""This module contains functions to parse output files from the ZOBOV \
-void finder.
-
-"""
+"""Contains functions to parse output files from the ZOBOV void finder."""
 
 import ctypes
 
@@ -250,7 +247,6 @@ def process_and_extract_void_properties_and_particles(
     tuple
         Tuple of (VoidProperties, particles) pairs for voids found by ZOBOV.
     """
-
     # Create dictionary of array of particles
     p_in_v = _get_particles_in_void(
         txt_path=jozov_text_file_output_path,
@@ -271,17 +267,22 @@ def process_and_extract_void_properties_and_particles(
 
 def get_zones_in_void(zones_in_void_file_path):
     """
-    Read the zones in voids file
+    Gets zones belonging to voids.
+
+    Read the output file containing zones in each void and returns an array
+    maping zones to the void they belong.
+
     Parameters
     ----------
-        input_file_path(str):
-            path to the file that contains the zones in void data
+    zones_in_void_file_path : str
+        Path to the output file containing zones in each void
+
     Returns
     -------
-        zones_in_void(list):
-            List of numpy arrays firste element of each array is an index the
-            following elements are the zones inside the void (the void index
-            is the same as the first element of the array)
+    list of numpy.ndarray
+        A list of numpy arrays where the first element of each array is an 
+        index. The following elements are the zones inside the void, with 
+        the void index being the same as the first element of the array.
     """
     with open(zones_in_void_file_path, "r") as f:
         zones = f.readlines()
@@ -291,7 +292,20 @@ def get_zones_in_void(zones_in_void_file_path):
 
 def _get_file_void_and_core_particle(*, txt_path):
     """
+    Extract void and core particle data from a specified text file.
+
     Returns the FileVoid# and CoreParticle of each void.
+
+    Parameters
+    ----------
+    txt_path : str
+        Path to the text file containing void and core particle data.
+
+    Returns
+    -------
+    numpy.ndarray
+        An array where each element contains the FileVoid# and 
+        CoreParticle associated with each void.
     """
     fv_cp = []
     with open(txt_path, "r") as f:
@@ -307,24 +321,31 @@ def _get_particles_in_void(
     *, txt_path, tracers_in_zones_path, zones_in_void_path
 ):
     """
-    Creates array of tracers inside each void.
+    Create an array of tracers located inside each void.
+
+    Creates an array of tracers inside each void.
+
     Parameters
     ----------
-        txt_path(str):
-            Path to the ascii txt file resulting from JOZOV which contains the
-            properties of the void.
-        tracers_in_zones(str):
-            Path to the file with particles in zones data.
-        zones_in_void_path(str):
-            Path to the file that contains the zones in void data.
+    txt_path : str
+        Path to the ASCII text file resulting from JOZOV which contains the
+        properties of the void.
+    tracers_in_zones_path : str
+        Path to the file with particles in zones data.
+    zones_in_void_path : str
+        Path to the file that contains the zones in void data.
+
     Returns
     -------
-        particles_in_void(list):
-            List where each element is a numpy array of integers. Each integer
-            references a particle in the input box. The first particle in each
-            array is the core particle of a void (See VoidProperties).
+    dict
+        A dictionary where each key is the core particle of a void, and 
+        each value is a numpy array of integers referencing particles 
+        in the input box. The first particle in each array is the core 
+        particle of the corresponding void (see VoidProperties).
+        
     Notes
     -----
+    This function may be slow due to its concatenation operations.
     """
     # Get the tracers in zones from the parsed file
     tracers_in_zones = _get_particles_in_zones(
@@ -355,21 +376,21 @@ def _get_particles_in_void(
 
 def get_void_xyz_centers(*, box, txt_path):
     """
-    Finds xyz coordinates of the CoreParticle of each void
+    Retrieve xyz coordinates of the CoreParticle for each void.
+
+    Finds xyz coordinates of the CoreParticle of each void.
 
     Parameters
     ----------
-        box : object
-            Box object with the tracers properties
-        txt_path : str
-            Path to the jozov txt with void properties
+    box : object
+        Box object with the tracers properties.
+    txt_path : str
+        Path to the JOZOV text file containing void properties.
 
     Returns
     -------
-        xyz : np.array
-            Array of [x,y,z] elements for each CoreParticle
-
-
+    np.ndarray
+        An array of [x, y, z] elements for each CoreParticle.
     """
     xyz = np.column_stack((box.x.value, box.y.value, box.z.value))
     fv_cp = _get_file_void_and_core_particle(txt_path=txt_path)

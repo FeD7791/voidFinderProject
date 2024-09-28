@@ -7,11 +7,10 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 # =============================================================================
-"""DIVE: Detection, Identificacion and Voids Examination
+"""DIVE: Detection, Identificacion and Voids Examination.
 
 DIVE is a reimplementation of VIDE void detection algoritm in pure Python on
 top of the classic ZOBOV code.
-
 """
 
 from ._dive import DiveVF

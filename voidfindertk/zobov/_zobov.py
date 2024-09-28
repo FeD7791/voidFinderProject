@@ -8,12 +8,11 @@
 # All rights reserved.
 # =============================================================================
 """
-Module that holds functions and methods that are used to run the ZOBOV python
+Module that holds functions and methods that are used to run the ZOBOV python\
 wrapper methods in a coherent step by step.
 
     ZobovVF is the main Model object that represent a particular run of ZOBOV
     void finder. It mainly consists of two steps:
-
     a. preprocess step used to preprocess any input data needed for the
     algorythm. For this method none pre process is needed
     b. model_find: Consist of all steps needed to run zobov and the python
@@ -39,7 +38,7 @@ from ..core import VoidFinderABC
 @attr.define(frozen=True)
 class Names:
     """
-    Holds Names to suffix inputs for files created using ZOBOV
+    Holds Names to suffix inputs for files created using ZOBOV.
 
     Parameters
     ----------
@@ -55,8 +54,27 @@ class Names:
 
 class _Files:
     """
-    Name of the Box parsed to raw files. This files always are parsed and
-    saved in files with the same names (see write_input module in _wrapper)
+    Names of the Box parsed to raw files.
+
+    These files are parsed and saved with the same names (see write_input
+    module in _wrapper).
+
+    Attributes
+    ----------
+    TRACERS_RAW : str
+        Name of the raw file for tracers.
+    TRACERS_TXT : str
+        Name of the ASCII text file for tracers.
+    PARTICLES_VS_ZONES_RAW : str
+        Name of the raw file for particles in zones.
+    PARTICLES_VS_ZONES_ASCII : str
+        Name of the ASCII text file for particles in zones.
+    OUTPUT_JOZOV_VOIDS_DAT : str
+        Name of the raw file for output from JOZOV regarding voids.
+    ZONES_VS_VOID_RAW : str
+        Name of the raw file for zones in voids.
+    ZONES_VS_VOID_ASCII : str
+        Name of the ASCII text file for zones in voids.
     """
 
     TRACERS_RAW = "tracers_zobov.raw"
@@ -76,8 +94,15 @@ class _ExecutableNames:
 
 class _Paths:
     """
-    Class that holds paths of reference to the current file and
-    ZOBOV's src directory
+    Class that holds paths of reference to the current file and ZOBOV's\
+    source directory.
+
+    Attributes
+    ----------
+    CURRENT : pathlib.Path
+        Absolute path to the directory of the current file.
+    ZOBOV : pathlib.Path
+        Path to the src folder of ZOBOV.
     """
 
     CURRENT = pathlib.Path(
@@ -166,6 +191,7 @@ class ZobovVF(VoidFinderABC):
                 (see run_jozov)
             5. This step will create the object Voids that contains the voids
             foud by the method and their properties.
+
     Notes
     -----
     The ZOBOV Void Finder is executed in several steps including VOZINIT,
@@ -184,7 +210,7 @@ class ZobovVF(VoidFinderABC):
         workdir_clean=False,
         dtype=np.float32,
     ):
-
+        """Init for class inicialization."""
         self._buffer_size = buffer_size
         self._box_size = box_size
         self._number_of_divisions = number_of_divisions
@@ -206,47 +232,57 @@ class ZobovVF(VoidFinderABC):
     # PROPERTIES ==============================================================
     @property
     def buffer_size(self):
+        """Return the buffer size for the ZOBOV void finder."""
         return self._buffer_size
 
     @property
     def box_size(self):
+        """Return the size of the box for particle positions."""
         return self._box_size
 
     @property
     def number_of_divisions(self):
+        """Return the number of divisions in each dimension of the box."""
         return self._number_of_divisions
 
     @property
     def ensity_threshold(self):
+        """Return the density threshold for void growth."""
         return self._density_threshold
 
     @property
     def zobov_path(self):
+        """Return the path to the ZOBOV executable."""
         return self._zobov_path
 
     @property
     def workdir(self):
+        """Return the temporary working directory path."""
         return self._workdir
 
     @property
     def workdir_clean(self):
+        """Return whether to clean up the working directory on deletion."""
         return self._workdir_clean
 
     @property
     def dtype(self):
+        """Return the data type used for computations."""
         return self._dtype
 
     # INTERNAL ================================================================
 
     def _create_run_work_dir(self):
         """
+        Create a temporary directory for the current run.
+
         This method will create a temporal directory inside the working
         directory of the ZobovVF class workdir.
 
         Returns
         -------
-            run_work_dir: pathlib.Path
-                path of the work directoty
+        pathlib.Path
+            Path of the working directory for the current run.
         """
         timestamp = dt.datetime.now(dt.timezone.utc).isoformat()
         run_work_dir = pathlib.Path(
@@ -256,6 +292,8 @@ class ZobovVF(VoidFinderABC):
 
     def __del__(self):
         """
+        Clean up temporary resources when the object is deleted.
+
         Destructor that cleans up the temporary working directory
         if workdir_clean is True.
         """
@@ -264,6 +302,8 @@ class ZobovVF(VoidFinderABC):
 
     def preprocess(self, box):
         """
+        Preprocess the data contained in the Box object.
+
         Placeholder method for data preprocessing.
 
         Parameters
@@ -280,8 +320,11 @@ class ZobovVF(VoidFinderABC):
 
     def model_find(self, box):
         """
-        Execute the ZOBOV Void Finder algorithm on the provided Box
-        object.
+        Execute the ZOBOV Void Finder algorithm on the provided Box object.
+
+        The execution of ZOBOV involves: write box data into raw files, run
+        VOZINIT ---> run VOZSTEP ---> run JOZOV.For a detailed explanation of
+        each step see: _wrapper.
 
         Parameters
         ----------
@@ -344,26 +387,30 @@ class ZobovVF(VoidFinderABC):
 
     def build_voids(self, model_find_parameters):
         """
-        This methods is used to build the final object Voids (see Voids class
+        Build the final Voids object using specified model parameters.
+
+        This method is used to build the final object Voids (see Voids class
         in this module). Each step will specify a mandatory attribute or
-        method of Voids class.
+        method of the Voids class.
 
         Parameters
         ----------
-            model_find_parameters: Dictionary
-                The dictionary holds some relevant properties from the
-                model_find method (See model_find method in whithin this class
-                ). Those properties are needed to run this module.
-                These properties are:
-                - run_work_dir: Directory path where the current run is
-                performed.
-                - box : Object class    Box (See   Box in box module)
-                with the tracers information.
+        model_find_parameters : dict
+            The dictionary holds some relevant properties from the
+            model_find method (see model_find method within this class).
+            These properties are needed to run this module:
+            - run_work_dir: Directory path where the current run is
+            performed.
+            - box: Box object (see Box in box module) with the tracers 
+            information.
+
         Returns
         -------
-            voids : Voids class
-                Object Voids that contains the voids found in this run
-                alongside with their properties.
+        tuple
+            A tuple containing:
+            - tracers_in_voids: List of particles in each void.
+            - centers: Coordinates of the centers of the voids.
+            - extra: Dictionary with additional properties about the voids.
         """
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]

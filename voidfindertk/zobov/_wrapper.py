@@ -139,7 +139,7 @@ def run_voz_step(
     voz_executables_path,
 ):
     """
-    This method runs vozinit executable.
+    Runs vozinit executable.
 
     Use this method only if vozinit was executed before. The executable
     created by vozinit has the suffix provided in the vozinit step and the
@@ -203,7 +203,7 @@ def run_voz1b1(
     work_dir_path,
 ):
     """
-    This method runs the VOZ1B1 executable with specified parameters.
+    Runs the VOZ1B1 executable with specified parameters.
 
     This program (VOZ one-by-one) calculates the Voronoi diagram on one
     sub-box of the data cube. Ideally, one would not have to use the input
@@ -242,7 +242,6 @@ def run_voz1b1(
     str
         Output of the voz1b1 run.
     """
-
     voz1b1 = sh.Command(voz1b1_dir_path / "voz1b1")
 
     params = [
@@ -382,11 +381,15 @@ def run_jozov(
 
 
 def write_input(*, box, path_executable, raw_file_path, txt_file_path):
-    """Create the position file used in the ZOBOV void finder from the
-    input Box object of tracers.
+    """
+    Generate input files for the ZOBOV void finder from the Box object.
 
-    The position file contains the positions of all particles. By default,
-    this is a Fortran 77-formatted file, written as below:
+    Create the position file used in the ZOBOV void finder from the input
+    Box object of tracers.
+
+    This function generates a position file containing the positions of
+    all particles. By default, this is a Fortran 77-formatted file,
+    structured as follows:
 
     open(unit=1, file=outname, form='unformatted')
     write(1) num_particles
@@ -397,9 +400,9 @@ def write_input(*, box, path_executable, raw_file_path, txt_file_path):
 
     The module will create two files:
         "tracers_zobov.raw": Contains the parsed raw contents of the Box
-        object. This file is used to run the ZOBOV finder.
-        "tracers_zobov.txt": File with the same contents as the file above
-        but in ASCII format for readability.
+        object and is used to run the ZOBOV finder.
+        "tracers_zobov.txt": Contains the same data in ASCII format for
+        better readability.
 
     Parameters
     ----------
@@ -416,7 +419,6 @@ def write_input(*, box, path_executable, raw_file_path, txt_file_path):
     -------
     None
     """
-
     # Create input binary files for Zobov finder
 
     # Declare library path
