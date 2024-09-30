@@ -19,24 +19,19 @@ This module contains classes that facilitate the visualization of data
 from box and void objects through various plotting functions. The module uses
 Matplotlib and Seaborn.
 
-Classes
--------
-BoxPlotter
-    A class for plotting histograms of data contained in a box.
-
-VoidPlotter
-    A class for plotting void size functions.
 
 """
 
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
 import matplotlib.pyplot as plt
 
 import seaborn as sns
 
 from ..utils import accabc
+
 
 
 class BoxPlotter(accabc.AccessorABC):
@@ -95,6 +90,7 @@ class BoxPlotter(accabc.AccessorABC):
         -----
         The x and y attributes in the box should have a `unit` attribute
         for labeling the axes correctly.
+
         """
         ax = plt.gca() if ax is None else ax
 
@@ -134,10 +130,7 @@ class VoidPlotter(accabc.AccessorABC):
         plotting operations. This is crucial for the proper functioning
         of the plotting methods in this class.
         """
-
-    def __getattr__(self, kind):
-        """Get attribute access to kind."""
-        self._voids = kind
+        self._voids = voids
 
     def __getattr__(self, kind):
         """Get attribute access to kind."""
@@ -202,3 +195,7 @@ class VoidPlotter(accabc.AccessorABC):
         return ax
 
     vsf = void_size_function
+
+    def void_over_hist2d(self, x, y, *, ax=None):
+        ax = self.hist2d(x=x, y=y, ax=ax)
+        ax.axvline(500, color="k")

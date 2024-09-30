@@ -1,5 +1,6 @@
 include LICENSE.txt
 include README.md
+include dependencies.md
 
 graft voidfindertk
 
