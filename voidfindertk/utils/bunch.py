@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
-# =============================================================================
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
-# Paz Dante, Ruiz Andres, Correa Carlos
+# Copyright (c) 2023 - 2024, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+#                            Paz Dante, Ruiz Andres, Correa Carlos
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-# =============================================================================
-
-# This file is part of the
-#   Void-Finder-Toolkit Project (https://github.com/FeD7791/voidFinderProject).
-# Copyright (c) 2023-2024, Bustillos, J.F.; Cabral, Juan
-# License: BSD 3-Clause
-# Full Text:
-#   https://raw.githubusercontent.com/FeD7791/voidFinderProject/dev/LICENSE.txt
 
 # This code was ripped of from scikit-criteria on 10-nov-2022.
 # https://github.com/quatrope/scikit-criteria/blob/ec63c/skcriteria/utils/bunch.py
