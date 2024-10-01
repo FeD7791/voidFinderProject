@@ -5,6 +5,14 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Module that holds functions and methods that are used to run SVF Popcorn \
+void finder."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import os
 import pathlib
 import shutil
@@ -97,42 +105,6 @@ class SVFPopCorn(VoidFinderABC):
     workdir_clean : bool
         Flag to clean the working directory on deletion.
 
-    Methods
-    -------
-    __attrs_post_init__()
-        Initializes paths for SVF and working directory.
-    auxfiles
-        Returns the flag for auxiliary files.
-    boxsize
-        Returns the length of the box.
-    densth
-        Returns the density threshold.
-    minradius
-        Returns the minimum radius for void detection.
-    maxradius
-        Returns the maximum radius for void detection.
-    massmin
-        Returns the minimum mass threshold.
-    svf_path
-        Returns the path to the SVF directory.
-    mpi_flags
-        Returns the MPI flags.
-    workdir
-        Returns the working directory path.
-    workdir_clean
-        Returns the flag for cleaning the working directory.
-    _create_run_work_dir()
-        Creates and returns a temporary working directory.
-    __del__()
-        Cleans up the temporary working directory if
-        `workdir_clean` is True.
-    preprocess(box)
-        Placeholder for preprocessing the box object.
-    model_find(box)
-        Finds voids using the provided box object.
-    build_voids(model_find_parameters)
-        Builds voids and returns properties and tracers
-        from the model find parameters.
     """
 
     _auxfiles = attr.field(default="true")  # AUXILIARY FILES

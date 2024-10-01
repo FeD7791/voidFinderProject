@@ -12,34 +12,14 @@
 # =============================================================================
 
 
-"""
-Module for interacting with the Popcorn void finder and related utilities.
-
-This module provides functions to execute commands related to the Popcorn void
-finder, compute intersections, clean duplicates, and modify configuration
-files.
-
-Functions
----------
-popcorn_void_finder(mpi_flags, bin_path, conf_file_path, work_dir_path)
-    Executes the Popcorn void finder with the specified configuration.
-
-compute_intersects(bin_path, conf_file_path, work_dir_path)
-    Executes the compute_intersecs command with the specified configuration.
-
-clean_duplicates(bin_path, conf_file_path, work_dir_path)
-    Executes the clean_duplicates command with the specified configuration.
-
-read_and_modify_config(config_file_path, section, parameter, new_value)
-    Reads a configuration file and modifies a specified parameter in a given
-    section.
-"""
-
-import configparser
-
+"""Module for interacting with the Popcorn void finder and related\
+utilities."""
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
+import configparser
+
 import sh
 
 from ..utils import chdir

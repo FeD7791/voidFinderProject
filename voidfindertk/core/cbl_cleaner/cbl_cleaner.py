@@ -5,7 +5,15 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
 """Wrapper of the Cosmo Bologna Lib clean_void_catalogue."""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import ctypes
 import os
 import pathlib

@@ -6,9 +6,14 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
-
+# =============================================================================
+# DOCS
+# =============================================================================
 """ABC for Void Search."""
 
+# =============================================================================
+# IMPORTS
+# =============================================================================
 from abc import ABC, abstractmethod
 
 from .voids import Voids
@@ -21,22 +26,6 @@ class VoidFinderABC(ABC):
     This class defines the interface for subclasses to implement the
     functionality to preprocess data, model the findings, and build voids.
 
-    Methods
-    -------
-    find(box)
-        Main method to find voids in the provided box.
-
-    preprocess(box)
-        Abstract method to preprocess the input box. Must be implemented by
-        subclass.
-
-    model_find(preprocess_parameters)
-        Abstract method to model the findings from the preprocessed parameters.
-        Must be implemented by subclass.
-
-    build_voids(model_find_parameters)
-        Abstract method to build voids from the model find parameters.
-        Must be implemented by subclass.
     """
 
     def __init__(self):

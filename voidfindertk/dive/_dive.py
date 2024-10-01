@@ -6,6 +6,14 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Module that holds functions and methods that are used to run the DIVE \
+void finder."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 from . import _postprocessing
 from ..zobov import Names, ZobovVF
 
@@ -79,10 +87,6 @@ class DiveVF(ZobovVF):
     overlap_criterion : bool
         Indicates whether to apply the overlap criterion.
 
-    Methods
-    -------
-    build_voids(model_find_parameters)
-        Postprocess outputs from the ZOBOV Finder to extract voids.
     """
 
     def __init__(

@@ -5,7 +5,15 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
 """Module for effective radius and Void Size Calculation."""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import warnings
 from collections.abc import Sequence
 

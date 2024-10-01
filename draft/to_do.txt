@@ -27,4 +27,15 @@ eliminar metodos y eso. La documentacion debe quedar simetrica
 Relevantes para Juan:
 1 - Corregir la cabeceras
 2 - Eliminar la documentacion redundante (Classes, methods, attributes, functions)
+#hecho
 3 - Completar el dependencies.md
+
+- Llevar a attrs las siguientes clases:
+plot_acc/BoxPlotter
+plot_acc/VoidPlotter
+vfinder_abc/VoidFinderABC
+dive/DiveVF
+- Cambiar a salida en forma de dataframe a:
+dive/_postprocessing/VoidProperties
+zobov/_postprocessing
+

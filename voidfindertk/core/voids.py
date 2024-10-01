@@ -6,9 +6,14 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
-
+# =============================================================================
+# DOCS
+# =============================================================================
 """Void Class."""
 
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import attrs
 
 import numpy as np
@@ -41,29 +46,6 @@ class Voids:
     extra : dict
         Additional results and information of the run.
 
-    Attributes
-    ----------
-    method : str
-        The name of the method used to find the voids.
-    box : Box
-        A copy of the Box object containing tracer properties.
-    centers : numpy.ndarray
-        Array of coordinates of the centers of the voids.
-    tracers_in_voids : tuple of numpy.ndarray
-        Collection of arrays that contains the IDs of particles inside voids.
-    numbers_of_voids : int
-        The number of voids.
-    extra : dict
-        Dictionary with additional results and information of the run.
-
-    Methods
-    -------
-    void_of(tracer) :
-        Returns indices of voids containing a specific tracer particle.
-    all_effective_radius(delta=-0.9, n_neighbors=100, n_cells=64) :
-        Computes the effective radius for all voids.
-    effective_radius(void_idx, delta=-0.9, n_neighbors=100, n_cells=64) :
-        Computes the effective radius of a specific void.
     """
 
     # came from finde and data

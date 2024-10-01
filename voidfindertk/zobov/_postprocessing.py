@@ -5,8 +5,14 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-"""Contains functions to parse output files from the ZOBOV void finder."""
 
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Contains functions to parse output files from the ZOBOV void finder."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import ctypes
 
 from astropy import units as u
@@ -278,8 +284,8 @@ def get_zones_in_void(zones_in_void_file_path):
     Returns
     -------
     list of numpy.ndarray
-        A list of numpy arrays where the first element of each array is an 
-        index. The following elements are the zones inside the void, with 
+        A list of numpy arrays where the first element of each array is an
+        index. The following elements are the zones inside the void, with
         the void index being the same as the first element of the array.
     """
     with open(zones_in_void_file_path, "r") as f:
@@ -302,7 +308,7 @@ def _get_file_void_and_core_particle(*, txt_path):
     Returns
     -------
     numpy.ndarray
-        An array where each element contains the FileVoid# and 
+        An array where each element contains the FileVoid# and
         CoreParticle associated with each void.
     """
     fv_cp = []
@@ -336,11 +342,11 @@ def _get_particles_in_void(
     Returns
     -------
     dict
-        A dictionary where each key is the core particle of a void, and 
-        each value is a numpy array of integers referencing particles 
-        in the input box. The first particle in each array is the core 
+        A dictionary where each key is the core particle of a void, and
+        each value is a numpy array of integers referencing particles
+        in the input box. The first particle in each array is the core
         particle of the corresponding void (see VoidProperties).
-        
+
     Notes
     -----
     This function may be slow due to its concatenation operations.

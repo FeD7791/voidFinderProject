@@ -6,6 +6,16 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
+# =============================================================================
+# DOCS
+# =============================================================================
+
+"""Module that holds functions and methods that are used to run the Popcorn \
+void finder."""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import attr
 
 import numpy as np

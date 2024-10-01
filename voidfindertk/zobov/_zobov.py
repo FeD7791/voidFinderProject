@@ -5,19 +5,15 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-"""
-Module that holds functions and methods that are used to run the ZOBOV python\
-wrapper methods in a coherent step by step.
 
-    ZobovVF is the main Model object that represent a particular run of ZOBOV
-    void finder. It mainly consists of two steps:
-    a. preprocess step used to preprocess any input data needed for the
-    algorythm. For this method none pre process is needed
-    b. model_find: Consist of all steps needed to run zobov and the python
-    wrappers used to represent them. For reference of the steps see ZobovVF
-    Class in this module.
-"""
-
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Module that holds functions and methods that are used to run the ZOBOV\
+python wrapper methods in a coherent step by step."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import datetime as dt
 import os
 import pathlib
@@ -399,7 +395,7 @@ class ZobovVF(VoidFinderABC):
             These properties are needed to run this module:
             - run_work_dir: Directory path where the current run is
             performed.
-            - box: Box object (see Box in box module) with the tracers 
+            - box: Box object (see Box in box module) with the tracers
             information.
 
         Returns

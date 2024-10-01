@@ -5,14 +5,14 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-"""
-Wrapper functions for the ZOBOV void finder.
 
-This module provides wrapper executables to run the ZOBOV void finder
-algorithm and its associated preprocessing steps.
-
-"""
-
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Wrapper functions for the ZOBOV void finder."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import ctypes
 import os
 import shutil

@@ -5,6 +5,15 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Module for interacting with the SVF Popcorn void finder and related\
+utilities."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 from configparser import ConfigParser
 
 import pandas as pd

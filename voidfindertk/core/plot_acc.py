@@ -10,15 +10,7 @@
 # =============================================================================
 # DOCS
 # =============================================================================
-"""
-Module for plotting data related to boxes and voids.
-
-This module contains classes that facilitate the visualization of data
-from box and void objects through various plotting functions. The module uses
-Matplotlib and Seaborn.
-
-
-"""
+"""Module for plotting data related to boxes and voids."""
 
 # =============================================================================
 # IMPORTS
@@ -29,7 +21,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from ..utils import accabc
-
 
 
 class BoxPlotter(accabc.AccessorABC):
@@ -194,6 +185,7 @@ class VoidPlotter(accabc.AccessorABC):
 
     vsf = void_size_function
 
-    def void_over_hist2d(self, x, y, *, ax=None):
-        ax = self.hist2d(x=x, y=y, ax=ax)
-        ax.axvline(500, color="k")
+    # Metodo para plotear un void sobre un histograma (A construir)
+    # def void_over_hist2d(self, x, y, *, ax=None):
+    #     ax = self.hist2d(x=x, y=y, ax=ax)
+    #     ax.axvline(500, color="k")

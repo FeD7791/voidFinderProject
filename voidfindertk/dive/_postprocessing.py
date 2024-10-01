@@ -5,7 +5,13 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
-
+# =============================================================================
+# DOCS
+# =============================================================================
+"""Module for process data obtained from DIVE void finder."""
+# =============================================================================
+# IMPORTS
+# =============================================================================
 import struct
 
 import grispy as gsp

@@ -52,16 +52,6 @@ class Box:
     m : numpy.ndarray
         array of masses
 
-    Methods
-    -------
-    build_df()
-        Transforms the set into a pandas dataframe
-
-    _check_length()
-        Verifies that the length of the inputs are the same
-
-    slice(n, parameter)
-        Calls the function Slicer to slice the set in n parts
     """
 
     x = uttr.ib(converter=np.array, unit=u.Mpc)
