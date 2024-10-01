@@ -10,8 +10,14 @@ ZOBOV (ZOnes Bordering On Voidness) is an algorithm that finds density depressio
 
 > Neyrinck, M. C. (2008). ZOBOV: a parameter-free void-finding algorithm. Monthly notices of the royal astronomical society, 386(4), 2101-2109.
 
-## Spherical Void Finder
+## Spherical Void Finder and Popcorn
 
-## Popcorn
+Underdense regions are defined as free-form objects, called popcorn voids, made from the union of spheres of maximum volume with a given joint integrated (under)density contrast. The method is inspired by the excursion-set theory and consequently no rescaling processing is needed, the removal of overlapping voids and objects with sizes below the shot noise threshold is inherent in the algorithm.
+
+Popcorn voids are an extension of spherical voids by adding children spheres in a recursive way. Spherical Voids are just spherical simmetry underdense regions with some defined density contrast.
+
+> Paz, D. J., Correa, C. M., Gualpa, S. R., Ruiz, A. N., Bederián, C. S., Graña, R. D., & Padilla, N. D. (2023). Guess the cheese flavour by the size of its holes: a cosmological test using the abundance of popcorn voids. Monthly Notices of the Royal Astronomical Society, 522(2), 2553-2569.
+
+
 
 

@@ -23,9 +23,10 @@ eliminar metodos y eso. La documentacion debe quedar simetrica
 - Agregar snippets #hecho
 - Copiar un test para bunch
 - Cabeceras: copyright 2023-2024 y poner autores en misma linea
+- TESTS PAPA!!! 2 test por dia
 
 Relevantes para Juan:
-1 - Corregir la cabeceras
+1 - Corregir la cabeceras #HECHO
 2 - Eliminar la documentacion redundante (Classes, methods, attributes, functions)
 #hecho
 3 - Completar el dependencies.md
