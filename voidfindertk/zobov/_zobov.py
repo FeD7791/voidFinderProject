@@ -459,4 +459,5 @@ class ZobovVF(VoidFinderABC):
         # d-1) centers = xyz[properties["CoreParticle"]]
         # Maps the indexes of the CoreParticle in each void to xyz positions
         # given by box.
+        # tinv stands for tracers in void
         return tuple(tinv), xyz[properties["CoreParticle"]], extra
