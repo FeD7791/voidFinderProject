@@ -24,6 +24,8 @@ import attr
 
 import numpy as np
 
+import pandas as pd
+
 from . import _postprocessing
 from . import _wrapper as _wrap
 from ..core import VoidFinderABC
@@ -410,6 +412,12 @@ class ZobovVF(VoidFinderABC):
         run_work_dir = model_find_parameters["run_work_dir"]
         # Get box
         box = model_find_parameters["box"]
+        # Get properties as dataframe
+        df = pd.read_csv(
+            run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            delim_whitespace=True,
+            header=1,
+        )
         # Process 1:
         # a) Parse tracers in zones raw file in the work directory
         _postprocessing.parse_tracers_in_zones_output(
@@ -425,34 +433,30 @@ class ZobovVF(VoidFinderABC):
             output_file_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
         )
         # Process 2:
-        # a) Get Tuple of (VoidProperties, particles)
-        zobov_vp_and_part = (
-            _postprocessing.process_and_extract_void_properties_and_particles(
-                tinz_output_file_path=run_work_dir
-                / _Files.PARTICLES_VS_ZONES_ASCII,
-                zinv_output_file_path=run_work_dir
-                / _Files.ZONES_VS_VOID_ASCII,
-                jozov_text_file_output_path=run_work_dir
-                / _Files.OUTPUT_JOZOV_VOIDS_DAT,
-            )
+        # a) Get Tracers in voids
+        # tinv stands for tracers in voids
+        properties, tinv = _postprocessing.get_tracers_in_voids(
+            properties_dataframe=df,
+            tracers_in_zones_path=(
+                run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII
+            ),
+            zones_in_void_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
         )
-
-        # b) divide the output
-        tracers_in_voids, zobov_voids = [], []
-        for void_properties, particle_in_void in zobov_vp_and_part:
-            tracers_in_voids.append(particle_in_void)
-            zobov_voids.append(void_properties)
 
         # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
-            "void_properties": tuple(zobov_voids),
+            "void_properties": properties,
             "files_directory_path": run_work_dir,
         }
 
         # d) Get centers
-        centers = _postprocessing.get_void_xyz_centers(
-            box=box, txt_path=run_work_dir / _Files.OUTPUT_JOZOV_VOIDS_DAT
-        )
+        x = box.arr_.x
+        y = box.arr_.y
+        z = box.arr_.z
+        xyz = np.column_stack((x, y, z))
 
-        return tuple(tracers_in_voids), centers, extra
+        # d-1) centers = xyz[properties["CoreParticle"]]
+        # Maps the indexes of the CoreParticle in each void to xyz positions
+        # given by box.
+        return tuple(tinv), xyz[properties["CoreParticle"]], extra
