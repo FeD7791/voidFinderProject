@@ -19,7 +19,7 @@ import numpy as np
 
 
 # =============================================================================
-# FUNCTIONS
+# FILE PARSERS
 # =============================================================================
 def parse_zones_in_void_output(
     *, executable_path, input_file_path, output_file_path
@@ -82,6 +82,9 @@ def parse_tracers_in_zones_output(
         str(input_file_path).encode(), str(output_file_path).encode()
     )
 
+# =============================================================================
+# FILE READERS
+# =============================================================================
 
 def _get_tracers_in_zones(*, tracers_in_zones_path):
     """
@@ -144,6 +147,9 @@ def _get_zones_in_void(zones_in_void_file_path):
     zones_in_void = [np.array(zone.split(), dtype=int) for zone in zones[2:]]
     return zones_in_void
 
+# =============================================================================
+# MAIN POSTPROCESS
+# =============================================================================
 
 def get_tracers_in_voids(
     *, properties_dataframe, tracers_in_zones_path, zones_in_void_path
