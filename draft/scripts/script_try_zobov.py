@@ -11,7 +11,7 @@ path = "/home/jorgefederico/updates/vftk_actual002/voidFinderProject/datasets/ha
 dbox = io.xyz_read_table(path, usecols=[1,2,3])
 box = dbox.box
 
-workdir = "/home/jorgefederico/updates/vftk_actual002/voidFinderProject/runv"
+workdir = '/home/jorgefederico/updates/vftk_1109/voidFinderProject/runz'
 
 # model
 model = zobov.ZobovVF(box_size=1000, workdir=workdir)
@@ -31,7 +31,7 @@ tinv,centers,extra = model.build_voids(model_find_parameters=model_find_paramete
 ##
 voids = Voids(
     method="zobov",
-    box=dbox.box,
+    box=box,
     tracers_in_voids=tinv,
     centers=centers,
     extra=extra,
