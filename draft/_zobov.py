@@ -84,31 +84,29 @@ class ZobovVF(ModelABC):
             databox.vz,
             databox.m,
             len(databox),
-            os.path.join(self.path_zobov, "tracers_zobov.raw").encode(
-                "utf-8"
-            ),
-            os.path.join(self.path_zobov, "tracers_zobov.txt").encode(
-                "utf-8"
-            ),
+            os.path.join(self.path_zobov, "tracers_zobov.raw").encode("utf-8"),
+            os.path.join(self.path_zobov, "tracers_zobov.txt").encode("utf-8"),
         )
         return DataBox(databox)
 
     def model_find(self, **kwargs):
-        kwargs.setdefault("path_src",_Paths.ZOBOV/"src")
-        kwargs.setdefault("path_input_file",_Paths.ZOBOV/"src"/"tracers_zobov.raw")
+        kwargs.setdefault("path_src", _Paths.ZOBOV / "src")
+        kwargs.setdefault(
+            "path_input_file", _Paths.ZOBOV / "src" / "tracers_zobov.raw"
+        )
         kwargs.setdefault("buffer_size", 0.08)
         kwargs.setdefault("box_size", 500)
         kwargs.setdefault("number_of_divisions", 2)
-        kwargs.setdefault("executable_name","output_vozinit")
-        kwargs.setdefault("output_name_particles_in_zones","part_vs_zone")
-        kwargs.setdefault("output_name_zones_in_void","zones_vs_voids")
-        kwargs.setdefault("output_name_text_file","ouput_txt")
+        kwargs.setdefault("executable_name", "output_vozinit")
+        kwargs.setdefault("output_name_particles_in_zones", "part_vs_zone")
+        kwargs.setdefault("output_name_zones_in_void", "zones_vs_voids")
+        kwargs.setdefault("output_name_text_file", "ouput_txt")
         kwargs.setdefault("density_threshold", 0)
         _wrapper.run_zobov_void_finder(**kwargs)
         sp_void = read_zobov_output(
-            str(kwargs["path_src"]/kwargs["output_name_text_file"]))
+            str(kwargs["path_src"] / kwargs["output_name_text_file"])
+        )
         return {"voids": sp_void}
-        
 
     def mk_vbox(self, voids, llbox):
         voids = voids["voids"]
@@ -119,9 +117,7 @@ class ZobovVF(ModelABC):
         mass_list = []
         for i in range(len(voids)):
             # voids._tracers_in_void[i] = array of indexes of tracers in void
-            mass_list.append(
-                sum(llbox.box.m.value[voids._tracers_in_void[i]])
-            )
+            mass_list.append(sum(llbox.box.m.value[voids._tracers_in_void[i]]))
         return mass_list
 
 
@@ -335,11 +331,11 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
             os.path.join(path, "tracers_in_voids.h5"), "w"
         )  # save in zobovvf
         for i in range(len(void_centers)):
-            # distance from center to each particle : 
-            #row[i] = [dist(xyz_void(i),box_xyz(i))]
+            # distance from center to each particle :
+            # row[i] = [dist(xyz_void(i),box_xyz(i))]
             d = scipy.spatial.distance.cdist([void_centers[i]], xyz_tracers)
-            #asociate index to each particle distances[i] = 
-            #(i ,dist(xyz_void(i),box_xyz(i)))
+            # asociate index to each particle distances[i] =
+            # (i ,dist(xyz_void(i),box_xyz(i)))
             distances = [list(enumerate(arr)) for arr in d]
             sorted_distances = [
                 sorted(dist, key=lambda x: x[1]) for dist in distances
@@ -348,8 +344,8 @@ def calculate_tracers_inside_void(box, voids, **kwargs):
             n_tracer_in_voids = voids.Void_number_Part
             # keep the lowest n_tracer_in_voids[i] from sorted_distances
 
-            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1] 
-            #for i in range(len(sorted_distances))]
+            # sd = [sorted_distances[i][1: n_tracer_in_voids[i]+1]
+            # for i in range(len(sorted_distances))]
             sd = [
                 sorted_distances[j][1 : n_tracer_in_voids[i] + 1]
                 for j in range(len(sorted_distances))
@@ -381,24 +377,24 @@ def find_zones_in_void(path_executable, path_file, mode):
         out = f.readlines()
     if mode == 1:
         e = [
-        {
-            "n_zone": np.int32(out[i].split(" ")[2].split())[0],
-            "particles": np.int32(out[i + 2].split(" ")[:-1]),
-        }
-        for i in range(len(out))
-        if re.match(r"^ zone", out[i])
+            {
+                "n_zone": np.int32(out[i].split(" ")[2].split())[0],
+                "particles": np.int32(out[i + 2].split(" ")[:-1]),
+            }
+            for i in range(len(out))
+            if re.match(r"^ zone", out[i])
         ]
     if mode == 0:
         e = [
-        {
-            "void": np.int32(out[i].split(" ")[3:4])[0],
-            "zones": np.int32(out[i].split(" ")[5:-1]),
-        }
-        for i in range(3, len(out))
+            {
+                "void": np.int32(out[i].split(" ")[3:4])[0],
+                "zones": np.int32(out[i].split(" ")[5:-1]),
+            }
+            for i in range(3, len(out))
         ]
-    else: raise ValueError("Allowed values are 0 or 1")
+    else:
+        raise ValueError("Allowed values are 0 or 1")
     return e
-
 
 
 def find_zobov_tracers():
@@ -426,6 +422,7 @@ def find_zobov_tracers():
         }
         for i in range(3, len(out2))
     ]
+
 
 # def write_zobov_input(box, path_executable ,path_raw_file_output,path_txt_file_output):
 #     # Create input binary files for Zobov finder
@@ -463,7 +460,6 @@ def find_zobov_tracers():
 #                 "utf-8"
 #             ),
 #         )
-
 
 
 # import struct

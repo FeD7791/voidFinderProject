@@ -5,7 +5,24 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+"""Global configuration for pytest suite.
+
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import io
+import os
+import pathlib
+
+import joblib
 
 import numpy as np
 
@@ -14,6 +31,30 @@ import pandas as pd
 import pytest
 
 from voidfindertk.core.box import Box
+<<<<<<< HEAD
+=======
+
+# =============================================================================
+# CONSTANTS
+# =============================================================================
+
+PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
+
+MOCK_DATA = PATH / "mock_data"
+
+# =============================================================================
+# FIXTURES
+# =============================================================================
+
+
+@pytest.fixture(scope="session")
+def load_mock_data():
+    def loader(*folder_and_filename):
+        full_path = MOCK_DATA.joinpath(*folder_and_filename)
+        return joblib.load(full_path)
+
+    return loader
+>>>>>>> ecd97f16ddec9d74032280fb53e0469c7b599b18
 
 
 @pytest.fixture(scope="session")

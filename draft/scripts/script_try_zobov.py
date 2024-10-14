@@ -8,7 +8,7 @@ import pathlib
 
 path = "/home/jorgefederico/updates/vftk_actual002/voidFinderProject/datasets/halos_ascii_1000_1024_npmin_10_z0.51.dat"
 # Get Box
-dbox = io.xyz_read_table(path, usecols=[1,2,3])
+dbox = io.xyz_read_table(path, usecols=[1, 2, 3])
 box = dbox.box
 
 workdir = '/home/jorgefederico/updates/vftk_1109/voidFinderProject/runz'
@@ -22,12 +22,14 @@ model = zobov.ZobovVF(box_size=1000, workdir=workdir)
 
 ## Just build voids
 model_find_parameters = {
-    'run_work_dir':pathlib.Path(workdir) / 'old',
-    'box':box
-                         }
+    "run_work_dir": pathlib.Path(workdir) / "old",
+    "box": box,
+}
 
 start_time = time.time()
-tinv,centers,extra = model.build_voids(model_find_parameters=model_find_parameters)
+tinv, centers, extra = model.build_voids(
+    model_find_parameters=model_find_parameters
+)
 ##
 voids = Voids(
     method="zobov",

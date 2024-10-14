@@ -7,7 +7,7 @@
 # All rights reserved.
 import pytest
 
-from voidfindertk import box
+from voidfindertk.core import box
 from voidfindertk.io import read_table
 
 

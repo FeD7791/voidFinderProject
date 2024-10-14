@@ -11,7 +11,7 @@ import numpy as np
 
 import pytest
 
-from voidfindertk.box import Box
+from voidfindertk.core.box import Box
 
 
 def test_Box_initialization(mkbox):
