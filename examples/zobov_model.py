@@ -1,4 +1,4 @@
-from voidfindertk import io,zobov
+from voidfindertk import io, zobov
 import os
 import pathlib
 import tempfile
@@ -7,20 +7,20 @@ import tempfile
 # This path is used to ensure that example works anywhere
 this_file_path = pathlib.Path(os.path.abspath(__file__))
 
-#Path to the dataset file
+# Path to the dataset file
 this_file_parent = this_file_path.parents[1]
-#path_dataset = this_file_parent/'datasets'/'halos_fede.dat'
+# path_dataset = this_file_parent/'datasets'/'halos_fede.dat'
 path_dataset = "./voidFinderProject/datasets/halos_fede.dat"
 
-#Generate Directory to place the runs
-temp_dir = tempfile.mkdtemp(prefix='run',dir=str(this_file_parent))
+# Generate Directory to place the runs
+temp_dir = tempfile.mkdtemp(prefix="run", dir=str(this_file_parent))
 # print(str(pathlib.Path(temp_dir)))
 
-#Generate the model
+# Generate the model
 zobov_0 = zobov.ZobovVF(
     # Perform zobov and place its files in a directory inside temp_dir
     workdir=str(str(pathlib.Path(temp_dir)))
-    )
+)
 
 # Get dataset box object:
 tracers = io.read_table(path_or_buffer=path_dataset)

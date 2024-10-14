@@ -16,7 +16,6 @@ import uttr
 
 @uttr.s(repr=False)
 class ZobovVoids:
-
     """
     Class that represents the properties of the output ascii
     file of ZOBOV. This Class contains the properties of the
@@ -177,7 +176,7 @@ def parse_zobov(filename_path):
     into an object: ZobovVoids with the void properties
     """
 
-    with open(filename_path,"r") as f:
+    with open(filename_path, "r") as f:
         voids = f.readlines()
     parameters = [
         "void_number",
@@ -194,10 +193,11 @@ def parse_zobov(filename_path):
     ]
     zobov_voids = []
     for void in voids[2:]:
-        z_void = ZobovVoids(**dict(zip(parameters,void.split())))
+        z_void = ZobovVoids(**dict(zip(parameters, void.split())))
         zobov_voids.append(z_void)
 
     return zobov_voids
+
 
 # def _get_zones_in_voids(*,zones_in_voids_file_path:str):
 #     """
@@ -229,7 +229,8 @@ def parse_zobov(filename_path):
 #         zones_in_voids[vz[0]] = np.array(vz[1:-1],dtype=int)
 #     return zones_in_voids
 
-def _get_particles_in_voids(*,particles_in_zones_path):
+
+def _get_particles_in_voids(*, particles_in_zones_path):
     """
     This method is used to extract the particles inside each void from the
     parsed file got from the membership file of zobov (which contains
@@ -245,7 +246,7 @@ def _get_particles_in_voids(*,particles_in_zones_path):
     ----------
         particles_in_zones_path : str
             Path to the parsed file
-    
+
     Returns
     -------
         dict
@@ -258,7 +259,7 @@ def _get_particles_in_voids(*,particles_in_zones_path):
         rather is linked indirectly using the CoreParticle as identifier that
         can relate to the void using the txt property file of ZOBOV.
     """
-    with open(particles_in_zones_path, "r") as f: # Read Parsed file
+    with open(particles_in_zones_path, "r") as f:  # Read Parsed file
         zones_particles = f.readlines()
 
     particles_in_zones = {}
@@ -267,8 +268,7 @@ def _get_particles_in_voids(*,particles_in_zones_path):
         if zones_particles[i].startswith(" Nparticles"):
 
             particles = np.array(
-                zones_particles[i+2].split(" ")[:-1],
-                dtype=int
-                )
+                zones_particles[i + 2].split(" ")[:-1], dtype=int
+            )
             particles_in_zones[f"{particles[0]}"] = particles
     return particles_in_zones
