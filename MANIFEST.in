@@ -1,6 +1,7 @@
 include LICENSE.txt
 include README.md
 include dependencies.md
+include pyproject.toml
 
 recursive-include voidfindertk *.py
 recursive-include voidfindertk *.c
@@ -15,12 +16,9 @@ recursive-include voidfindertk *.md
 recursive-exclude voidfindertk *.htm
 recursive-exclude voidfindertk *.gif
 
-
-
 recursive-exclude draft *
 recursive-exclude examples *
 recursive-exclude tests *
 
 exclude .header-template
 exclude tox.ini
-exclude pyproject.toml
