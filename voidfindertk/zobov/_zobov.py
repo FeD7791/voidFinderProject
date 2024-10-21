@@ -9,11 +9,16 @@
 # =============================================================================
 # DOCS
 # =============================================================================
-"""Module that holds functions and methods that are used to run the ZOBOV\
-python wrapper methods in a coherent step by step."""
+
+"""Module that holds functions and methods that are used to run the ZOBOV \
+python wrapper methods in a coherent step by step.
+
+"""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
 import datetime as dt
 import os
 import pathlib
@@ -26,9 +31,13 @@ import numpy as np
 
 import pandas as pd
 
-from . import _postprocessing
-from . import _wrapper as _wrap
+from . import _zb_postprocessing
+from . import _zb_wrapper as _wrap
 from ..core import VoidFinderABC
+
+# =============================================================================
+# HELPER CLASSES
+# =============================================================================
 
 
 @attr.define(frozen=True)
@@ -105,6 +114,11 @@ class _Paths:
         os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
     )
     ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
+
+
+# =============================================================================
+# FINDER
+# =============================================================================
 
 
 class ZobovVF(VoidFinderABC):
@@ -420,14 +434,14 @@ class ZobovVF(VoidFinderABC):
         )
         # Process 1:
         # a) Parse tracers in zones raw file in the work directory
-        _postprocessing.parse_tracers_in_zones_output(
+        _zb_postprocessing.parse_tracers_in_zones_output(
             executable_path=_Paths.ZOBOV
             / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII,
         )
         # b) Parse zones in voids raw file in the work directory
-        _postprocessing.parse_zones_in_void_output(
+        _zb_postprocessing.parse_zones_in_void_output(
             executable_path=_Paths.ZOBOV / _ExecutableNames.ZONES_IN_VOIDS_BIN,
             input_file_path=run_work_dir / _Files.ZONES_VS_VOID_RAW,
             output_file_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
@@ -435,7 +449,7 @@ class ZobovVF(VoidFinderABC):
         # Process 2:
         # a) Get Tracers in voids
         # tinv stands for tracers in voids
-        properties, tinv = _postprocessing.get_tracers_in_voids(
+        properties, tinv = _zb_postprocessing.get_tracers_in_voids(
             properties_dataframe=df,
             tracers_in_zones_path=(
                 run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII

@@ -10,9 +10,11 @@
 # DOCS
 # =============================================================================
 """Contains functions to parse output files from the ZOBOV void finder."""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
 import ctypes
 
 import numpy as np
@@ -90,7 +92,7 @@ def parse_tracers_in_zones_output(
 
 def _get_tracers_in_zones(*, tracers_in_zones_path):
     """
-    Reads a file containing tracers in zones information and returns the\
+    Reads a file containing tracers in zones information and returns the \
     tracers associated with each zone.
 
     Parameters

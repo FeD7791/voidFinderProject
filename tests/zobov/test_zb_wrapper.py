@@ -7,7 +7,7 @@
 # All rights reserved.
 from unittest import mock
 
-from voidfindertk.zobov import _wrapper
+from voidfindertk.zobov import _zb_wrapper
 
 
 # @mock.patch("sh.Command")  # Patching sh.Command
@@ -25,7 +25,7 @@ def test_vozinit(load_mock_data):
 
     # mock the class and run
     with mock.patch("sh.Command", return_value=mock_vozinit):
-        output = _wrapper.run_vozinit(**mock_data)
+        output = _zb_wrapper.run_vozinit(**mock_data)
 
     assert output == expected_output
     mock_vozinit.assert_called_once_with(

@@ -9,7 +9,9 @@
 # =============================================================================
 # DOCS
 # =============================================================================
+
 """Wrapper functions for the ZOBOV void finder."""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
@@ -105,10 +107,8 @@ def run_vozinit(
     -----
     This function leverages the `sh` module to execute the vozinit
     command in the specified working directory and returns the output.
-    """
-    import ipdb
 
-    ipdb.set_trace()
+    """
     vozinit = sh.Command("vozinit", search_paths=[vozinit_dir_path])
 
     params = (

@@ -11,17 +11,25 @@
 # =============================================================================
 
 """Module that holds functions and methods that are used to run the Popcorn \
-void finder."""
+void finder.
+
+"""
 
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
 import attr
 
 import numpy as np
 
 from . import _postprocessing, _wrapper
 from ..svf_popcorn import FileNames, Paths, SVFPopCorn
+
+
+# =============================================================================
+# VFINDER
+# =============================================================================
 
 
 @attr.define

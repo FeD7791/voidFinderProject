@@ -11,9 +11,11 @@
 # DOCS
 # =============================================================================
 
-
 """Module for interacting with the Popcorn void finder and related\
-utilities."""
+utilities.
+
+"""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
@@ -23,6 +25,10 @@ import configparser
 import sh
 
 from ..utils import chdir
+
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
 
 # Reference:
 # https://gitlab.com/dante.paz/popcorn_void_finder#43-popcorn-void-finder

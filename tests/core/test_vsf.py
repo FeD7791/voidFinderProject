@@ -46,17 +46,15 @@ def test_kind0_effective_radius_fixed_radius(
     # box 1
     x, y, z = np.hsplit(cloud_with_voids, 3)
     b = box.Box(
-        **{
-            "x": x,
-            "y": y,
-            "z": z,
-            # I don't care about this parameters.
-            # But i have to fill them.
-            "vx": x,
-            "vy": y,
-            "vz": z,
-            "m": z,
-        }
+        x=x,
+        y=y,
+        z=z,
+        # I don't care about this parameters.
+        # But i have to fill them.
+        vx=x,
+        vy=y,
+        vz=z,
+        m=z,
     )
 
     # Effective radius calculations
@@ -66,6 +64,7 @@ def test_kind0_effective_radius_fixed_radius(
 
     # er has 4 parameters, errors, radius, tracers, densitymap
     error_kind0 = np.where(er.errors == 0)  # Normal (No error)
+
     # =========================================================================
     # ERROR KIND 0 TEST
     # =========================================================================
@@ -91,8 +90,8 @@ def test_kind0_effective_radius_fixed_radius(
     # Assert some values are above threshold density and some are below.
     # .T[0] : Number of above values
     # .T[1] : Number of below values
-    assert np.all(np.greater(d0_above_below.T[0], np.zeros(len(d0))))
-    assert np.all(np.greater(d0_above_below.T[1], np.zeros(len(d0))))
+    assert np.all(d0_above_below.T[0] > np.zeros(len(d0)))
+    assert np.all(d0_above_below.T[1] > np.zeros(len(d0)))
 
     # The method should capture void radii with some presition.
     assert np.all(np.abs(rad0 - rad) < separation)

@@ -16,7 +16,7 @@
 # IMPORTS
 # =============================================================================
 
-from ._postprocessing import (
+from ._zb_postprocessing import (
     parse_tracers_in_zones_output,
     parse_zones_in_void_output,
 )

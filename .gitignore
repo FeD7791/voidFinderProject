@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 
+
+
 # C extensions
 *.so
 
@@ -75,7 +77,6 @@ script_re_run_popcorn.py
 draft/
 
 # zobov
-
 voidfindertk/zobov/*.txt
 voidfindertk/zobov/*.dat
 voidfindertk/zobov/src/src/*
@@ -84,12 +85,12 @@ voidfindertk/zobov/src/qhull/
 
 
 # Popcorn
-voidfindertk/svf_popcorn/popcorn_void_finder/*
 run_real_popcorn/
 runz/
 run_dive/
 re_run_popcorn/
 models/
+
 
 # dive
 voidfindertk/dive/CosmoBolognaLib/*

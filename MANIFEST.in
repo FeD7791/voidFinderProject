@@ -2,13 +2,24 @@ include LICENSE.txt
 include README.md
 include dependencies.md
 
-graft voidfindertk
+recursive-include voidfindertk *.py
+recursive-include voidfindertk *.c
+recursive-include voidfindertk *.cpp
+recursive-include voidfindertk *.h
+recursive-include voidfindertk *.hpp
+recursive-include voidfindertk *.tpp
+recursive-include voidfindertk *.so
+recursive-include voidfindertk *.txt
+recursive-include voidfindertk *.md
+
+recursive-exclude voidfindertk *.htm
+recursive-exclude voidfindertk *.gif
+
+
 
 recursive-exclude draft *
 recursive-exclude examples *
 recursive-exclude tests *
-
-
 
 exclude .header-template
 exclude tox.ini
