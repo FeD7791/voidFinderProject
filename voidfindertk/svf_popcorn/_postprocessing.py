@@ -84,9 +84,9 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     void center.
     """
     # First get x,y,z array elements and combine them into a np.array(x,y,z):
-    x = box.x.value
-    y = box.y.value
-    z = box.z.value
+    x = box.arr_.x
+    y = box.arr_.y
+    z = box.arr_.z
     xyz = np.column_stack((x, y, z))
 
     # Get radius and centers
@@ -100,6 +100,13 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
 
     # Build grispy grid
     grid = gsp.GriSPy(xyz)
+    # Set periodicity
+    periodic = {
+        0: (np.min(x), box.size()),
+        1: (np.min(y), box.size()),
+        2: (np.min(z), box.size()),
+    }
+    grid.set_periodicity(periodic, inplace=True)
 
     # Get tracers
     dist, ind = grid.bubble_neighbors(void_xyz, distance_upper_bound=void_rad)

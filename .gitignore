@@ -54,7 +54,7 @@ docs/_build/
 *.pyc
 *.pyo
 *.o
-datasets/
+datasets/*
 #examples/
 main.py
 *.so
@@ -70,6 +70,9 @@ voids_file.dat
 .isort.cfg
 header.txt
 script_re_run_popcorn.py
+
+#draft
+draft/
 
 # zobov
 

@@ -22,6 +22,8 @@ import io
 import os
 import pathlib
 
+import grispy as gsp
+
 import joblib
 
 import numpy as np
@@ -31,8 +33,6 @@ import pandas as pd
 import pytest
 
 from voidfindertk.core.box import Box
-<<<<<<< HEAD
-=======
 
 # =============================================================================
 # CONSTANTS
@@ -54,7 +54,6 @@ def load_mock_data():
         return joblib.load(full_path)
 
     return loader
->>>>>>> ecd97f16ddec9d74032280fb53e0469c7b599b18
 
 
 @pytest.fixture(scope="session")
@@ -172,73 +171,135 @@ def make_spherical_voids_params():
     return _maker
 
 
+@pytest.fixture
+def build_cloud():
+    def _build_cloud(*, seed=2, lmin=0, lmax=1000, n_points=100**3):
+        """
+        Builds a cloud of n_points , where: lmin < x,y,z < lmax.
+
+        Parameters
+        ----------
+            seed: int
+                Seed for random number generator.
+            lmin: float
+                Low limit of random generated points.
+            lmax: float
+                Max limit of random generated points.
+            n_points: int
+                Number of points to be generated
+        Returns
+        -------
+            cloud: array
+                Array of n_points with x,y,z coordinates between lmin and lmax.
+
+        """
+        np.random.seed(seed)
+        # Create point cloud
+        cloud = np.random.uniform(lmin, lmax, size=(n_points, 3))
+        return cloud
+
+    return _build_cloud
 
 
+@pytest.fixture
+def build_spherical_void():
+    def _build_spherical_void(
+        delta,
+        centers: np.ndarray,
+        radii: float,
+        cloud,
+    ):
+        """
+        Takes a cloud of tracers and removes tracers inside an spherical shell
+        around each void center so that each void has a desired density
+        density contrast.
+
+        Parameters
+        ----------
+            delta: float
+                Integrated density contrast of the void. -1 < delta < 0
+            centers: array
+                Array of x,y,z positions of void centers.
+            radii: float
+                Radius of void. (All void have same radius)
+            cloud: array
+                Collection of tracers, each with positions x,y,z that constitu-
+                te the universe (Box)
+        Returns
+        -------
+            cloud_with_voids : array
+                Collection of tracers of cloud input, minus some tracers around
+                each void so that these have the desired density contrast.
+        """
+        cloud_volume = round(np.max(cloud) - np.min(cloud)) ** 3
+        cloud_density = len(cloud) / cloud_volume
+        density_voids = (1 + delta) * cloud_density
+
+        # Build Grid
+        grid = gsp.GriSPy(cloud)
+        # Set periodicity
+        periodic = {
+            0: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
+            1: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
+            2: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
+        }
+        grid.set_periodicity(periodic, inplace=True)
+
+        # Find nearest neighbors
+        dist, index = grid.bubble_neighbors(
+            centers, distance_upper_bound=radii
+        )
+
+        # Calculate right number of tracers so the void gets at the desired
+        # density
+        n = int(round(density_voids * (4 / 3) * np.pi * (radii**3), 0))
+
+        new_index = [i[: len(i) - int(n - 1)] for i in index]
+        # dens_voids
+
+        # Remove from cloud the indicated indexes
+        mask = np.ones(len(cloud), dtype=bool)
+        for i in new_index:
+            mask[i] = False
+
+        cloud_with_voids = cloud[mask]
+        # Check the voids have the correct density
+        dens_validator(
+            cloud_with_voids=cloud_with_voids,
+            centers_of_voids=centers,
+            radius=radii,
+            density=density_voids,
+        )
+        return cloud_with_voids
+
+    return _build_spherical_void
 
 
-
-
-
-
-
-
-
-
-
-
-# @pytest.fixture
-# def make_zobov_voids_params():
-#     def _maker(**kwargs):
-#         params = {
-#             "n_voids": 3000,  # Max value
-#             "FileVoid#": 3300,  # Max value
-#             "CoreParticle": 100000,  # should always be equal to len(box)
-#             "CoreDens": 1.5,  # Max value
-#             "ZoneVol": (226.26, 292.82),  # (Mu,Sigma)
-#             "Zone#Part": (226.26, 243.7),  # (Mu,Sigma)
-#             "Void#Zones": (2.06, 24.8),  # (Mu,Sigma)
-#             "VoidVol": (660.23, 9985.43),  # (Mu,Sigma)
-#             "Void#Part": 5000,  # max value of particles inside void
-#             "VoidDensContrast": 3,  # Max value
-#             "VoidProb": 1,  # Max value
-#             "seed": 42,
-#         }
-#         for key, value in kwargs.items():
-#             params[key] = value
-#         rng = np.random.default_rng(seed=params["seed"])
-#         void_params = {
-#             "Void_number": np.arange(0, params["n_voids"]),
-#             "File_void_number": rng.integers(
-#                 0, params["FileVoid#"], params["n_voids"]
-#             ),
-#             "CoreParticle": rng.integers(
-#                 0, params["CoreParticle"], params["n_voids"]
-#             ),
-#             "CoreDens": rng.uniform(0, params["CoreDens"], params["n_voids"]),
-#             "ZoneVol": rng.normal(
-#                 params["ZoneVol"][0], params["ZoneVol"][1], params["n_voids"]
-#             ),
-#             "Zone_number_part": rng.normal(
-#                 params["Zone#Part"][0],
-#                 params["Zone#Part"][1],
-#                 params["n_voids"],
-#             ),
-#             "Void_number_Zones": rng.normal(
-#                 params["Void#Zones"][0],
-#                 params["Void#Zones"][1],
-#                 params["n_voids"],
-#             ),
-#             "VoidVol": rng.uniform(
-#                 params["VoidVol"][0], params["VoidVol"][1], params["n_voids"]
-#             ),
-#             "Void_number_Part": rng.integers(
-#                 0, params["Void#Part"], params["n_voids"]
-#             ),
-#             "VoidDensContrast": rng.uniform(
-#                 0, params["VoidDensContrast"], params["n_voids"]
-#             ),
-#             "VoidProb": rng.uniform(0, params["VoidProb"], params["n_voids"]),
-#         }
-#         return void_params
-
-#     return _maker
+# =============================================================================
+# OTHER
+# =============================================================================
+def dens_validator(*, cloud_with_voids, centers_of_voids, radius, density):
+    """Validator for build_spherical_void. Checks if the created cloud with
+    voids has the desired density contrast for each void.
+    """
+    # Build Grid
+    grid = gsp.GriSPy(cloud_with_voids)
+    # Add periodicity
+    periodic = {
+        0: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
+        1: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
+        2: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
+    }
+    grid.set_periodicity(periodic, inplace=True)
+    # Perform buble search of neighbors around center
+    distances, tracers = grid.bubble_neighbors(centers_of_voids, radius)
+    # Calculate densities
+    densities = np.array(list(map(len, tracers))) / (
+        (4 / 3) * np.pi * radius**3
+    )
+    # Check densities are the desired density
+    check_dens = np.all(
+        np.less_equal(densities, density * np.ones(densities.shape))
+    )
+    if not check_dens:
+        raise ValueError("Wrong density of voids")

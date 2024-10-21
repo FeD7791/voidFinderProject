@@ -43,7 +43,9 @@ class EffectiveRadiusErrors:
         leading to potential inaccuracies.
     EXEED_CRITICAL : int
         Error code indicating that the computed densities exceeded the
-        critical density, suggesting the region is not considered a void.
+        critical density for some values, other values are under critical
+        density in particular, last neighbor examined keeps being under the
+        critical
     UNDER_CRITICAL : int
         Error code indicating that all computed densities are below the
         critical density, which imply that the number of nearest neighbors
@@ -175,10 +177,12 @@ def _sigle_void_eradius(idx, n_neighbors, crit_density, distance, nn):
 
     """
     # Find density values for n_nat particles at radius d
-    n_nat = np.arange(1, n_neighbors + 1)
+    n_nat = np.arange(1, n_neighbors + 1, dtype=np.float32)
     density_n_nat_d = (3 * n_nat) / (4 * np.pi * distance**3)
 
-    # Find all density values that are less than crit_density
+    # Find all density values that are less than crit_density below a thresh -
+    # hold
+
     dens_values = np.where(density_n_nat_d < crit_density)[0]
 
     # This means that all calculated densities are above crit density,
@@ -290,8 +294,20 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 
     """
     # Create spatial gridding
-    xyz = np.column_stack((box.x.value, box.y.value, box.z.value))
+    x = box.arr_.x
+    y = box.arr_.y
+    z = box.arr_.z
+    xyz = np.column_stack((x, y, z))
     grid = gsp.GriSPy(xyz, copy_data=False, N_cells=n_cells)
+
+    # Set periodicity conditions based on limits of the box in each dimension.
+    periodic = {
+        0: (np.min(x), box.size()),
+        1: (np.min(y), box.size()),
+        2: (np.min(z), box.size()),
+    }
+
+    grid.set_periodicity(periodic, inplace=True)
 
     # For each center, get the distance for the n nearest tracers and their
     # index
