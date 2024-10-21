@@ -34,6 +34,7 @@ import pandas as pd
 from . import _zb_postprocessing
 from . import _zb_wrapper as _wrap
 from ..core import VoidFinderABC
+from ..settings import SETTINGS
 
 # =============================================================================
 # HELPER CLASSES
@@ -104,16 +105,11 @@ class _Paths:
 
     Attributes
     ----------
-    CURRENT : pathlib.Path
-        Absolute path to the directory of the current file.
     ZOBOV : pathlib.Path
         Path to the src folder of ZOBOV.
     """
 
-    CURRENT = pathlib.Path(
-        os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-    )
-    ZOBOV = CURRENT / "src"  # Path to the src folder of Zobov
+    ZOBOV = SETTINGS.paths.get("zobov_path", None)
 
 
 # =============================================================================
@@ -229,6 +225,13 @@ class ZobovVF(VoidFinderABC):
         self._zobov_path = pathlib.Path(
             _Paths.ZOBOV if zobov_path is None else zobov_path
         )
+
+        if self._zobov_path is None:
+            raise ValueError(
+                "You didn't provide a path to zobov and "
+                "there isn't one configured globally"
+            )
+
         # Create a workdir path to run ZOBOV
         self._workdir = pathlib.Path(
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
