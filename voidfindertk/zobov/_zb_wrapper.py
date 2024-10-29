@@ -174,12 +174,12 @@ def run_voz_step(
     src-executable and executing it in the specified working directory.
 
     """
-    # Moving necesary files tho run the src-executable
+    # Moving necesary files to run the src-executable
     _move_inputs(voz_executables_path / "voz1b1", work_dir_path)
     _move_inputs(voz_executables_path / "voztie", work_dir_path)
 
     full_executable_name = preprocess_dir_path / f"scr{executable_name}"
-    preprocess = sh.Command(full_executable_name)
+    preprocess = sh.Command(str(full_executable_name))
 
     with chdir(work_dir_path):
         output = preprocess()

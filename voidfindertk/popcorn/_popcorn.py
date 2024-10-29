@@ -23,7 +23,7 @@ import attr
 
 import numpy as np
 
-from . import _postprocessing, _wrapper
+from . import _pc_postprocessing, _pc_wrapper
 from ..svf_popcorn import FileNames, Paths, SVFPopCorn
 
 
@@ -79,30 +79,30 @@ class PopCorn(SVFPopCorn):
         run_work_dir = extra["files_directory_path"]
 
         # Before continuing minradius must be re-configured
-        _wrapper.read_and_modify_config(
+        _pc_wrapper.read_and_modify_config(
             config_file_path=run_work_dir / FileNames.CONFIG,
             section="INPUT_PARAMS",
             parameter="MINRADIUS",
             new_value=str(self._shot_noise_threshold),
         )
-        _wrapper.popcorn_void_finder(
+        _pc_wrapper.popcorn_void_finder(
             mpi_flags=self._mpi_flags,
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir,
         )
-        _wrapper.compute_intersects(
+        _pc_wrapper.compute_intersects(
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir,
         )
-        _wrapper.clean_duplicates(
+        _pc_wrapper.clean_duplicates(
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir,
         )
         # Get popvoids
-        popcorn_void_properties = _postprocessing.read_pop(
+        popcorn_void_properties = _pc_postprocessing.read_pop(
             filename=run_work_dir / FileNames.POPFILE
         )
         # Process output

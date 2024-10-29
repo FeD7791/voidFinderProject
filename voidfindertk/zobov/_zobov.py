@@ -109,7 +109,7 @@ class _Paths:
         Path to the src folder of ZOBOV.
     """
 
-    ZOBOV = SETTINGS.paths.get("zobov_path", None)
+    ZOBOV = pathlib.Path(SETTINGS.paths.get("zobov_path", None))
 
 
 # =============================================================================
@@ -382,8 +382,7 @@ class ZobovVF(VoidFinderABC):
             preprocess_dir_path=run_work_dir,
             executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
-            voz_executables_path=_Paths.ZOBOV
-            / "src",  # this is the path where voz1b1 and voztie exe are
+            voz_executables_path=_Paths.ZOBOV / "src"
         )
 
         # JOZOV ===============================================================
@@ -393,7 +392,7 @@ class ZobovVF(VoidFinderABC):
             output_name_particles_in_zones=Names.PARTICLES_IN_ZONES,
             output_name_zones_in_void=Names.ZONES_IN_VOID,
             output_name_text_file=Names.OUTPUT_JOZOV_VOIDS,
-            density_threshold=0,
+            density_threshold=self._density_threshold,
             work_dir_path=run_work_dir,
         )
         return {"run_work_dir": run_work_dir, "box": box}
@@ -466,13 +465,11 @@ class ZobovVF(VoidFinderABC):
             "void_properties": properties,
             "files_directory_path": run_work_dir,
         }
-
         # d) Get centers
         x = box.arr_.x
         y = box.arr_.y
         z = box.arr_.z
         xyz = np.column_stack((x, y, z))
-
         # d-1) centers = xyz[properties["CoreParticle"]]
         # Maps the indexes of the CoreParticle in each void to xyz positions
         # given by box.

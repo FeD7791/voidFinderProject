@@ -22,9 +22,10 @@ import attr
 
 import numpy as np
 
-from . import _postprocessing, _wrapper
+from . import _svf_pc_postprocessing, _svf_pc_wrapper
 from ..core import VoidFinderABC
 from ..utils import make_workdir
+from ..settings import SETTINGS
 
 
 class Paths:
@@ -33,19 +34,15 @@ class Paths:
 
     Attributes
     ----------
-    CURRENT : pathlib.Path
-        The absolute path to the current directory of the module.
     SVF : pathlib.Path
         Path to the source folder of the Popcorn void finder.
     CONFFILE : pathlib.Path
         Path to the configuration folder within the SVF directory.
     """
 
-    CURRENT = pathlib.Path(
-        os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-    )
-    # Path to the src folder of Popcorn
-    SVF = CURRENT / "popcorn_void_finder" / "src"
+    # Path to the src folder of Popcorn.
+    SVF = SETTINGS.paths.get("popcorn_path", None)
+    # Path to the configuration File of Popcorn.
     CONFFILE = SVF / "configuration"
 
 
@@ -267,7 +264,7 @@ class SVFPopCorn(VoidFinderABC):
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
         # Create config file on Workdir
-        _wrapper.config_file_maker(
+        _svf_pc_wrapper.config_file_maker(
             # Files
             trsfile=str(run_work_dir / FileNames.TRSFILE),
             filefmt="ASCII",
@@ -287,11 +284,11 @@ class SVFPopCorn(VoidFinderABC):
             path=str(run_work_dir / FileNames.CONFIG),  # Workdir path
         )
         # Generate dataset file from box
-        _wrapper.popcorn_svf_input_data_builder(
+        _svf_pc_wrapper.popcorn_svf_input_data_builder(
             box=box, file_path=str(run_work_dir / FileNames.TRSFILE)
         )  # Save File to workdir
         # Run Void Finder
-        _wrapper.spherical_popcorn_void_finder(
+        _svf_pc_wrapper.spherical_popcorn_void_finder(
             mpi_flags=self._mpi_flags,
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
@@ -330,11 +327,11 @@ class SVFPopCorn(VoidFinderABC):
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
         # Get void Properties
-        properties = _postprocessing.get_void_properties(
+        properties = _svf_pc_postprocessing.get_void_properties(
             popcorn_output_file_path=str(run_work_dir / FileNames.SPHFILE)
         )
         # Get tracers in void
-        tracers_in_voids = _postprocessing.get_tracers_in_voids(
+        tracers_in_voids = _svf_pc_postprocessing.get_tracers_in_voids(
             box=box,
             popcorn_output_file_path=str(run_work_dir / FileNames.SPHFILE),
         )

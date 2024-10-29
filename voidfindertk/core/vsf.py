@@ -366,7 +366,7 @@ def void_size_function(
     scale_2_num_samples,
 ):
     """
-    Computes the SvdW Void Size Function (VSF) model.
+    Computes the Void Size Function.
 
     This function calculates the VSF by creating a histogram of the logarithm
     of radii, using a specified number of histogram bins for different scales.
