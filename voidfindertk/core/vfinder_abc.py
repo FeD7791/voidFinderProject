@@ -32,7 +32,7 @@ class VoidFinderABC(ABC):
         """Initialize the VoidFinderABC instance."""
         pass
 
-    def find(self, box):
+    def find(self, box, box_copy=False):
         """
         Find voids in the provided box.
 
@@ -41,6 +41,8 @@ class VoidFinderABC(ABC):
         box : object
             The input data structure representing the box of tracers in which
             voids are to be found.
+        box_copy : bool, optional
+            Whether to copy the box before preprocessing it. Default is False.
 
         Returns
         -------
@@ -57,7 +59,7 @@ class VoidFinderABC(ABC):
 
         voids = Voids(
             method=type(self).__name__,
-            box=box,
+            box=box.copy() if box_copy else box,
             tracers_in_voids_=tracers_in_voids,
             centers_=centers,
             extra_=extra,
@@ -80,7 +82,7 @@ class VoidFinderABC(ABC):
         preprocess_parameters : object
             The parameters resulting from preprocessing the input box.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def model_find(self, preprocess_parameters):
@@ -97,7 +99,7 @@ class VoidFinderABC(ABC):
         model_find_parameters : object
             The parameters resulting from the model finding process.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def build_voids(self, model_find_parameters):
@@ -118,4 +120,4 @@ class VoidFinderABC(ABC):
         extra : object
             Any additional information generated during void construction.
         """
-        pass
+        pass  # pragma: no cover

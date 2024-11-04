@@ -50,7 +50,7 @@ class Voids:
 
     # came from finde and data
     method: str = attrs.field(converter=str)
-    box: Box = attrs.field(converter=Box.copy)
+    box: Box = attrs.field()
 
     # if end with "_" is calculated
     tracers_in_voids_: tuple = attrs.field(converter=tuple)

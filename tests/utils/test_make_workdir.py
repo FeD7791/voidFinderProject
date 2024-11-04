@@ -5,3 +5,17 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+
+from unittest import mock
+
+
+from voidfindertk.utils import make_workdir
+
+
+def test_make_workdir():
+
+    with mock.patch("tempfile.mkdtemp", return_value="path"):
+        path = make_workdir.create_run_work_dir(workdir_path="wdpath")
+
+    assert str(path) == "path"

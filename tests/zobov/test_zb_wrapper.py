@@ -146,12 +146,12 @@ def test_run_jozov():
         "work_dir_path": ".",
     }
     args = (
-        f"adj{params["executable_name"]}.dat",
-        f"vol{params["executable_name"]}.dat",
-        f"{params["output_name_particles_in_zones"]}.dat",
-        f"{params["output_name_zones_in_void"]}.dat",
-        f"{params["output_name_text_file"]}.dat",
-        f"{params["density_threshold"]}",
+        f"adj{params['executable_name']}.dat",
+        f"vol{params['executable_name']}.dat",
+        f"{params['output_name_particles_in_zones']}.dat",
+        f"{params['output_name_zones_in_void']}.dat",
+        f"{params['output_name_text_file']}.dat",
+        f"{params['density_threshold']}",
     )
     mock_jozov = mock.MagicMock()
     with mock.patch("sh.Command") as mock_command:

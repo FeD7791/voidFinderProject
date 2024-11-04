@@ -201,22 +201,30 @@ class Box:
         """
         return math.ceil(np.max(self.z.value))
 
-    def copy(self):
+    def to_dict(self):
+        """Method used to convert the class Box to a dictionary.
+
+        Returns
+        -------
+            dict
         """
-        Method used to perform a deep copy of the class Box.
+        return attrs.asdict(self, filter=lambda a, _: a.init)
+
+    def copy(self, **kwargs):
+        """Method used to perform a deep copy of the class Box.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Keyword arguments to update the Box parameters.
 
         Retruns
         -------
             Box object with a copy of Box Parameters.
         """
         cls = type(self)
-        new_tracers = cls(
-            x=self.x,
-            y=self.y,
-            z=self.z,
-            vx=self.vx,
-            vy=self.vy,
-            vz=self.vz,
-            m=self.m,
-        )
-        return new_tracers
+
+        data = self.to_dict()
+        data.update(kwargs)
+
+        return cls(**data)
