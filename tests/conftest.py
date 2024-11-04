@@ -22,6 +22,8 @@ import io
 import os
 import pathlib
 
+import attr
+
 import grispy as gsp
 
 import joblib
@@ -32,7 +34,12 @@ import pandas as pd
 
 import pytest
 
+from scipy.spatial.distance import cdist
+
+
 from voidfindertk.core.box import Box
+from voidfindertk.datasets import spherical_cloud
+from voidfindertk.settings import SETTINGS
 
 # =============================================================================
 # CONSTANTS
@@ -41,6 +48,32 @@ from voidfindertk.core.box import Box
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 
 MOCK_DATA = PATH / "mock_data"
+
+# =============================================================================
+# OTHER
+# =============================================================================
+
+
+@attr.define
+class ZobovElements:
+    """Contains Paths, Names and executable names of ZOBOV"""
+
+    OUTPUT_VOZINIT = "output_vozinit"
+    OUTPUT_JOZOV_VOIDS = "output_txt"
+    PARTICLES_IN_ZONES = "part_vs_zone"
+    ZONES_IN_VOID = "zones_vs_voids"
+    TRACERS_RAW = "tracers_zobov.raw"
+    TRACERS_TXT = "tracers_zobov.txt"
+    PARTICLES_VS_ZONES_RAW = f"{PARTICLES_IN_ZONES}.dat"
+    PARTICLES_VS_ZONES_ASCII = f"{PARTICLES_IN_ZONES}_ascii.txt"
+    OUTPUT_JOZOV_VOIDS_DAT = f"{OUTPUT_JOZOV_VOIDS}.dat"
+    ZONES_VS_VOID_RAW = f"{ZONES_IN_VOID}.dat"
+    ZONES_VS_VOID_ASCII = f"{ZONES_IN_VOID}_ascii.txt"
+    ZOBOV_LOADER_BIN = "zobov_loader.so"
+    TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
+    ZONES_IN_VOIDS_BIN = "zones_in_void.so"
+    ZOBOV = pathlib.Path(SETTINGS.paths.get("zobov_path", None))
+
 
 # =============================================================================
 # FIXTURES
@@ -172,134 +205,173 @@ def make_spherical_voids_params():
 
 
 @pytest.fixture
-def build_cloud():
-    def _build_cloud(*, seed=2, lmin=0, lmax=1000, n_points=100**3):
-        """
-        Builds a cloud of n_points , where: lmin < x,y,z < lmax.
+def build_box_with_eq_voids():
+    """This will return a box of tracers that include void of some defined
+    radii and that are equidistant between them.
+    """
 
+    def _maker(*, rad=30, cloud=None, delta=-0.9):
+        """
         Parameters
         ----------
-            seed: int
-                Seed for random number generator.
-            lmin: float
-                Low limit of random generated points.
-            lmax: float
-                Max limit of random generated points.
-            n_points: int
-                Number of points to be generated
-        Returns
-        -------
-            cloud: array
-                Array of n_points with x,y,z coordinates between lmin and lmax.
-
+            rad : float
+                Radius of the voids.
+            cloud : np.array
+                Array of tracers.
+            delta = : float
+                Integrated density contrast.
+        Return
+        ------
+            b : object
+                Box with the cloud with voids.
+            threshold : float
+                Threshold of the density, that divides the underdensities from
+                the overdensities.
+            centers : array
+                Array with the centers of the voids.
+            cloud : array
+                Updated cloud with tracers.
         """
-        np.random.seed(seed)
-        # Create point cloud
-        cloud = np.random.uniform(lmin, lmax, size=(n_points, 3))
-        return cloud
+        lmax = np.max(cloud)
+        # Generate centers
+        xyz_ = np.arange(0.0, lmax, rad + 10)
+        centers = np.column_stack((xyz_, xyz_, xyz_))
+        # Get cloud with spherical voids
+        cloud_with_voids = spherical_cloud.build_spherical_void(
+            delta=delta, centers=centers, radii=rad, cloud=cloud
+        )
+        # Density threshold
+        threshold = (
+            (1 + delta)
+            * len(cloud_with_voids)
+            / (np.max(cloud_with_voids) ** 3)
+        )
+        # Transform the cloud to a box
+        # box 1
+        x, y, z = np.hsplit(cloud_with_voids, 3)
+        b = Box(
+            x=x,
+            y=y,
+            z=z,
+            # I don't care about this parameters.
+            # But i have to fill them.
+            vx=x,
+            vy=y,
+            vz=z,
+            m=z,
+        )
+        return b, threshold, centers, cloud_with_voids
 
-    return _build_cloud
+    return _maker
 
 
 @pytest.fixture
-def build_spherical_void():
-    def _build_spherical_void(
-        delta,
-        centers: np.ndarray,
-        radii: float,
-        cloud,
-    ):
-        """
-        Takes a cloud of tracers and removes tracers inside an spherical shell
-        around each void center so that each void has a desired density
-        density contrast.
+def build_box_from_cloud():
+    def _maker(*, cloud=None):
+        x, y, z = np.hsplit(cloud, 3)
+        b = Box(
+            x=x,
+            y=y,
+            z=z,
+            # I don't care about this parameters.
+            # But i have to fill them.
+            vx=x,
+            vy=y,
+            vz=z,
+            m=z,
+        )
+        return b
+
+    return _maker
+
+
+@pytest.fixture
+def zobov_paths_and_names():
+    def _zobov_paths_and_names():
+        z = ZobovElements()
+        return z
+
+    return _zobov_paths_and_names
+
+
+@pytest.fixture
+def get_first_neighbor_min_distance():
+    def _get_first_neighbor_min_distance(*, cloud_with_voids):
+        """Calculates the minimun distance between first neighbors in a cloud.
 
         Parameters
         ----------
-            delta: float
-                Integrated density contrast of the void. -1 < delta < 0
-            centers: array
-                Array of x,y,z positions of void centers.
-            radii: float
-                Radius of void. (All void have same radius)
-            cloud: array
-                Collection of tracers, each with positions x,y,z that constitu-
-                te the universe (Box)
+            cloud_with_voids : array
+                Array of array of coordinates (x,y,z) of tracers in the cloud.
         Returns
         -------
-            cloud_with_voids : array
-                Collection of tracers of cloud input, minus some tracers around
-                each void so that these have the desired density contrast.
-        """
-        cloud_volume = round(np.max(cloud) - np.min(cloud)) ** 3
-        cloud_density = len(cloud) / cloud_volume
-        density_voids = (1 + delta) * cloud_density
+            d_min, dmax : tuple of floats
+                Minimum, maximun distances from all the distances calculated
+                beween first neighbors.
+        Notes
+        -----
+            To achieve this task, tracers (x,y,z) should be arranged based on
+            closeness to (0,0,0).
 
-        # Build Grid
-        grid = gsp.GriSPy(cloud)
-        # Set periodicity
+            First (x,y,z) distances to (0,0,0) are calculated. Then those
+            distances are sorted, ascending and then using the indexes to sort
+            the tracers in the cloud, having (x0,y0,z0),...,(xN,yN,zN) sorted
+            ascending.
+
+            This ensures a value thath could be used as threshold for the
+            effective_radius method where rad value is calculated
+        """
+        # Given a cloud calculate the distances to (0,0,0)
+        dd = cdist(cloud_with_voids, np.array([[0.0, 0.0, 0.0]]))
+        # Get 1D array of distances.
+        dd = np.ravel(dd)
+        # Get indexes that will sort the distances ascending.
+        d_idx = np.argsort(dd)
+        # Sort the cloud based on distance of tracers to (0,0,0)
+        cwv = cloud_with_voids[d_idx]
+        # Calculate the distances (now sorted) between (0,0,0) and tracers.
+        nn_dist = np.linalg.norm(cwv[1:] - cwv[:-1], axis=1)
+        # Get the min value from all those distances.
+        d_min = np.min(nn_dist)
+        # Get the max value from all those distances.
+        return d_min
+
+    return _get_first_neighbor_min_distance
+
+
+@pytest.fixture
+def find_bubble_neighbors():
+    def _find_bubble_neighbors(*, box, cloud_with_voids, centers, rad):
+        """
+        Perform search of trancers inside a radios.
+
+        Parameters
+        ----------
+            box : object
+                Properties of tracers: x,y,z (coordinates) v[x,y,z] velocities
+                m: total solar mass.
+            cloud_with_void : nd.array
+                Array of x,y,z positions of tracers.
+            centers : np.array
+                Array of x,y,z positions of void centers.
+            rad : nd.array
+                Array of void radius.
+        Returns
+        -------
+            dist : nd.array
+                Array of distances between centers and trancers.
+            ind : nd.array
+                Array of integer values that are the indexes of the tracers
+                inside a void (regarding to the tracers index in box.)
+        """
+        grid = gsp.GriSPy(cloud_with_voids)
         periodic = {
-            0: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
-            1: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
-            2: (np.round(np.min(cloud), 0), np.round(np.max(cloud), 0)),
+            0: (box.min(), box.max()),
+            1: (box.min(), box.max()),
+            2: (box.min(), box.max()),
         }
         grid.set_periodicity(periodic, inplace=True)
+        dist, ind = grid.bubble_neighbors(centers, distance_upper_bound=rad)
+        return dist, ind
 
-        # Find nearest neighbors
-        dist, index = grid.bubble_neighbors(
-            centers, distance_upper_bound=radii
-        )
-
-        # Calculate right number of tracers so the void gets at the desired
-        # density
-        n = int(round(density_voids * (4 / 3) * np.pi * (radii**3), 0))
-
-        new_index = [i[: len(i) - int(n - 1)] for i in index]
-        # dens_voids
-
-        # Remove from cloud the indicated indexes
-        mask = np.ones(len(cloud), dtype=bool)
-        for i in new_index:
-            mask[i] = False
-
-        cloud_with_voids = cloud[mask]
-        # Check the voids have the correct density
-        dens_validator(
-            cloud_with_voids=cloud_with_voids,
-            centers_of_voids=centers,
-            radius=radii,
-            density=density_voids,
-        )
-        return cloud_with_voids
-
-    return _build_spherical_void
-
-
-# =============================================================================
-# OTHER
-# =============================================================================
-def dens_validator(*, cloud_with_voids, centers_of_voids, radius, density):
-    """Validator for build_spherical_void. Checks if the created cloud with
-    voids has the desired density contrast for each void.
-    """
-    # Build Grid
-    grid = gsp.GriSPy(cloud_with_voids)
-    # Add periodicity
-    periodic = {
-        0: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-        1: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-        2: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-    }
-    grid.set_periodicity(periodic, inplace=True)
-    # Perform buble search of neighbors around center
-    distances, tracers = grid.bubble_neighbors(centers_of_voids, radius)
-    # Calculate densities
-    densities = np.array(list(map(len, tracers))) / (
-        (4 / 3) * np.pi * radius**3
-    )
-    # Check densities are the desired density
-    check_dens = np.all(
-        np.less_equal(densities, density * np.ones(densities.shape))
-    )
-    if not check_dens:
-        raise ValueError("Wrong density of voids")
+    return _find_bubble_neighbors
