@@ -302,9 +302,9 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
 
     # Set periodicity conditions based on limits of the box in each dimension.
     periodic = {
-        0: (np.min(x), box.size()),
-        1: (np.min(y), box.size()),
-        2: (np.min(z), box.size()),
+        0: (box.min(), box.max()),
+        1: (box.min(), box.max()),
+        2: (box.min(), box.max()),
     }
 
     grid.set_periodicity(periodic, inplace=True)
@@ -321,7 +321,6 @@ def effective_radius(centers, box, *, delta, n_neighbors, n_cells):
     # This is the density below which all voids should be
     # to be considered an underdensity
     crit_density = (1 + delta) * (len(box) / (box.size() ** 3))
-
     # Find the effective radius for each center
     for idx, distance in enumerate(distances):
         verror, vradius, vtracers, vdensity = _sigle_void_eradius(

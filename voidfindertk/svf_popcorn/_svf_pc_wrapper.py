@@ -124,12 +124,15 @@ def popcorn_svf_input_data_builder(*, box, file_path):
     # Popcorn input file format
     df = df[["m", "x", "y", "z", "vx", "vy", "vz"]]
     df.to_csv(
-        file_path, sep=" ", index=False, header=False, float_format="%.2f"
+        file_path,
+        sep=" ",
+        index=False,
+        header=False,  # float_format="%.2f"
     )
 
 
 def spherical_popcorn_void_finder(
-    *, mpi_flags, bin_path, conf_file_path, work_dir_path
+    *, mpi_flags=None, bin_path, conf_file_path, work_dir_path
 ):
     """
     Runs the Popcorn-Spherical Void Finder using MPI.

@@ -11,9 +11,7 @@
 # =============================================================================
 
 """Module that holds functions and methods that are used to run the ZOBOV \
-python wrapper methods in a coherent step by step.
-
-"""
+python wrapper methods in a coherent step by step."""
 
 # =============================================================================
 # IMPORTS
@@ -382,7 +380,7 @@ class ZobovVF(VoidFinderABC):
             preprocess_dir_path=run_work_dir,
             executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
-            voz_executables_path=_Paths.ZOBOV / "src"
+            voz_executables_path=_Paths.ZOBOV / "src",
         )
 
         # JOZOV ===============================================================

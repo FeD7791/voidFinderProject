@@ -24,8 +24,8 @@ import numpy as np
 
 from . import _svf_pc_postprocessing, _svf_pc_wrapper
 from ..core import VoidFinderABC
-from ..utils import make_workdir
 from ..settings import SETTINGS
+from ..utils import make_workdir
 
 
 class Paths:
@@ -41,7 +41,7 @@ class Paths:
     """
 
     # Path to the src folder of Popcorn.
-    SVF = SETTINGS.paths.get("popcorn_path", None)
+    SVF = pathlib.Path(SETTINGS.paths.get("popcorn_path", None))
     # Path to the configuration File of Popcorn.
     CONFFILE = SVF / "configuration"
 

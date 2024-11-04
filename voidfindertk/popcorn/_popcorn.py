@@ -11,9 +11,7 @@
 # =============================================================================
 
 """Module that holds functions and methods that are used to run the Popcorn \
-void finder.
-
-"""
+void finder."""
 
 # =============================================================================
 # IMPORTS

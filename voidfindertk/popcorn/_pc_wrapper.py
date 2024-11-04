@@ -11,10 +11,8 @@
 # DOCS
 # =============================================================================
 
-"""Module for interacting with the Popcorn void finder and related\
-utilities.
-
-"""
+"""Module for interacting with the Popcorn void finder and related \
+utilities."""
 
 # =============================================================================
 # IMPORTS

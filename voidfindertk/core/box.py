@@ -72,28 +72,40 @@ class Box:
 
         Checks that the lenght of the inputs are the same
         """
-        lengths = set(())
+        box_attributes = [
+            self.x.value,
+            self.y.value,
+            self.z.value,
+            self.vx.value,
+            self.vy.value,
+            self.vz.value,
+            self.m.value,
+        ]
+        # set of number of elements of each array attribute.
+        lengths = set(map(len, box_attributes))
 
-        for e in (self.x, self.y, self.z, self.vx, self.vy, self.vz, self.m):
-            lengths.add(len(e))
-
+        # Validator 1 : if another lenght is found then lengths hast more than
+        # one value.
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
 
-        # check if the box is a cube
+        # Validator 2 : check if the box is a cube.
         box_side = set(
-            (
-                math.ceil(np.max(self.x.value)),
-                math.ceil(np.max(self.y.value)),
-                math.ceil(np.max(self.z.value)),
+            map(
+                lambda arr: math.ceil(np.max(arr)) - math.floor(np.min(arr)),
+                box_attributes[:3],
             )
         )
+
         if len(box_side) != 1:
             raise ValueError(
                 "Not a cube: "
                 f"xmax: {math.ceil(np.max(self.x.value))} "
                 f"ymax: {math.ceil(np.max(self.y.value))} "
-                f"zmax: {math.ceil(np.max(self.z.value))}"
+                f"zmax: {math.ceil(np.max(self.z.value))} "
+                f"xmin: {math.floor(np.min(self.x.value))} "
+                f"ymin: {math.floor(np.min(self.y.value))} "
+                f"zmin: {math.floor(np.min(self.z.value))} "
             )
 
     def __len__(self):
@@ -146,19 +158,48 @@ class Box:
         """
         cls_name = type(self).__name__
         length = len(self)
-        return f"<{cls_name} size={length}>"
+        return f"<{cls_name} size={length} xyzmin={self.min()} \
+            xyzmax={self.max()}>"
 
     def size(self):
         """
-        Method used to determine the size of the box along the z-axis.
+        Returns the lenght of side of the box.
 
         Returns
         -------
-        int
-            The size of the box along a side box-axis
+            int : Lenght of box.
         """
-        size = math.ceil(np.max(self.z.value))
-        return size
+        return math.ceil(np.max(self.z.value)) - math.floor(
+            np.min(self.z.value)
+        )
+
+    def min(self):
+        """
+        Returns the minimun value, in length position of the box.
+
+        This value is the same for the x,y,z coordinates since all tracers are
+        aligned in a box.
+
+        Returns
+        -------
+            int
+                The lenght minimun value of the box.
+        """
+        return math.floor(np.min(self.z.value))
+
+    def max(self):
+        """
+        Returns the maximun value, in length position of the box.
+
+        This value is the same for the x,y,z coordinates since all tracers are
+        aligned in a box.
+
+        Returns
+        -------
+            int
+                The lenght maximun value of the box.
+        """
+        return math.ceil(np.max(self.z.value))
 
     def copy(self):
         """

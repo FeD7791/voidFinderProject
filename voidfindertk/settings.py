@@ -14,11 +14,11 @@
 Configuration management for VoidFinderTK.
 
 This module handles the creation, reading, and management of the configuration
-file for VoidFinderTK. It provides functionality to create an empty configuration,
-read an existing configuration, and store global settings.
+file for VoidFinderTK. It provides functionality to create an empty
+configuration, read an existing configuration, and store global settings.
 
-The module automatically creates a default configuration file if it doesn't exist
-and loads the settings into a global SETTINGS object.
+The module automatically creates a default configuration file if it doesn't
+exist and loads the settings into a global SETTINGS object.
 """
 
 # =============================================================================

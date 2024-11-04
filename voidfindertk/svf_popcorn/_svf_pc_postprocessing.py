@@ -68,7 +68,7 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     Returns
     -------
     np.ndarray
-        An array of indices of particles (refered to the Box object that are
+        An array of indices of particles (refered to the Box object) that are
         within each void. The shape of the array depends on the implementation
         of `grid.bubble_neighbors`.
 
@@ -102,9 +102,9 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     grid = gsp.GriSPy(xyz)
     # Set periodicity
     periodic = {
-        0: (np.min(x), box.size()),
-        1: (np.min(y), box.size()),
-        2: (np.min(z), box.size()),
+        0: (box.min(), box.max()),
+        1: (box.min(), box.max()),
+        2: (box.min(), box.max()),
     }
     grid.set_periodicity(periodic, inplace=True)
 
