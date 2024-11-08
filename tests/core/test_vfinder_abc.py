@@ -6,8 +6,12 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
-"""
-Unit tests for the `voidfindertk.core.vfinder_abc` module.
+# =============================================================================
+# DOCS
+# =============================================================================
+
+""" tests for the voidfindertk.core.vfinder_abc
+
 """
 
 # =============================================================================

@@ -12,7 +12,7 @@
 # DOCS
 # =============================================================================
 
-"""test for skneuromsi.utils.bunch
+"""test for voidfindertk.utils.bunch
 
 """
 

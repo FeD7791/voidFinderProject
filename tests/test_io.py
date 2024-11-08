@@ -5,11 +5,27 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+""" tests for voidfindertk.io
+
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import pytest
 
 from voidfindertk.core import box
 from voidfindertk.io import read_table
 
+# =============================================================================
+# TESTS
+# =============================================================================
 
 def test_read_table_type_output(random_buffer):
     buffer = random_buffer()

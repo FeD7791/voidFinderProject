@@ -5,6 +5,19 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+""" test for voidfindertk.core.box
+
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 from astropy import units as u
 
 import numpy as np
@@ -12,6 +25,10 @@ import numpy as np
 import pytest
 
 from voidfindertk.core.box import Box
+
+# =============================================================================
+# TESTS
+# =============================================================================
 
 
 def test_Box_initialization(mkbox):

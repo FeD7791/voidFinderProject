@@ -114,7 +114,7 @@ class _Paths:
 # FINDER
 # =============================================================================
 
-
+@attr.define
 class ZobovVF(VoidFinderABC):
     """
     ZobovVF class for running ZOBOV Void Finder.
@@ -147,27 +147,6 @@ class ZobovVF(VoidFinderABC):
         False).
     dtype : numpy.dtype, optional
         Data type used for computations (default is np.float32).
-
-    Attributes
-    ----------
-        _buffer_size : float
-            Input parameter of vozinit in ZOBOV void finder:
-            The buffer size sets the size, in units such that the box size of
-            the data cube is 1, of the buffer around each sub-box when
-            calculating the Voronoi diagram.
-        _box_size : float
-            Input parameter of vozinit in ZOBOV void finder:
-            The range of positions of particles in each dimension
-        _number_of_divisions : int
-            Input parameter of vozinit in ZOBOV void finder:
-            (default 2) -- the no. of partitions in each dimension; must be at
-            least 2 (giving 8 sub-boxes)
-        _density_threshold : float
-            Input parameter of vozinit in ZOBOV void finder:
-        _zobov_path : Pathlib.path
-        _workdir : Pathlib.path
-        _workdir_clean : bool
-        _dtype : numpy.dtype
 
 
     Methods
@@ -202,30 +181,21 @@ class ZobovVF(VoidFinderABC):
     VOZSTEP, and JOZOV.
     """
 
-    def __init__(
-        self,
-        *,
-        buffer_size=0.08,
-        box_size=500,
-        number_of_divisions=2,
-        density_threshold=0.2,
-        zobov_path=None,
-        workdir=None,
-        workdir_clean=False,
-        dtype=np.float32,
-    ):
-        """Init for class inicialization."""
-        self._buffer_size = buffer_size
-        self._box_size = box_size
-        self._number_of_divisions = number_of_divisions
-        self._density_threshold = density_threshold
+    _buffer_size=attr.field(default=0.08),
+    _box_size=attr.field(default=500),
+    _number_of_divisions=attr.field(default=2),
+    _density_threshold=attr.field(default=0.2),
+    _zobov_path=attr.field(default=None),
+    _workdir=attr.field(default=None),
+    _workdir_clean=attr.field(default=False),
+    _dtype=attr.field(default=np.float32),
 
-        self._zobov_path = pathlib.Path(
-            _Paths.ZOBOV if zobov_path is None else zobov_path
-        )
+    def __attrs_post_init__(self):
 
         if self._zobov_path is None:
-            raise ValueError(
+            try:
+                self._zobov_path = _Paths.ZOBOV
+            except: FileNotFoundError(
                 "You didn't provide a path to zobov and "
                 "there isn't one configured globally"
             )
@@ -233,12 +203,10 @@ class ZobovVF(VoidFinderABC):
         # Create a workdir path to run ZOBOV
         self._workdir = pathlib.Path(
             tempfile.mkdtemp(prefix=f"vftk_{type(self).__name__}_")
-            if workdir is None
-            else pathlib.Path(os.path.abspath(workdir))
+            if self._workdir is None
+            else pathlib.Path(os.path.abspath(self._workdir))
         )
-        self._workdir_clean = bool(workdir_clean)
 
-        self._dtype = dtype
 
     # PROPERTIES ==============================================================
     @property

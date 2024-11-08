@@ -12,7 +12,7 @@
 # DOCS
 # =============================================================================
 
-"""test for skneuromsi.utils.decorator
+"""test for voidfindertk.utils.accabc
 
 """
 

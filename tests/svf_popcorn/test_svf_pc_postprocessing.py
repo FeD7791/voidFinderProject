@@ -7,6 +7,14 @@
 # All rights reserved.
 
 # =============================================================================
+# DOCS
+# =============================================================================
+
+""" test for voidfindertk.svf_popcorn._svf_pc_postprocessing
+
+"""
+
+# =============================================================================
 # IMPORTS
 # =============================================================================
 
@@ -25,8 +33,8 @@ from voidfindertk.svf_popcorn import _svf_pc_postprocessing
 def test_get_tracers_in_voids(build_box_with_eq_voids, find_bubble_neighbors):
 
     # This is an example of dataset provided
-    rad = 30
-    cloud = spherical_cloud.build_cloud()
+    rad = 50
+    cloud = spherical_cloud.build_cloud(n_points=100**2)
     box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
         cloud=cloud, rad=rad
     )
@@ -35,20 +43,15 @@ def test_get_tracers_in_voids(build_box_with_eq_voids, find_bubble_neighbors):
     )
 
     parameters = {"box": box, "popcorn_output_file_path": "<path>"}
-    xyz = np.column_stack((box.arr_.x, box.arr_.y, box.arr_.z))
 
-    mock_read_csv = mock.MagicMock()
     mock_df = mock.MagicMock()
+    mock_df.__getitem__.return_value.to_numpy.side_effect = [
+        centers, rad * np.ones(len(box.arr_.x))
+        ]
 
-    mock_read_csv.return_value = mock_df
-    mock_df[["x", "y", "z"]].to_numpy.return_value = xyz
-
-    # All voids have the same radius
-    mock_df["rad"].to_numpy.return_value = rad * np.ones(len(box.arr_.x))
-
-    with mock.patch("pandas.read_csv", return_value=mock_read_csv):
+    with mock.patch("pandas.read_csv", return_value=mock_df) as mock_read_csv:
         ind_method = _svf_pc_postprocessing.get_tracers_in_voids(**parameters)
-
+    import ipdb; ipdb.set_trace()
     assert np.all(ind_method == ind)
     mock_read_csv.assert_called_once_with(
         parameters["popcorn_output_file_path"],

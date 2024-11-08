@@ -3,6 +3,12 @@ include README.md
 include dependencies.md
 include pyproject.toml
 
+
+graft voidfindertk/datasets
+recursive-exclude voidfindertk/datasets *.pyc
+graft voidfindertk/core 
+recursive-exclude voidfindertk/core *.pyc
+
 recursive-include voidfindertk *.py
 recursive-include voidfindertk *.c
 recursive-include voidfindertk *.cpp
@@ -10,15 +16,19 @@ recursive-include voidfindertk *.h
 recursive-include voidfindertk *.hpp
 recursive-include voidfindertk *.tpp
 recursive-include voidfindertk *.so
-recursive-include voidfindertk *.txt
 recursive-include voidfindertk *.md
 
+recursive-exclude voidfindertk *.txt
 recursive-exclude voidfindertk *.htm
 recursive-exclude voidfindertk *.gif
 
 recursive-exclude draft *
 recursive-exclude examples *
 recursive-exclude tests *
+
+recursive-exclude voidfindertk/svf_popcorn/popcorn_void_finder *
+recursive-exclude voidfindertk/zobov/src *
+recursive-exclude voidfindertk *.pyc
 
 exclude .header-template
 exclude tox.ini

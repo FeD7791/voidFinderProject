@@ -74,18 +74,6 @@ class DiveVF(ZobovVF):
     **kwargs :
         Additional keyword arguments passed to the parent class.
 
-    Attributes
-    ----------
-    ratio : float
-        The ratio used in void cleaning.
-    initial_radius : bool
-        Indicates whether the initial radius is used.
-    delta_r : list of float
-        The delta radii range.
-    threshold : float
-        The threshold for void detection.
-    overlap_criterion : bool
-        Indicates whether to apply the overlap criterion.
 
     """
 

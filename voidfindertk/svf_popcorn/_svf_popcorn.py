@@ -128,10 +128,15 @@ class SVFPopCorn(VoidFinderABC):
         Initializes paths for SVF and working directory after attribute
         initialization.
         """
+
         # svf_path
-        self._svf_path = pathlib.Path(
-            Paths.SVF if self._svf_path is None else self._svf_path
-        )
+        if self._svf_path is None:
+            try:
+                self._svf_path = Paths.SVF
+            except: FileNotFoundError(
+                "You didn't provide a path to zobov and "
+                "there isn't one configured globally"
+            )
 
         # Set workdir path
         self._workdir = pathlib.Path(

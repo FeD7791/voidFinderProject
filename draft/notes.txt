@@ -1,3 +1,43 @@
-For chat gpt docstrings:
+import subprocess
 
-from now on perform the same task, but when the first line of a previous docstring is just a line of less than 78 characters (including spaces) add another line describing the function, and if the firs line is larger than 78 characters instead, add a brief description of the function before the mentioned line and it has to be less than 78 character long (including spaces)
+def run_command(command):
+    result = subprocess.run(command, capture_output=True, text=True)
+    return result.stdout
+
+    import unittest
+from unittest.mock import patch, MagicMock
+
+# Assume the original function is in a module named `my_module`
+# from my_module import run_command
+
+class TestRunCommand(unittest.TestCase):
+
+    @patch('subprocess.run')
+    def test_run_command(self, mock_run):
+        # Arrange: Set up the mock to return a specific output
+        mock_run.return_value = MagicMock(stdout='mocked output')
+
+        # Act: Call the function you want to test
+        output = run_command(['echo', 'Hello, World!'])
+
+        # Assert: Check the output
+        self.assertEqual(output, 'mocked output')
+        # Also check if subprocess.run was called with the correct command
+        mock_run.assert_called_once_with(['echo', 'Hello, World!'], capture_output=True, text=True)
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+Explanation
+Patch the Executable: The @patch('subprocess.run') decorator replaces subprocess.run with a mock object for the duration of the test.
+
+Set Return Value: You can set the return value of the mock to simulate what the actual command would return. Here, MagicMock is used to create a mock object that has a stdout attribute.
+
+Call the Function: Invoke the function that uses the executable.
+
+Assertions: You can check that the output matches the expected value and verify that subprocess.run was called with the correct arguments.
+
+Additional Tips
+If you're testing a more complex executable, you can simulate different behaviors by adjusting the mock's return value or side effects.
+For mocking other parts of the execution (like stderr or the return code), you can set those attributes on the MagicMock return value as needed.
