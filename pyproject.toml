@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 79
-target-version = ['py310', 'py311','py312']
+target-version = ['py310', 'py311', 'py312']
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -16,14 +16,11 @@ description = "A package to compare void finders"
 version = "0.0.1"
 readme = "README.md"
 authors = [
-    {name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com"},
-    {name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar"}]
-license = {file = "LICENSE.txt"}
-keywords = [
-    "void finder",
-    "astronomy",
-    "large scale structure",
+    { name = "Federico Bustillos", email = "jorgefedericobustillosrava@gmail.com" },
+    { name = "Sebastian Gualpa", email = "srgualpa@unc.edu.ar" },
 ]
+license = { file = "LICENSE.txt" }
+keywords = ["void finder", "astronomy", "large scale structure"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Development Status :: 2 - Pre-Alpha",
@@ -37,16 +34,29 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
+    # science
     "numpy",
     "pandas",
     "scipy",
+
+    # oop lib
     "attrs",
     "uttrs",
+
+    # interaction with CLI
     "sh",
+
+    # astronomy tools
     "astropy",
     "grispy",
+
+    # visualization
     "matplotlib",
     "seaborn",
+
+    # io
+    "pyyaml",
+
 ]
 
 urls = { Repository = "https://github.com/FeD7791/voidFinderProject.git" }

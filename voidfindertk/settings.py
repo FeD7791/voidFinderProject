@@ -26,86 +26,107 @@ exist and loads the settings into a global SETTINGS object.
 # =============================================================================
 
 import datetime as dt
-import json
 import os
 import pathlib
 
+import attrs
+
+import yaml
+
 from . import __version__ as VERSION
-from .utils.bunch import Bunch
-
-# =============================================================================
-# DEFAULT CONF
-# =============================================================================
-
-#: dict: The default empty configuration structure.
-_EMPTY_CONF = {
-    "void_finder_tk_version": VERSION,
-    "created_at": None,
-    "paths": {
-        "zobov_path": "",
-        "popcorn_path": "",
-    },
-}
-
-# =============================================================================
-# API
-# =============================================================================
-
-
-def create_empty_conf(fp):
-    """
-    Create an empty configuration and write it to the given file object.
-
-    Parameters
-    ----------
-    fp : file object
-        The file object to write the configuration to.
-
-    Notes
-    -----
-    The created configuration includes the current version of VoidFinderTK
-    and the creation timestamp in UTC.
-    """
-    conf = _EMPTY_CONF.copy()
-    conf["created_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
-    json.dump(conf, fp, indent=2)
-
-
-def read_conf(fp):
-    """
-    Read a configuration from the given file object.
-
-    Parameters
-    ----------
-    fp : file object
-        The file object to read the configuration from.
-
-    Returns
-    -------
-    Bunch
-        A Bunch object containing the configuration data.
-    """
-    return Bunch(fp.name, json.load(fp))
 
 
 # =============================================================================
 # CONSTANTS
 # =============================================================================
 
-#: pathlib.Path: The path to the user's home directory.
-USER_HOME_PATH = pathlib.Path(os.path.expanduser("~"))
-
 #: pathlib.Path: The default path for the VoidFinderTK configuration file.
-DEFAULT_CONF_PATH = USER_HOME_PATH / ".voidfindertk.json"
+DEFAULT_CONF_PATH = pathlib.Path.home() / ".voidfindertk" / "vftk.yaml"
 
-# Create a new configuration file if it doesn't exist
-if not DEFAULT_CONF_PATH.exists():
+CWD_CONF_PATH = pathlib.Path.cwd() / "vftk.yaml"
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+_RO = {"readonly": True}
+
+
+@attrs.frozen()
+class _Settings:
+
+    _ENV_PREFFIX = "VFTK_"
+
+    voidfindertk_version: str = attrs.field(default=VERSION, metadata=_RO)
+    created_at: str = attrs.field(metadata=_RO)
+    zobov_path: str = attrs.field(default="")
+    popcorn_path: str = attrs.field(default="")
+
+    @created_at.default
+    def _created_at_default(self):
+        return dt.datetime.now(dt.timezone.utc).isoformat()
+
+    @classmethod
+    def from_yaml(cls, buffer):
+        data = yaml.safe_load(buffer)
+        return cls(**data)
+
+    def update_from_dict(self, data):
+        current = self.to_dict(read_only=False)
+
+        diff = set(data).difference(current)
+        if diff:
+            raise ValueError("Cant assing attribute/s: {diff}")
+
+        current.update(data)
+        for k, v in current.items():
+            super().__setattr__(k, v)
+
+    def update_from_env(self):
+        data = {
+            k.replace(self._ENV_PREFFIX, "", 1).lower(): v
+            for k, v in os.environ.items()
+            if k.startswith(self._ENV_PREFFIX)
+        }
+        self.update_from_dict(data)
+
+    def update_from_yaml(self, buffer):
+        data = self.from_yaml(buffer).to_dict(read_only=False)
+        self.update_from_dict(data)
+
+    def to_dict(self, read_only=True):
+        def no_privates(a, _):
+            return not a.name.startswith("_") and (
+                read_only or a.metadata != _RO
+            )
+
+        data = attrs.asdict(self, filter=no_privates)
+        return data
+
+    def to_yaml(self, buffer=None, **kwargs):
+        data = self.to_dict()
+        return yaml.safe_dump(data, stream=buffer, **kwargs)
+
+
+# =============================================================================
+# LOAD CONFIGURATION
+# =============================================================================
+
+# create the directory if needed
+DEFAULT_CONF_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+if DEFAULT_CONF_PATH.exists():
+    with open(DEFAULT_CONF_PATH, "r") as fp:
+        SETTINGS = _Settings.from_yaml(fp)
+else:
     print("Creating new configuration...")
+    SETTINGS = _Settings()
     with open(DEFAULT_CONF_PATH, "w") as fp:
-        create_empty_conf(fp)
+        SETTINGS.to_yaml(fp, default_flow_style=False, sort_keys=False)
     print(f"Please configure {DEFAULT_CONF_PATH}")
 
-# Load the settings from the configuration file
-with open(DEFAULT_CONF_PATH) as fp:
-    #: Bunch: Global settings object loaded from the configuration file.
-    SETTINGS = read_conf(fp)
+if CWD_CONF_PATH.exists():
+    with open(CWD_CONF_PATH, "r") as fp:
+        SETTINGS.update_from_yaml(fp)
+
+SETTINGS.update_from_env()
