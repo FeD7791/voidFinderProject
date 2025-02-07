@@ -51,15 +51,15 @@ class VoidFinderABC(ABC):
             including tracers in voids, their centers, and any extra
             information.
         """
-        preprocess_parameters = self.preprocess(box)
-        model_find_parameters = self.model_find(preprocess_parameters)
+        procesed_box = self.preprocess(box)
+        model_find_parameters = self.model_find(procesed_box)
         tracers_in_voids, centers, extra = self.build_voids(
             model_find_parameters
         )
 
         voids = Voids(
             method=type(self).__name__,
-            box=box.copy() if box_copy else box,
+            box=procesed_box.copy() if box_copy else procesed_box,
             tracers_in_voids_=tracers_in_voids,
             centers_=centers,
             extra_=extra,
@@ -80,19 +80,19 @@ class VoidFinderABC(ABC):
         Returns
         -------
         preprocess_parameters : object
-            The parameters resulting from preprocessing the input box.
+            Returns Box object with procesed parameters.
         """
         pass  # pragma: no cover
 
     @abstractmethod
-    def model_find(self, preprocess_parameters):
+    def model_find(self, procesed_box):
         """
         Execute the search for voids in the Box.
 
         Parameters
         ----------
-        preprocess_parameters : object
-            The parameters resulting from the preprocessing step.
+        procesed_box : object
+            Box object resulting from the preprocessing step.
 
         Returns
         -------

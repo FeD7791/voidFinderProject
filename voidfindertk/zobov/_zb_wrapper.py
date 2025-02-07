@@ -436,11 +436,12 @@ def write_input(*, box, path_executable, raw_file_path, txt_file_path):
         ctypes.c_char_p,
         ctypes.c_char_p,
     ]
+
     # Fill Input
     clibrary.c_binary_writter(
-        box.x,
-        box.y,
-        box.z,
+        box.arr_.x,
+        box.arr_.y,
+        box.arr_.z,
         # box.vx,
         # box.vy,
         # box.vz,

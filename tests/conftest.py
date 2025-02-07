@@ -21,6 +21,8 @@
 import io
 import os
 import pathlib
+from functools import reduce
+
 
 import attr
 
@@ -40,6 +42,8 @@ from scipy.spatial.distance import cdist
 from voidfindertk.core.box import Box
 from voidfindertk.datasets import spherical_cloud
 from voidfindertk.settings import SETTINGS
+from voidfindertk.utils import box_to_grid
+from voidfindertk.zobov import ZobovVF
 
 # =============================================================================
 # CONSTANTS
@@ -72,7 +76,19 @@ class ZobovElements:
     ZOBOV_LOADER_BIN = "zobov_loader.so"
     TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
     ZONES_IN_VOIDS_BIN = "zones_in_void.so"
-    ZOBOV = pathlib.Path(SETTINGS.paths.get("zobov_path", None))
+    ZOBOV = pathlib.Path(SETTINGS.zobov_path)
+
+
+@attr.define
+class SVFPopcornElements:
+    SVF = pathlib.Path(SETTINGS.popcorn_path)
+    CONFFILE = SVF / "configuration"
+    CONFIG = "vars.conf"
+    TRSFILE = "trsfile.dat"
+    SPHFILE = "sphfile.dat"
+    POPFILE = "popfile.dat"
+    RAWPOPFILE = "rawpopfile.dat"
+    PAIRSFILE = "pairsfile.dat"
 
 
 # =============================================================================
@@ -210,7 +226,7 @@ def build_box_with_eq_voids():
     radii and that are equidistant between them.
     """
 
-    def _maker(*, rad=30, cloud=None, delta=-0.9):
+    def _maker(*, rad=30, cloud=None, delta=-0.9, **mass_kwargs):
         """
         Parameters
         ----------
@@ -240,6 +256,10 @@ def build_box_with_eq_voids():
         cloud_with_voids = spherical_cloud.build_spherical_void(
             delta=delta, centers=centers, radii=rad, cloud=cloud
         )
+        # Get cloud with mass
+        cloud_with_voids_mass = spherical_cloud.add_mass_to_cloud(
+            cloud=cloud_with_voids, **mass_kwargs
+        )
         # Density threshold
         threshold = (
             (1 + delta)
@@ -248,18 +268,12 @@ def build_box_with_eq_voids():
         )
         # Transform the cloud to a box
         # box 1
-        x, y, z = np.hsplit(cloud_with_voids, 3)
-        b = Box(
-            x=x,
-            y=y,
-            z=z,
-            # I don't care about this parameters.
-            # But i have to fill them.
-            vx=x,
-            vy=y,
-            vz=z,
-            m=z,
-        )
+        cloud_ = cloud_with_voids_mass.T
+        x = cloud_[0]
+        y = cloud_[1]
+        z = cloud_[2]
+        m = cloud_[3]
+        b = Box(x=x, y=y, z=z, vx=x, vy=y, vz=z, m=m)
         return b, threshold, centers, cloud_with_voids
 
     return _maker
@@ -292,6 +306,15 @@ def zobov_paths_and_names():
         return z
 
     return _zobov_paths_and_names
+
+
+@pytest.fixture
+def svf_popcorn_paths_and_names():
+    def _svf_popcorn_paths_and_names():
+        s = SVFPopcornElements()
+        return s
+
+    return _svf_popcorn_paths_and_names
 
 
 @pytest.fixture
@@ -343,7 +366,7 @@ def get_first_neighbor_min_distance():
 def find_bubble_neighbors():
     def _find_bubble_neighbors(*, box, cloud_with_voids, centers, rad):
         """
-        Perform search of trancers inside a radios.
+        Perform search of trancers inside a spherical void.
 
         Parameters
         ----------
@@ -375,3 +398,93 @@ def find_bubble_neighbors():
         return dist, ind
 
     return _find_bubble_neighbors
+
+
+@pytest.fixture
+def zobov_model_builder():
+    def _zobov_model_builder(workdir_path=".", **kwargs):
+        kwargs.setdefault("n_points", 100000)
+        kwargs.setdefault("delta", -0.8)
+        kwargs.setdefault(
+            "centers",
+            np.array([[50, 50, 50], [700, 700, 700], [500, 500, 500]]),
+        )
+        kwargs.setdefault("radii", 70)
+        kwargs.setdefault("density_threshold", 0.1)
+        kwargs_cloud = {
+            key: value
+            for key, value in kwargs.items()
+            if key in {"seed", "lmin", "lmax", "n_points"}
+        }
+
+        cloud_with_voids_kwargs = {
+            key: value
+            for key, value in kwargs.items()
+            if key in {"delta", "centers", "radii", "cloud"}
+        }
+
+        cloud = spherical_cloud.build_cloud(**kwargs_cloud)
+        cloud_with_voids = spherical_cloud.build_spherical_void(
+            cloud=cloud, **cloud_with_voids_kwargs
+        )
+        x, y, z = np.hsplit(cloud_with_voids, 3)
+        box = Box(x=np.ravel(x), y=np.ravel(y), z=np.ravel(z))
+        workdir_path = pathlib.Path(workdir_path)
+        model = ZobovVF(box_size=box.max(), workdir=workdir_path)
+        parameters = model.model_find(box)
+        tinv, props, extra = model.build_voids(parameters)
+        return extra
+
+    return _zobov_model_builder
+
+
+# =============================================================================
+# POPCORN
+# =============================================================================
+
+
+@pytest.fixture
+def find_tracers():
+    def _find_tracers(properties_spheres, box):
+        centers = np.array(properties_spheres[["x", "y", "z"]])
+        rad = np.array(properties_spheres["radius"])
+
+        grid = box_to_grid.get_grispy_grid_from_box(box=box)
+
+        # For each sphere that is part of a single void, search tracers by
+        # looking in sphere (bubble search)
+        dist, ind = grid.bubble_neighbors(centers, distance_upper_bound=rad)
+
+        # Map each array of tracers indexes to a set, so we don't mind
+        # repeating indexes
+        indx_set = np.array(list(map(set, ind)))
+
+        # Look for tracers index belongig to spheres that are in the same void
+        tracers_in_voids = [
+            list(
+                # 4) Perform the union of sets with tracers that belong to
+                # spheres that compose a single void
+                reduce(
+                    set.union,
+                    list(
+                        # 3) Get the set indexes of tracers belongig to each
+                        # sphere that compose a void
+                        indx_set[
+                            np.where(
+                                # 2)For each unique void index filter the
+                                # spheres with that index
+                                properties_spheres.id
+                                == idx
+                            )[0]
+                            # 1)Consider the unique indexes that link spheres
+                            # with voids
+                        ]
+                    ),
+                )
+            )
+            for idx in properties_spheres.id.unique()
+        ]
+        # Return list of indexes of tracers belonging to each void
+        return tracers_in_voids
+
+    return _find_tracers

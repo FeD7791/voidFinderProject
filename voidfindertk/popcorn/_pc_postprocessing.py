@@ -16,123 +16,101 @@
 # IMPORTS
 # =============================================================================
 
+
 import numpy as np
 
+import pandas as pd
 
-# Popcorn reader (Old version - to be changed)
-def read_pop(filename):
-    """
-    Gets output from PopCorn Voidfinder from its output file.
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
 
-    Reads a data table of popcorn voids from an ASCII file (without header)
-    and structures it as a dictionary.
+
+def _to_float(line):
+    line = line.strip().split()
+    return list(map(np.float32, line))
+
+
+def get_properties(filename):
+    """Parse the output file from the PopCorn Void Finder and extract \
+    properties of voids and spheres.
+
+    This function reads the output file, processes its contents, and returns
+    two pandas DataFrames: one containing the properties of voids, and the
+    other containing the properties of spheres. The function assumes a specific
+    format for the input file, where each line contains space-separated values
+    corresponding to the properties of voids and spheres.
 
     Parameters
     ----------
     filename : str
-        The path to the data file.
+        The path to the output file from the PopCorn Void Finder.
 
     Returns
     -------
-    popcorn : dict
-        A dictionary with keys corresponding to popcorn voids attributes.
+    voids : pandas.DataFrame
+        A DataFrame containing the properties of voids. The columns are:
+        - 'id': The identifier of the void (int).
+        - 'n_mem': The number of members in the void (int).
+        - 'volume': The volume of the void (float).
+        - 'n_part': The number of particles in the void (int).
+        - 'flag': A flag indicating void properties (int).
+        - 'tracers': A list of tracers (1D array).
 
-    Popcorn voids attributes
-    -------------------------
-    id : int
-        Popcorn ID.
-    nmem : int
-        Number of member spheres.
-    vol : float
-        Popcorn volume.
-    reff : float
-        Effective radius.
-    npart : int
-        Number of particles inside.
-    flag : int
-        For internal control, can be ignored.
-    pop : dict
-        A dictionary with attributes of the member spheres (length: nmem).
-        * x : list of float
-            x-coordinates of the centres of the member spheres.
-        * y : list of float
-            y-coordinates of the member spheres.
-        * z : list of float
-            z-coordinates of the member spheres.
-        * r : list of float
-            Radii of the member spheres.
-        * fvol : list of float
-            Volume contribution to the total volume.
-        * level : list of int
-            Hierarchy level: 0 for main sphere, 1 for secondary spheres, etc.
+    sphere : pandas.DataFrame
+        A DataFrame containing the properties of spheres. The columns are:
+        - 'x': The x-coordinate of the sphere's center (float).
+        - 'y': The y-coordinate of the sphere's center (float).
+        - 'z': The z-coordinate of the sphere's center (float).
+        - 'radius': The radius of the sphere (float).
+        - 'fracvol': The fractional volume of the sphere (float).
+        - 'level': The level of the sphere (int).
+        - 'id': The identifier of the void to which the sphere belongs (int).
+
+    Example
+    -------
+    voids, sphere = get_properties('popcorn_output.txt')
     """
-    with open(filename, "r") as file:
-        npop = int(
-            file.readline().strip()
-        )  # number of popcorn voids (integer)
-        print(f"Number of popcorns: {npop}")
+    with open(filename, "r") as f:
+        data = f.readlines()  # Get all the lines in file
 
-        popcorn = {
-            "id": [],
-            "nmem": [],
-            "vol": [],
-            "reff": [],
-            "npart": [],
-            "flag": [],
-            "pop": [],
-        }
+    # map each string in line to a list of spaced separeted values
+    data_outputs = list(map(_to_float, data[1:]))
 
-        for p in range(npop):
-            head_pop = list(
-                file.readline().strip().split()
-            )  # this line is the header
-            id = int(head_pop[0])
-            nmem = int(head_pop[1])
-            vol = float(head_pop[2])
-            npart = int(head_pop[3])
-            flag = int(head_pop[4])
+    voids = []
+    spheres = []
+    tracers = []
+    idx_spheres = []
 
-            reff = (vol * 3 / (4 * np.pi)) ** (1.0 / 3.0)
-            # NOTE: this is a derived result, not contained in the original
-            # catalogue
+    for idx, out in enumerate(data_outputs):
+        if len(out) == 5:
+            voids.append(out)
+            spheres.append(data_outputs[idx + 1 : idx + 1 + int(out[1])])
+            tracers.append(
+                np.ravel(
+                    np.array(
+                        data_outputs[
+                            idx
+                            + 1
+                            + int(out[1]) : idx
+                            + 1
+                            + int(out[1])
+                            + int(out[3])
+                        ],
+                        dtype=int,
+                    )
+                )
+            )
+            idx_spheres += [int(out[0])] * int(out[1])
 
-            # Building the `pop` object:
-            x = []
-            y = []
-            z = []
-            r = []
-            fvol = []
-            level = []
-            if nmem > 0:
-                for _ in range(nmem):
-                    popmem = list(
-                        file.readline().strip().split()
-                    )  # attributes of the member spheres
-                    x.append(float(popmem[0]))
-                    y.append(float(popmem[1]))
-                    z.append(float(popmem[2]))
-                    r.append(float(popmem[3]))
-                    fvol.append(float(popmem[4]))
-                    level.append(int(popmem[5]))
-            pop = {
-                "x": x,
-                "y": y,
-                "z": z,
-                "r": r,
-                "fvol": fvol,
-                "level": level,
-            }  # this is an individual popcorn
+    void_properties_names = ["id", "n_mem", "volume", "n_part", "flag"]
+    sphere_properties_names = ["x", "y", "z", "radius", "fracvol", "level"]
 
-            if npart > 0:
-                for _ in range(npart):
-                    file.readline()  # reading inner particles ID (ignoring)
+    voids = pd.DataFrame(voids, columns=void_properties_names)
+    voids = voids.astype({"id": "int", "n_mem": "int", "n_part": "int"})
+    voids["tracers"] = tracers
 
-            popcorn["id"].append(id)
-            popcorn["nmem"].append(nmem)
-            popcorn["vol"].append(vol)
-            popcorn["reff"].append(reff)
-            popcorn["npart"].append(npart)
-            popcorn["flag"].append(flag)
-            popcorn["pop"].append(pop)
+    sphere = pd.DataFrame(np.vstack(spheres), columns=sphere_properties_names)
+    sphere["id"] = idx_spheres
 
-    return popcorn
+    return voids, sphere

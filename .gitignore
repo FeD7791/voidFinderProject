@@ -72,6 +72,7 @@ voids_file.dat
 .isort.cfg
 header.txt
 script_re_run_popcorn.py
+voidfindertk/epicsphere/*
 
 #draft
 draft/
@@ -82,9 +83,12 @@ voidfindertk/zobov/*.dat
 voidfindertk/zobov/src/src/*
 voidfindertk/zobov/src/bin/
 voidfindertk/zobov/src/qhull/
+voidfindertk/zobov/src/
 
 
 # Popcorn
+voidfindertk/svf_popcorn/popcorn_void_finder/
+
 run_real_popcorn/
 runz/
 run_dive/

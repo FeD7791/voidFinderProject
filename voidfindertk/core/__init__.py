@@ -18,14 +18,12 @@ from .box import Box
 from .plot_acc import VoidPlotter
 from .vfinder_abc import VoidFinderABC
 from .voids import Voids
-from .vsf import EffectiveRadiusErrors
 
 # =============================================================================
 # ALL
 # =============================================================================
 __all__ = [
     "Box",
-    "EffectiveRadiusErrors",
     "VoidFinderABC",
     "Voids",
     "VoidPlotter",

@@ -172,7 +172,7 @@ class VoidPlotter(accabc.AccessorABC):
         kwargs.setdefault("label", "Void Size Function")
         sns.lineplot(x=x, y=y, ax=ax, **kwargs)
 
-        ax.set_xlabel(r"$log_{10}(R)$" f"{x.unit}")
+        ax.set_xlabel(r"$log_{10}(R)$" f"R in {x.unit}")
         ax.set_ylabel(r"$\frac{1}{V} \frac{dN_v}{dlnR_v}$")
 
         ax.set_yscale("log")
@@ -184,8 +184,3 @@ class VoidPlotter(accabc.AccessorABC):
         return ax
 
     vsf = void_size_function
-
-    # Metodo para plotear un void sobre un histograma (A construir)
-    # def void_over_hist2d(self, x, y, *, ax=None):
-    #     ax = self.hist2d(x=x, y=y, ax=ax)
-    #     ax.axvline(500, color="k")

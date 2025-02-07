@@ -6,8 +6,9 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 # Directory structure (adjust as needed for relative paths)
-dirLib = /home/jorgefederico/project/CosmoBolognaLib/CosmoBolognaLib/ # Here your directory to the CBL Library
+dirLib = /home/jorgefederico/project/CosmoBolognaLib/CosmoBolognaLib/# Here your directory to the CBL Library
 dirH = $(dirLib)Headers/
+
 dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2.1/

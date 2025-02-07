@@ -9,18 +9,26 @@
 # =============================================================================
 # DOCS
 # =============================================================================
+
 """Module for interacting with the SVF Popcorn void finder and related\
 utilities."""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
+import subprocess
 from configparser import ConfigParser
+
+import numpy as np
 
 import pandas as pd
 
-import sh
-
 from ..utils import chdir
+
+# =============================================================================
+# DOCS
+# =============================================================================
 
 
 def config_file_maker(
@@ -119,10 +127,22 @@ def popcorn_svf_input_data_builder(*, box, file_path):
     file_path : pathlib.Path
         File path to place the generated input file.
     """
-    df = pd.DataFrame(box.__dict__)
-    # df.drop(labels=["_len"], axis=1, inplace=True)
-    # Popcorn input file format
-    df = df[["m", "x", "y", "z", "vx", "vy", "vz"]]
+    # Pre processing
+    df = pd.DataFrame(
+        np.array(
+            [
+                np.ravel(box.m),  # This is log of Msun
+                np.ravel(box.arr_.x),
+                np.ravel(box.arr_.y),
+                np.ravel(box.arr_.z),
+                np.ravel(box.arr_.vx),
+                np.ravel(box.arr_.vy),
+                np.ravel(box.arr_.vz),
+            ]
+        ).T
+    )
+
+    df.columns = ["m", "x", "y", "z", "vx", "vy", "vz"]
     df.to_csv(
         file_path,
         sep=" ",
@@ -132,34 +152,58 @@ def popcorn_svf_input_data_builder(*, box, file_path):
 
 
 def spherical_popcorn_void_finder(
-    *, mpi_flags=None, bin_path, conf_file_path, work_dir_path
+    *, bin_path, conf_file_path, work_dir_path, cores=1
 ):
     """
     Runs the Popcorn-Spherical Void Finder using MPI.
 
     Parameters
     ----------
-    mpi_flags : str
-        MPI flags for execution.
     bin_path : pathlib.Path
         Path to the folder containing the binary file for the void finder.
     conf_file_path : pathlib.Path
         Path to the configuration file used to run the void finder.
     work_dir_path : str
         Path to the working directory.
+    cores : int
+        Number of cores to run the mpi run.
 
     Returns
     -------
     output : str
         Standard output from the run.
+
+    Notes
+    -----
+    The mpi command is the following: mpirun -np <cores> --bind-to core
     """
     # Reference to mpi
     # https://docs.oracle.com/cd/E19356-01/820-3176-10/ExecutingPrograms.html
-    svf_mpi = sh.Command("svf", search_paths=[bin_path])
+
     params = "config=" + str(conf_file_path)
+
     # Command will be executed from work_dir_path path.
     with chdir(work_dir_path):
-        output = svf_mpi(params)
+        output = _run_mpi(search_paths=bin_path, params=params, cores=cores)
     return output
-    # subprocess.run(["mpirun", "-np", "1","--bind-to","none",
-    # "./svf", "./configuration/vars.conf"])
+
+
+def _run_mpi(search_paths, params, cores):
+
+    # By means of safety only integer values are allowed
+    if type(cores) is not int:
+        raise ValueError("Not integer number")
+
+    # Define the MPI-related command
+
+    subprocess.run(
+        [
+            "mpirun",
+            "-np",
+            str(cores),
+            "--bind-to",
+            "core",
+            str(search_paths / "svf"),
+            params,
+        ]
+    )

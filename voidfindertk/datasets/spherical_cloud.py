@@ -61,7 +61,13 @@ def _dens_gen(*, seed=2, center, rad, n_points):
     return xyz
 
 
-def build_cloud(*, seed=2, lmin=0, lmax=1000, n_points=100**3):
+def build_cloud(
+    *,
+    seed=2,
+    lmin=0,
+    lmax=1000,
+    n_points=100**3,
+):
     """
     Builds a cloud of n_points , where: lmin < x,y,z < lmax.
 
@@ -79,12 +85,41 @@ def build_cloud(*, seed=2, lmin=0, lmax=1000, n_points=100**3):
     Returns
     -------
         cloud: array
-            Array of n_points with x,y,z coordinates between lmin and lmax.
+            Array of n_points with x,y,z coordinates between lmin and lmax
 
     """
     rng = np.random.default_rng(seed=seed)
-    # Create point cloud
+    # Create point cloud xyz
     cloud = rng.uniform(lmin, lmax, size=(n_points, 3))
+    return cloud
+
+
+def add_mass_to_cloud(*, cloud, seed=2, log_mass_min=10, log_mass_max=12):
+    """
+    Adds log of mass to a cloud of tracers.
+
+    Parameters
+    ----------
+    cloud : array
+        Array of xyz positions of tracers
+    seed : int
+        Seed for random number generator
+    log_mass_min : float
+        Minimun log sun mass.
+    log_mass_max : float
+        Maximun log sun mass.
+
+    Returns
+    -------
+    cloud :
+        Updated cloud with log mass.
+    """
+    rng = np.random.default_rng(seed=seed)
+    # Generate mass for each tracers
+    log_mass = np.ravel(
+        rng.uniform(log_mass_min, log_mass_max, size=(len(cloud), 1))
+    )
+    cloud = np.vstack([cloud.T, log_mass]).T
     return cloud
 
 
@@ -117,6 +152,7 @@ def build_spherical_void(
             Collection of tracers of cloud input, minus some tracers around
             each void so that these have the desired density contrast.
     """
+    # Remove mass from cloud:
     cloud_volume = round(np.max(cloud) - np.min(cloud)) ** 3
     cloud_density = len(cloud) / cloud_volume
     density_voids = (1 + delta) * cloud_density
@@ -147,13 +183,7 @@ def build_spherical_void(
         mask[i] = False
 
     cloud_with_voids = cloud[mask]
-    # Check the voids have the correct density
-    dens_validator(
-        cloud_with_voids=cloud_with_voids,
-        centers_of_voids=centers,
-        radius=radii,
-        density=density_voids,
-    )
+
     return cloud_with_voids
 
 
@@ -219,32 +249,3 @@ def build_spherical_overdensity(delta, centers, radii, cloud):
     # Add tracers to cloud
     cloud_with_overdensities = np.concatenate(new_tracers)
     return cloud_with_overdensities
-
-
-# =============================================================================
-# OTHER
-# =============================================================================
-def dens_validator(*, cloud_with_voids, centers_of_voids, radius, density):
-    """Validator for build_spherical_void. Checks if the created cloud with \
-    voids has the desired density contrast for each void."""
-    # Build Grid
-    grid = gsp.GriSPy(cloud_with_voids)
-    # Add periodicity
-    periodic = {
-        0: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-        1: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-        2: (np.min(cloud_with_voids), np.max(cloud_with_voids)),
-    }
-    grid.set_periodicity(periodic, inplace=True)
-    # Perform buble search of neighbors around center
-    distances, tracers = grid.bubble_neighbors(centers_of_voids, radius)
-    # Calculate densities
-    densities = np.array(list(map(len, tracers))) / (
-        (4 / 3) * np.pi * radius**3
-    )
-    # Check densities are the desired density
-    check_dens = np.all(
-        np.less_equal(densities, density * np.ones(densities.shape))
-    )
-    if not check_dens:
-        raise ValueError("Wrong density of voids")

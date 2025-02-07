@@ -28,6 +28,24 @@ import uttr
 from . import plot_acc
 
 
+def _box_converter(a):
+    """
+    Logic for attrs/uttrs converter.
+
+    Parameters
+    ----------
+        a : array or None
+    Returns
+    -------
+        a : np.array
+    """
+    if a is not None:
+        a = np.array(a)
+    else:
+        a = np.array([])
+    return a
+
+
 @uttr.s(repr=False, frozen=True, cmp=False)
 class Box:
     """Box Class.
@@ -54,13 +72,16 @@ class Box:
 
     """
 
-    x = uttr.ib(converter=np.array, unit=u.Mpc)
-    y = uttr.ib(converter=np.array, unit=u.Mpc)
-    z = uttr.ib(converter=np.array, unit=u.Mpc)
-    vx = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
-    vy = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
-    vz = uttr.ib(converter=np.array, unit=u.Mpc / u.second)
-    m = uttr.ib(converter=np.array, unit=u.M_sun)
+    x = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc)
+    y = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc)
+    z = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc)
+    vx = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc / u.second)
+    vy = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc / u.second)
+    vz = uttr.ib(default=None, converter=_box_converter, unit=u.Mpc / u.second)
+    m = uttr.ib(
+        default=None,
+        converter=_box_converter,
+    )
 
     plot = uttr.ib(
         init=False,
@@ -72,41 +93,15 @@ class Box:
 
         Checks that the lenght of the inputs are the same
         """
-        box_attributes = [
-            self.x.value,
-            self.y.value,
-            self.z.value,
-            self.vx.value,
-            self.vy.value,
-            self.vz.value,
-            self.m.value,
-        ]
-        # set of number of elements of each array attribute.
-        lengths = set(map(len, box_attributes))
+        attributes = np.array([self.x, self.y, self.z], dtype=object)
+        k = np.array(list(map(len, attributes)))
+        indx = np.where(k > 0)[0]
+        lengths = set(map(len, attributes[indx]))
 
         # Validator 1 : if another lenght is found then lengths hast more than
         # one value.
         if len(lengths) != 1:
             raise ValueError("Arrays should be of the same size")
-
-        # Validator 2 : check if the box is a cube.
-        box_side = set(
-            map(
-                lambda arr: math.ceil(np.max(arr)) - math.floor(np.min(arr)),
-                box_attributes[:3],
-            )
-        )
-
-        if len(box_side) != 1:
-            raise ValueError(
-                "Not a cube: "
-                f"xmax: {math.ceil(np.max(self.x.value))} "
-                f"ymax: {math.ceil(np.max(self.y.value))} "
-                f"zmax: {math.ceil(np.max(self.z.value))} "
-                f"xmin: {math.floor(np.min(self.x.value))} "
-                f"ymin: {math.floor(np.min(self.y.value))} "
-                f"zmin: {math.floor(np.min(self.z.value))} "
-            )
 
     def __len__(self):
         """Length method.
@@ -185,7 +180,17 @@ class Box:
             int
                 The lenght minimun value of the box.
         """
-        return math.floor(np.min(self.z.value))
+        return int(
+            np.min(
+                np.array(
+                    [
+                        math.floor(np.min(self.x.value)),
+                        math.floor(np.min(self.y.value)),
+                        math.floor(np.min(self.z.value)),
+                    ]
+                )
+            )
+        )
 
     def max(self):
         """
@@ -199,7 +204,56 @@ class Box:
             int
                 The lenght maximun value of the box.
         """
-        return math.ceil(np.max(self.z.value))
+        return int(
+            np.max(
+                np.array(
+                    [
+                        math.ceil(np.max(self.x.value)),
+                        math.ceil(np.max(self.y.value)),
+                        math.ceil(np.max(self.z.value)),
+                    ]
+                )
+            )
+        )
+
+    def mass_cutoff(self, mass_threshold):
+        """
+        Filter the points by mass threshold.
+
+        Returns a new `Box` object that only includes points with a mass
+        greater than the given threshold.
+
+        Parameters
+        ----------
+        mass_threshold : float
+            The mass threshold above which points will be included.
+
+        Returns
+        -------
+        Box
+            A new `Box` object containing only points with mass greater
+            than the threshold.
+        """
+        idx = np.where(self.m > mass_threshold)[0]
+        properties = [
+            self.x,
+            self.y,
+            self.z,
+            self.vx,
+            self.vy,
+            self.vz,
+            self.m,
+        ]
+        names = ["x", "y", "z", "vx", "vy", "vz", "m"]
+        available_properties = np.array(list(map(len, properties)))
+
+        new_properties = {}
+        for e in zip(names, available_properties != 0, properties):
+            if e[1]:
+                new_properties[e[0]] = e[2][idx]
+            else:
+                new_properties[e[0]] = np.array([])
+        return self.copy(**new_properties)
 
     def to_dict(self):
         """Method used to convert the class Box to a dictionary.

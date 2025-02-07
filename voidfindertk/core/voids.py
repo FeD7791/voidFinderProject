@@ -18,8 +18,11 @@ import attrs
 
 import numpy as np
 
+from . import center_finder
 from . import plot_acc, vsf
+from . import radius_finder
 from .box import Box
+from ..core import cleaners
 from ..utils import Bunch
 
 
@@ -67,7 +70,7 @@ class Voids:
         """Post init method."""
         if len(self.box) <= len(self.tracers_in_voids_):
             raise ValueError(
-                "Number of box must be lesser than the numbers of voids"
+                "Number of voids can never outnumber number of tracers"
             )
 
     @property
@@ -79,6 +82,16 @@ class Voids:
     def e_(self):
         """dict: Holds extra results and information of the run."""
         return self.extra_
+
+    @property
+    def tracers(self):
+        """Returns the tracers that belong to a void."""
+        return self.tracers_in_voids_
+
+    @property
+    def centers(self):
+        """Returns the center/s of void/s."""
+        return self.centers_
 
     # REPR ====================================================================
     def __repr__(self):
@@ -111,45 +124,38 @@ class Voids:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
 
-    def effective_radius(self, *, delta=-0.9, n_neighbors=100, n_cells=64):
-        """Calculate the effective radius of the voids.
+    def effective_radius(self, method="default", **kwargs):
+        """
+        Computes the effective radius of voids using the given method.
 
         Parameters
         ----------
-        delta : float
-            The delta parameter for the effective radius calculation.
-            Defaults to -0.9.
-        n_neighbors : int
-            The number of neighbors to consider for the effective radius
-            calculation. Defaults to 100.
-        n_cells : int
-            The number of cells to consider for the effective radius
-            calculation. Defaults to 64.
+        method : str, optional
+            The method used to calculate the effective radius. Default is
+            "default".
+        **kwargs : keyword arguments
+            Additional keyword arguments passed to the method used to calculate
+            the effective radius.
 
         Returns
         -------
-        effective_radius :
-            A dataclass containing the effective radius results.
+        numpy.ndarray
+            An array containing the calculated effective radii of the voids.
         """
-        return vsf.effective_radius(
-            self.centers_,
-            self.box,
-            delta=delta,
-            n_neighbors=n_neighbors,
-            n_cells=n_cells,
-        )
+        rad_method = radius_finder.get_radius_searcher(method=method)
+        return rad_method(**kwargs)
 
     def void_size_function(
         self,
         *,
+        radius,
+        delta=-0.8,
         n_step1=2,
         n_step2=10,
         scale_1_num_samples=7,
         scale_2_num_samples=2,
-        **kwargs,
     ):
-        """
-        Calculate the void size distribution based on the effective radius.
+        """Calculate the void size distribution based on the effective radius.
 
         This function computes the log of radius, count of voids, and delta
         values using the provided parameters for scaling and sampling.
@@ -180,10 +186,9 @@ class Voids:
             - delta : array
                 The delta values for the void size distribution.
         """
-        effective_radius = self.effective_radius(**kwargs)
-
         log_of_radius, count, delta = vsf.void_size_function(
-            effective_radius=effective_radius,
+            radius=radius,
+            delta=delta,
             box=self.box,
             n_step1=n_step1,
             n_step2=n_step2,
@@ -194,3 +199,141 @@ class Voids:
         return log_of_radius, count, delta
 
     vsf = void_size_function
+
+    def cleaner(
+        self,
+        centers,
+        radius,
+        cleaner_method="overlap",
+        rad_min_max=[0.0, 100.0],
+        **kwargs,
+    ):
+        """
+        Cleans voids based on a cleaner method and given radius.
+
+        This method uses the specified cleaner method to clean the voids and
+        applies a filtering process based on the given radius.
+
+        Parameters
+        ----------
+        centers : array-like
+            The coordinates of the centers of the voids.
+        radius : array-like
+            The radii of the voids.
+        cleaner_method : str, optional
+            The method used to clean the voids. Default is "overlap".
+        rad_min_max : list, optional
+            A list containing the minimum and maximum radius for filtering
+            voids. Default is [0.0, 100.0].
+        **kwargs : keyword arguments
+            Additional keyword arguments passed to the cleaner method.
+
+        Returns
+        -------
+        Voids
+            A new instance of the Voids class with cleaned voids.
+        """
+        cleaner = cleaners.get_cleaner(cleaner_method=cleaner_method)
+        centers_, radius_ = cleaner(center=centers, radius=radius, **kwargs)
+        # Post cleaning
+        idx = np.where(
+            (radius_ < rad_min_max[1]) & (radius_ > rad_min_max[0])
+        )[0]
+        # Build new void
+        parameters = {
+            "method": self.method,
+            "box": self.box,
+            "tracers_in_voids_": self.tracers_in_voids_,
+            "centers_": centers_[idx],
+            "extra_": {"radius": radius_[idx]},
+        }
+        return self._create_new_instance(parameters=parameters)
+
+    @classmethod
+    def _create_new_instance(cls, parameters):
+        """
+        Creates a new instance of the Voids class with the given parameters.
+
+        Parameters
+        ----------
+        parameters : dict
+            A dictionary containing the parameters to initialize the new Voids
+            object.
+
+        Returns
+        -------
+        Voids
+            A new instance of the Voids class initialized with the given
+            parameters.
+        """
+        return cls(
+            method=parameters["method"],
+            box=parameters["box"],
+            tracers_in_voids_=parameters["tracers_in_voids_"],
+            centers_=parameters["centers_"],
+            extra_=parameters["extra_"],
+        )
+
+    def find_radius_and_clean(
+        self, cleaner_method="overlap", radius_method="default", **kwargs
+    ):
+        """
+        Finds the radius of voids and cleans them using the specified methods.
+
+        This method calculates the effective radius of voids using the
+        specified radius method, applies a cleaning process, and returns a new
+        instance of the Voids class with cleaned voids.
+
+        Parameters
+        ----------
+        cleaner_method : str, optional
+            The cleaner method to use. Default is "overlap".
+        radius_method : str, optional
+            The method to use for calculating the effective radius. Default is
+            "default".
+        **kwargs : keyword arguments
+            Additional keyword arguments passed to the effective radius and
+            cleaner methods.
+
+        Returns
+        -------
+        Voids
+            A new instance of the Voids class with cleaned voids and calculated
+            radii.
+        """
+        # Default Parameters
+        kwargs.setdefault("centers", self.centers_)
+        kwargs.setdefault("box", self.box)
+        kwargs.setdefault("extra", self.extra_)
+        # 1) Find radius by method radius_method
+
+        radius = self.effective_radius(method=radius_method, **kwargs)
+        # 2) Clean found radius
+        # 2.1) Pre cleaning
+        idx = np.where(radius > 0)[0]
+        radius = radius[idx]
+        centers = self.centers_[idx]
+        # 2.2) Use class cleaner method
+        kwargs["centers"] = centers
+        kwargs["radius"] = radius
+        new_void = self.cleaner(cleaner_method=cleaner_method, **kwargs)
+        return new_void
+
+    def find_centers(self):
+        """
+        Finds and calculates the centers of voids.
+
+        This method computes the centers of the voids based on tracer particles
+        and the properties of the box.
+
+        Returns
+        -------
+        numpy.ndarray
+            An array containing the calculated centers of the voids.
+        """
+        return center_finder.center_calculator(
+            box=self.box,
+            tracers_in_voids=self.tracers_in_voids_,
+            n_neighbors=3.0,
+            threshold=0.8,
+        )

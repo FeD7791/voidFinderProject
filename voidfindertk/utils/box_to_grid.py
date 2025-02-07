@@ -6,20 +6,45 @@
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
 
+
 # =============================================================================
 # DOCS
 # =============================================================================
-"""DIVE: Detection, Identificacion and Voids Examination.
 
-DIVE is a reimplementation of VIDE void detection algoritm in pure Python on
-top of the classic ZOBOV code.
-"""
+"""Parses Box object to Grispy Grid."""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
-from ._dive import DiveVF
+
+import grispy as gsp
+
+import numpy as np
 
 # =============================================================================
-# ALL
+# FUNCTIONS
 # =============================================================================
-__all__ = ["DiveVF"]
+
+
+def get_grispy_grid_from_box(box, **grispy_kwargs):
+    """Gets a periodical grispy grid from box."""
+    grispy_kwargs.setdefault("N_cells", 64)
+    grispy_kwargs.setdefault("copy_data", False)
+
+    # Build a grispy grid using the box
+    x = box.arr_.x
+    y = box.arr_.y
+    z = box.arr_.z
+    xyz = np.column_stack((x, y, z))
+    grid = gsp.GriSPy(
+        xyz,
+        copy_data=grispy_kwargs["copy_data"],
+        N_cells=grispy_kwargs["N_cells"],
+    )
+    periodic = {
+        0: (box.min(), box.max()),
+        1: (box.min(), box.max()),
+        2: (box.min(), box.max()),
+    }
+    grid.set_periodicity(periodic, inplace=True)
+    return grid

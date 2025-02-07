@@ -27,6 +27,7 @@ from voidfindertk.io import read_table
 # TESTS
 # =============================================================================
 
+
 def test_read_table_type_output(random_buffer):
     buffer = random_buffer()
     assert isinstance(read_table(buffer), box.Box)

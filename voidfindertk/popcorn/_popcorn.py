@@ -17,6 +17,8 @@ void finder."""
 # IMPORTS
 # =============================================================================
 
+import pathlib
+
 import attr
 
 import numpy as np
@@ -49,12 +51,20 @@ class PopCorn(SVFPopCorn):
         configuration as necessary.
     """
 
-    _shot_noise_threshold = attr.field(default=20)
+    _shot_noise_threshold = attr.field(
+        default=20, alias="shot_noise_threshold"
+    )
 
     @property
     def shot_noise_threshold(self):
         """Return the shot noise threshold value."""
         return self._shot_noise_threshold
+
+    def model_find(self, box):
+        """Performs PopCorn Search."""
+        model_find_parameters = super().model_find(box)
+        model_find_parameters["build_popcorn"] = True
+        return model_find_parameters
 
     def build_voids(self, model_find_parameters):
         """
@@ -71,58 +81,53 @@ class PopCorn(SVFPopCorn):
             A tuple containing tracers, centers, and additional information
             regarding the files directory and effective radii.
         """
-        tracers_in_voids, centers, extra = super().build_voids(
-            model_find_parameters
-        )
-        run_work_dir = extra["files_directory_path"]
+        if model_find_parameters["build_popcorn"]:
+            tracers_in_voids, centers, extra = super().build_voids(
+                model_find_parameters
+            )
+            run_work_dir = pathlib.Path(extra["files_directory_path"])
 
-        # Before continuing minradius must be re-configured
-        _pc_wrapper.read_and_modify_config(
-            config_file_path=run_work_dir / FileNames.CONFIG,
-            section="INPUT_PARAMS",
-            parameter="MINRADIUS",
-            new_value=str(self._shot_noise_threshold),
-        )
-        _pc_wrapper.popcorn_void_finder(
-            mpi_flags=self._mpi_flags,
-            bin_path=Paths.SVF,
-            conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir,
-        )
-        _pc_wrapper.compute_intersects(
-            bin_path=Paths.SVF,
-            conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir,
-        )
-        _pc_wrapper.clean_duplicates(
-            bin_path=Paths.SVF,
-            conf_file_path=run_work_dir / FileNames.CONFIG,
-            work_dir_path=run_work_dir,
-        )
+            # Before continuing minradius must be re-configured
+            _pc_wrapper.read_and_modify_config(
+                config_file_path=run_work_dir / FileNames.CONFIG,
+                section="INPUT_PARAMS",
+                parameter="MINRADIUS",
+                new_value=str(self._shot_noise_threshold),
+            )
+            _pc_wrapper.popcorn_void_finder(
+                mpi_flags=self._mpi_flags,
+                bin_path=Paths.SVF,
+                conf_file_path=run_work_dir / FileNames.CONFIG,
+                work_dir_path=run_work_dir,
+            )
+            _pc_wrapper.compute_intersects(
+                bin_path=Paths.SVF,
+                conf_file_path=run_work_dir / FileNames.CONFIG,
+                work_dir_path=run_work_dir,
+            )
+            _pc_wrapper.clean_duplicates(
+                bin_path=Paths.SVF,
+                conf_file_path=run_work_dir / FileNames.CONFIG,
+                work_dir_path=run_work_dir,
+            )
+        else:
+            run_work_dir = pathlib.Path(model_find_parameters["run_work_dir"])
         # Get popvoids
-        popcorn_void_properties = _pc_postprocessing.read_pop(
+        voids, spheres = _pc_postprocessing.get_properties(
             filename=run_work_dir / FileNames.POPFILE
         )
-        # Process output
-        tracers = []
+        # Sort voids and spheres ascending in index
+        voids.sort_values(by=["id"], inplace=True)
+        spheres.sort_values(by=["id"], inplace=True)
+
+        # Get Tracers
+        tracers = voids.tracers
         # Get centers of the first sphere
-        # By now, the centers are the center of the spheres of heriarchy level
-        # zero
-        x = np.array(
-            [e["x"][0] for e in popcorn_void_properties["pop"]],
-            dtype=np.float32,
-        )
-        y = np.array(
-            [e["y"][0] for e in popcorn_void_properties["pop"]],
-            dtype=np.float32,
-        )
-        z = np.array(
-            [e["z"][0] for e in popcorn_void_properties["pop"]],
-            dtype=np.float32,
-        )
-        centers = np.stack([x, y, z], axis=1)
+        class0_spheres = spheres[spheres["level"] == 0.0]
         extra = {
             "files_directory_path": run_work_dir,
-            "r_eff": np.array([e for e in popcorn_void_properties["reff"]]),
+            "voids": voids,
+            "spheres": spheres,
         }
-        return tracers, centers, extra
+        popcorn_centers = np.array(class0_spheres[["x", "y", "z"]])
+        return tracers, popcorn_centers, extra

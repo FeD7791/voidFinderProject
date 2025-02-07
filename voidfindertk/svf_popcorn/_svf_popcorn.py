@@ -5,14 +5,22 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+
 # =============================================================================
 # DOCS
 # =============================================================================
+
+
 """Module that holds functions and methods that are used to run SVF Popcorn \
 void finder."""
+
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
+
 import os
 import pathlib
 import shutil
@@ -41,7 +49,7 @@ class Paths:
     """
 
     # Path to the src folder of Popcorn.
-    SVF = pathlib.Path(SETTINGS.paths.get("popcorn_path", None))
+    SVF = pathlib.Path(SETTINGS.popcorn_path)
     # Path to the configuration File of Popcorn.
     CONFFILE = SVF / "configuration"
 
@@ -76,8 +84,7 @@ class FileNames:
 
 @attr.define
 class SVFPopCorn(VoidFinderABC):
-    """
-    PopCornVF class for void finding and analysis.
+    """PopCornVF class for void finding and analysis.
 
     Attributes
     ----------
@@ -95,48 +102,43 @@ class SVFPopCorn(VoidFinderABC):
         Minimum halo mass allowed (0 if not applicable).
     svf_path : pathlib.Path
         Path to the source directory of the SVF.
-    mpi_flags : str or None
+    cores : str or None
         MPI flags for parallel computation.
     workdir : pathlib.Path
         Path to the working directory.
     workdir_clean : bool
         Flag to clean the working directory on deletion.
 
+    Notes
+    -----
+    Existen MASSMIN parameter of POPCORN is always se to 0. For use of tracers
+    with a specific mass threshold use Box method mass_cutoff before
+    performing the search.
     """
 
-    _auxfiles = attr.field(default="true")  # AUXILIARY FILES
+    _auxfiles = attr.field(default="true", alias="auxfiles")  # AUXILIARY FILES
     # INPUT PARAMETERS
-    _boxsize = attr.field(default=1000.0)
-    _densth = attr.field(default=-0.9)
-    _minradius = attr.field(default=5)
-    _maxradius = attr.field(default=100)
-    _massmin = attr.field(default=0)
+    _boxsize = attr.field(default=1000.0, alias="boxsize")
+    _densth = attr.field(default=-0.9, alias="densth")
+    _minradius = attr.field(default=5, alias="minradius")
+    _maxradius = attr.field(default=100, alias="maxradius")
     # Path to Source folder
-    _svf_path = attr.field(default=None)  # Path to source directory of SVF
+    _svf_path = attr.field(
+        default=None, alias="svf_path"
+    )  # Path to source directory of SVF
     # mpi flags:
-    _mpi_flags = attr.field(default=None)
+    _cores = attr.field(default=1, alias="cores")
     # Path to working directory
-    _workdir = attr.field(default=None)
+    _workdir = attr.field(default=None, alias="workdir")
     # Whether to clean or not the working directory
-    _workdir_clean = attr.field(default=False)
+    _workdir_clean = attr.field(default=False, alias="workdir_clean")
 
     # Set path to extra files
     def __attrs_post_init__(self):
-        """
-        Post inicialization method.
-
-        Initializes paths for SVF and working directory after attribute
-        initialization.
-        """
-
+        """Post inicialization method."""
         # svf_path
         if self._svf_path is None:
-            try:
-                self._svf_path = Paths.SVF
-            except: FileNotFoundError(
-                "You didn't provide a path to zobov and "
-                "there isn't one configured globally"
-            )
+            self._svf_path = Paths.SVF
 
         # Set workdir path
         self._workdir = pathlib.Path(
@@ -173,19 +175,14 @@ class SVFPopCorn(VoidFinderABC):
         return self._maxradius
 
     @property
-    def massmin(self):
-        """Returns the minimum mass threshold."""
-        return self._massmin
-
-    @property
     def svf_path(self):
         """Returns the path to the SVF directory."""
         return self._svf_path
 
     @property
-    def mpi_flags(self):
+    def cores(self):
         """Returns the MPI flags."""
-        return self._mpi_flags
+        return self._cores
 
     @property
     def workdir(self):
@@ -253,7 +250,8 @@ class SVFPopCorn(VoidFinderABC):
             box : Object
                 Box object that holds the tracer properties.
 
-        Returns : Dict
+        Returns
+        -------
             Dictionary with two parameters:
                 - run_work_dir : path to the working directory.
                 - box : Box Object.
@@ -264,8 +262,6 @@ class SVFPopCorn(VoidFinderABC):
         file are needed. The input tracer file is built using the Box Object.
         The configuration file is built using the parameters of the class.
         """
-        # Retrieve box from box object
-        box = box
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
         # Create config file on Workdir
@@ -284,7 +280,7 @@ class SVFPopCorn(VoidFinderABC):
             densth=str(self._densth),
             minradius=str(self._minradius),
             maxradius=str(self._maxradius),
-            massmin=str(self._massmin),
+            massmin=str(0),
             eps=str(1e-5),
             path=str(run_work_dir / FileNames.CONFIG),  # Workdir path
         )
@@ -294,7 +290,7 @@ class SVFPopCorn(VoidFinderABC):
         )  # Save File to workdir
         # Run Void Finder
         _svf_pc_wrapper.spherical_popcorn_void_finder(
-            mpi_flags=self._mpi_flags,
+            cores=self._cores,
             bin_path=Paths.SVF,
             conf_file_path=run_work_dir / FileNames.CONFIG,
             work_dir_path=run_work_dir,
@@ -330,7 +326,7 @@ class SVFPopCorn(VoidFinderABC):
         # Retrieve box from box object
         box = model_find_parameters["box"]
         # Get current working directory
-        run_work_dir = model_find_parameters["run_work_dir"]
+        run_work_dir = pathlib.Path(model_find_parameters["run_work_dir"])
         # Get void Properties
         properties = _svf_pc_postprocessing.get_void_properties(
             popcorn_output_file_path=str(run_work_dir / FileNames.SPHFILE)
@@ -345,7 +341,8 @@ class SVFPopCorn(VoidFinderABC):
 
         # Build extra
         extra = {
-            "svf_voids_properties": properties,
+            "radius": np.array(properties["r"]),
+            "properties": properties,
             "files_directory_path": run_work_dir,
         }
         return tuple(tracers_in_voids), centers, extra

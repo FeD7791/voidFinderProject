@@ -42,9 +42,9 @@ def test_Box_initialization(mkbox):
     assert box.vx.unit == u.Mpc / u.second
     assert box.vy.unit == u.Mpc / u.second
     assert box.vz.unit == u.Mpc / u.second
-    assert box.m.unit == u.M_sun
+
     assert len(box) == 1000
-    assert repr(box) == "<Box size=1000>"
+    assert repr(box) == "<Box size=1000 xyzmin=0             xyzmax=500>"
     assert isinstance(box.x, np.ndarray)
     assert isinstance(box.y, np.ndarray)
     assert isinstance(box.z, np.ndarray)
@@ -62,19 +62,20 @@ def test_Box_different_length_tracers(mkbox_params):
         Box(**params)
 
 
-def test_Box_different_length_side_box(mkbox_params):
-    params = mkbox_params(
-        seed=43, size=1000
-    )  # for this seed math.ceil(max(box.x)) = 499 instead default vaule of 500
-    with pytest.raises(
-        ValueError, match="Not a cube: xmax: 499 ymax: 500 zmax: 500"
-    ):
-        Box(**params)
-
-
 def test_box_equality(mkbox):
     box1 = mkbox(seed=42, size=1000)
     box2 = mkbox(seed=42, size=1000)
     box3 = mkbox(seed=42, size=999)
     assert box1 == box2
     assert not box1 == box3
+
+
+def test_box_mass_cutoff(mkbox):
+    m_threshold = 10
+    box = mkbox(seed=42, size=1000, mass_scale=15)
+    new_box = box.mass_cutoff(mass_threshold=m_threshold)
+
+    assert m_threshold <= np.min(new_box.m)
+    assert len(new_box) < len(box)
+    assert new_box.max() <= box.max()
+    assert box.min() <= box.max()

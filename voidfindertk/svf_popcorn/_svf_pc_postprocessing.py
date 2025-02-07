@@ -5,13 +5,18 @@
 # License: MIT
 # Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
 # All rights reserved.
+
+
 # =============================================================================
 # DOCS
 # =============================================================================
+
 """Module for process data obtained from SVF PopCorn void finder."""
+
 # =============================================================================
 # IMPORTS
 # =============================================================================
+
 import grispy as gsp
 
 import numpy as np
@@ -46,7 +51,6 @@ def get_void_properties(*, popcorn_output_file_path):
         names=["id", "r", "x", "y", "z", "density_contrast"],
         delim_whitespace=True,
     )
-    # return tuple(all_void_properties)
     return df_properties
 
 
@@ -106,6 +110,7 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
         1: (box.min(), box.max()),
         2: (box.min(), box.max()),
     }
+
     grid.set_periodicity(periodic, inplace=True)
 
     # Get tracers

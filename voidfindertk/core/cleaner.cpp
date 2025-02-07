@@ -9,12 +9,11 @@ extern "C" {
 
 void process_catalogues(
     const char* file_voids,
-    const char* file_tracers, 
+    const char* file_tracers,
     double ratio,
     bool initial_radius,
-    std::vector<double> delta_r,
-    // const double* delta_r,
-    int delta_r_size, 
+    const double* delta_r_min,
+    const double* delta_r_max,
     double threshold,
     const char* output_path,
     bool ol_crit,
@@ -23,8 +22,7 @@ void process_catalogues(
     ) {
 
     try {
-        std::vector<double> delta_r_vec(delta_r, delta_r + delta_r_size);
-
+        std::vector<double> delta_r_vec = {*delta_r_min, *delta_r_max};
         // Load the input void catalogue
         std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
         std::vector<int> columns_voids = {1, 2, 3, 4};
@@ -46,6 +44,8 @@ void process_catalogues(
             void_catalogue.clean_void_catalogue(initial_radius, delta_r_vec, threshold, rescale, input_tracersCata, ChM, ratio, checkoverlap, cbl::catalogue::Var::_CentralDensity_);
             var_names_voids.emplace_back(cbl::catalogue::Var::_CentralDensity_);
         }
+        //Print the received file paths
+
         // About clean_void_catalogue --cbl version 1-- Definition at line 1328 of file VoidCatalogue.cpp.
         // Parameters
         // initial_radius	erase voids outside a given interval delta_r of initial radius;
@@ -58,15 +58,15 @@ void process_catalogues(
         // checkoverlap	true \(\rightarrow\) erase all the voids wrt a given criterion, false \(\rightarrow\) skip the step
         // ol_criterion	the criterion for the overlap step (valid criteria: Var::DensityContrast, Var::CentralDensity)
 
-
-
-
         // Save the catalogue data to the provided output path
         void_catalogue.write_data(output_path, var_names_voids);
 
-    } catch (cbl::glob::Exception &exc) {
+    }catch (cbl::glob::Exception &exc) {
         std::cerr << exc.what() << std::endl;
         exit(1);
+    } catch (const std::exception &exc) {
+    std::cerr << "Error: " << exc.what() << std::endl;
+    exit(1);
     }
 }
 

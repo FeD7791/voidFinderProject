@@ -56,6 +56,7 @@ class Names:
     ZONES_IN_VOID = "zones_vs_voids"
 
 
+@attr.define(frozen=True)
 class _Files:
     """
     Names of the Box parsed to raw files.
@@ -90,12 +91,14 @@ class _Files:
     ZONES_VS_VOID_ASCII = f"{Names.ZONES_IN_VOID}_ascii.txt"
 
 
+@attr.define(frozen=True)
 class _ExecutableNames:
     ZOBOV_LOADER_BIN = "zobov_loader.so"
     TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
     ZONES_IN_VOIDS_BIN = "zones_in_void.so"
 
 
+@attr.define(frozen=True)
 class _Paths:
     """
     Class that holds paths of reference to the current file and ZOBOV's\
@@ -107,12 +110,14 @@ class _Paths:
         Path to the src folder of ZOBOV.
     """
 
-    ZOBOV = pathlib.Path(SETTINGS.paths.get("zobov_path", None))
+    ZOBOV = pathlib.Path(SETTINGS.zobov_path)
+    SO_PATHS = pathlib.Path(os.path.abspath(__file__)).parent / "src"
 
 
 # =============================================================================
 # FINDER
 # =============================================================================
+
 
 @attr.define
 class ZobovVF(VoidFinderABC):
@@ -181,24 +186,19 @@ class ZobovVF(VoidFinderABC):
     VOZSTEP, and JOZOV.
     """
 
-    _buffer_size=attr.field(default=0.08),
-    _box_size=attr.field(default=500),
-    _number_of_divisions=attr.field(default=2),
-    _density_threshold=attr.field(default=0.2),
-    _zobov_path=attr.field(default=None),
-    _workdir=attr.field(default=None),
-    _workdir_clean=attr.field(default=False),
-    _dtype=attr.field(default=np.float32),
+    _buffer_size = attr.field(default=0.08, alias="buffer_size")
+    _box_size = attr.field(default=500, alias="box_size")
+    _number_of_divisions = attr.field(default=2, alias="number_of_divisions")
+    _density_threshold = attr.field(default=0.2, alias="density_threshold")
+    _zobov_path = attr.field(default=None, alias="zobov_path")
+    _workdir = attr.field(default=None, alias="workdir")
+    _workdir_clean = attr.field(default=False, alias="workdir_clean")
+    _dtype = attr.field(default=np.float32, alias="dtype")
 
     def __attrs_post_init__(self):
-
+        """Post init Method."""
         if self._zobov_path is None:
-            try:
-                self._zobov_path = _Paths.ZOBOV
-            except: FileNotFoundError(
-                "You didn't provide a path to zobov and "
-                "there isn't one configured globally"
-            )
+            self._zobov_path = _Paths.ZOBOV
 
         # Create a workdir path to run ZOBOV
         self._workdir = pathlib.Path(
@@ -206,7 +206,6 @@ class ZobovVF(VoidFinderABC):
             if self._workdir is None
             else pathlib.Path(os.path.abspath(self._workdir))
         )
-
 
     # PROPERTIES ==============================================================
     @property
@@ -248,6 +247,11 @@ class ZobovVF(VoidFinderABC):
     def dtype(self):
         """Return the data type used for computations."""
         return self._dtype
+
+    @property
+    def centre_method(self):
+        """Return the centre calculation method."""
+        return self._centre_method
 
     # INTERNAL ================================================================
 
@@ -321,9 +325,10 @@ class ZobovVF(VoidFinderABC):
         tracers_txt_file_path = run_work_dir / _Files.TRACERS_TXT
 
         # write the box in the files
+
         _wrap.write_input(
             box=box,
-            path_executable=self._zobov_path
+            path_executable=_Paths.SO_PATHS
             / _ExecutableNames.ZOBOV_LOADER_BIN,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
@@ -332,7 +337,7 @@ class ZobovVF(VoidFinderABC):
         # VOZINIT =============================================================
 
         _wrap.run_vozinit(
-            vozinit_dir_path=self._zobov_path / "src",
+            vozinit_dir_path=self._zobov_path,
             input_file_path=tracers_raw_file_path,
             buffer_size=self.buffer_size,
             box_size=self.box_size,
@@ -348,12 +353,12 @@ class ZobovVF(VoidFinderABC):
             preprocess_dir_path=run_work_dir,
             executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
-            voz_executables_path=_Paths.ZOBOV / "src",
+            voz_executables_path=_Paths.ZOBOV,
         )
 
         # JOZOV ===============================================================
         _wrap.run_jozov(
-            jozov_dir_path=_Paths.ZOBOV / "src",
+            jozov_dir_path=_Paths.ZOBOV,
             executable_name=Names.OUTPUT_VOZINIT,
             output_name_particles_in_zones=Names.PARTICLES_IN_ZONES,
             output_name_zones_in_void=Names.ZONES_IN_VOID,
@@ -361,7 +366,11 @@ class ZobovVF(VoidFinderABC):
             density_threshold=self._density_threshold,
             work_dir_path=run_work_dir,
         )
-        return {"run_work_dir": run_work_dir, "box": box}
+        return {
+            "run_work_dir": run_work_dir,
+            "box": box,
+            "center_method": "barycentre",
+        }
 
     def build_voids(self, model_find_parameters):
         """
@@ -390,6 +399,8 @@ class ZobovVF(VoidFinderABC):
             - centers: Coordinates of the centers of the voids.
             - extra: Dictionary with additional properties about the voids.
         """
+        # Center Method:
+        center_method = model_find_parameters["center_method"]
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
         # Get box
@@ -403,21 +414,22 @@ class ZobovVF(VoidFinderABC):
         # Process 1:
         # a) Parse tracers in zones raw file in the work directory
         _zb_postprocessing.parse_tracers_in_zones_output(
-            executable_path=_Paths.ZOBOV
+            executable_path=_Paths.SO_PATHS
             / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII,
         )
         # b) Parse zones in voids raw file in the work directory
         _zb_postprocessing.parse_zones_in_void_output(
-            executable_path=_Paths.ZOBOV / _ExecutableNames.ZONES_IN_VOIDS_BIN,
+            executable_path=_Paths.SO_PATHS
+            / _ExecutableNames.ZONES_IN_VOIDS_BIN,
             input_file_path=run_work_dir / _Files.ZONES_VS_VOID_RAW,
             output_file_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
         )
         # Process 2:
         # a) Get Tracers in voids
         # tinv stands for tracers in voids
-        properties, tinv = _zb_postprocessing.get_tracers_in_voids(
+        prop_df, tracers_in_voids = _zb_postprocessing.get_tracers_in_voids(
             properties_dataframe=df,
             tracers_in_zones_path=(
                 run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII
@@ -428,16 +440,24 @@ class ZobovVF(VoidFinderABC):
         # c) Create extra
         extra = {
             "zobov_path": self._zobov_path,
-            "void_properties": properties,
+            "properties": prop_df,
             "files_directory_path": run_work_dir,
         }
+
         # d) Get centers
-        x = box.arr_.x
-        y = box.arr_.y
-        z = box.arr_.z
-        xyz = np.column_stack((x, y, z))
-        # d-1) centers = xyz[properties["CoreParticle"]]
-        # Maps the indexes of the CoreParticle in each void to xyz positions
-        # given by box.
-        # tinv stands for tracers in void
-        return tuple(tinv), xyz[properties["CoreParticle"]], extra
+        if center_method == "barycentre":
+            barycentre = _zb_postprocessing.get_center_method("barycentre")
+            centers = barycentre(
+                tracers_volumes_file_path=(
+                    run_work_dir / f"vol{Names.OUTPUT_VOZINIT}.dat"
+                ),
+                tracers_in_voids=tracers_in_voids,
+                box=box,
+            )
+        elif center_method == "core_particle":
+            core_particle = _zb_postprocessing.get_center_method(
+                "core_particle"
+            )
+            centers = core_particle(properties_df=prop_df, box=box)
+
+        return tuple(tracers_in_voids), centers, extra

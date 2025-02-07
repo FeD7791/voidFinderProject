@@ -1,12 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-# This file is part of the
-#   Scikit-NeuroMSI Project (https://github.com/renatoparedes/scikit-neuromsi).
-# Copyright (c) 2021-2022, Renato Paredes; Cabral, Juan
-# License: BSD 3-Clause
-# Full Text:
-#     https://github.com/renatoparedes/scikit-neuromsi/blob/main/LICENSE.txt
+# Copyright (c) 2023 - 2024, Bustillos Federico, Gualpa Sebastian, Cabral Juan,
+#                            Paz Dante, Ruiz Andres, Correa Carlos
+# License: MIT
+# Full Text: https://github.com/FeD7791/voidFinderProject/blob/dev/LICENSE.txt
+# All rights reserved.
 
 # =============================================================================
 # DOCS
