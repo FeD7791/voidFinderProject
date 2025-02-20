@@ -173,7 +173,8 @@ def test_write_input():
         "txt_file_path": "txt_file_path",
     }
     clibrary = mock.MagicMock()
-    clibrary.c_binary_writter = mock.MagicMock()
+    binary_writter = mock.MagicMock()
+    clibrary.return_value = binary_writter
 
     with mock.patch("ctypes.CDLL") as mock_cdll:
         mock_cdll.return_value = clibrary
@@ -182,7 +183,7 @@ def test_write_input():
     mock_cdll.assert_called_once_with(
         str(params["path_executable"]), mode=ctypes.RTLD_GLOBAL
     )
-    clibrary.c_binary_writter.assert_called_once_with(
+    binary_writter.assert_called_once_with(
         mock_box.x,
         mock_box.y,
         mock_box.z,

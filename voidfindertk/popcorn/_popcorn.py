@@ -95,7 +95,6 @@ class PopCorn(SVFPopCorn):
                 new_value=str(self._shot_noise_threshold),
             )
             _pc_wrapper.popcorn_void_finder(
-                mpi_flags=self._mpi_flags,
                 bin_path=Paths.SVF,
                 conf_file_path=run_work_dir / FileNames.CONFIG,
                 work_dir_path=run_work_dir,

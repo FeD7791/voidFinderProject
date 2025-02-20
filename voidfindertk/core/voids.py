@@ -124,15 +124,14 @@ class Voids:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
 
-    def effective_radius(self, method="default", **kwargs):
+    def effective_radius(self, method="density", **kwargs):
         """
         Computes the effective radius of voids using the given method.
 
         Parameters
         ----------
-        method : str, optional
-            The method used to calculate the effective radius. Default is
-            "default".
+        method : {'density', 'extra', 'volume'}, default='density'
+            The method used to calculate the effective radius.
         **kwargs : keyword arguments
             Additional keyword arguments passed to the method used to calculate
             the effective radius.

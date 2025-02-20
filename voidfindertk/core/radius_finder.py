@@ -40,7 +40,7 @@ def get_radius_searcher(method):
     ----------
     method : str
         The radius search method to use. Must be one of:
-        - `"default"`: Uses `_default_effective_radius`.
+        - `"default"`: Uses `_spherical_density_radius_mapping`.
         - `"extra"`: Uses `_extra_effective_radius`.
         - `"volume"`: Uses `_volume_effective_radius`.
 
@@ -54,8 +54,8 @@ def get_radius_searcher(method):
     ValueError
         If an invalid `method` is provided.
     """
-    if method == "default":
-        return _default_effective_radius
+    if method == "density":
+        return _spherical_density_radius_mapping
     if method == "extra":
         return _extra_effective_radius
     if method == "volume":
@@ -88,9 +88,8 @@ class EffectiveRadiusErrors:
         leading to potential inaccuracies.
     EXEED_CRITICAL : int
         Error code indicating that the computed densities exceeded the
-        critical density for some values, other values are under critical
-        density in particular, last neighbor examined keeps being under the
-        critical
+        critical density for all values. This could mean the region is not a
+        void or the center is illy defined.
     UNDER_CRITICAL : int
         Error code indicating that all computed densities are below the
         critical density, which imply that the number of nearest neighbors
@@ -293,7 +292,7 @@ def _sigle_void_eradius(idx, n_neighbors, crit_density, distance, nn):
             )
 
 
-def default_effective_radius_analysis(
+def spherical_density_mapping(
     centers, box, *, delta, n_neighbors, n_cells
 ):
     """
@@ -397,7 +396,7 @@ def default_effective_radius_analysis(
     return eradius
 
 
-def _default_effective_radius(centers, box, **kwargs):
+def _spherical_density_radius_mapping(centers, box, **kwargs):
     kwargs.setdefault("delta", -0.9)
     kwargs.setdefault("n_neighbors", 100)
     kwargs.setdefault("n_cells", 64)
@@ -406,7 +405,7 @@ def _default_effective_radius(centers, box, **kwargs):
         for k, v in kwargs.items()
         if k in ["delta", "n_neighbors", "n_cells"]
     }
-    eradius = default_effective_radius_analysis(
+    eradius = spherical_density_mapping(
         centers=centers, box=box, **kwargs
     )
     return eradius.radius
