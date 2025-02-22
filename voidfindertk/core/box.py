@@ -153,8 +153,7 @@ class Box:
         """
         cls_name = type(self).__name__
         length = len(self)
-        return f"<{cls_name} size={length} xyzmin={self.min()} \
-            xyzmax={self.max()}>"
+        return f"<{cls_name} size={length}"
 
     def size(self):
         """
