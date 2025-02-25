@@ -58,7 +58,7 @@ def test_kind0_effective_radius(
     )
 
     # Effective radius calculations
-    eff_rad_obj = radius_finder.default_effective_radius_analysis(
+    eff_rad_obj = radius_finder.spherical_density_mapping(
         centers=centers, n_neighbors=400, box=box, delta=delta, n_cells=64
     )
 
@@ -113,7 +113,7 @@ def test_kind3_effective_radius(delta, build_box_with_eq_voids):
         RuntimeWarning,
     ) as record:
         # Effective radius calculations
-        eff_rad_obj = radius_finder.default_effective_radius_analysis(
+        eff_rad_obj = radius_finder.spherical_density_mapping(
             centers=centers, n_neighbors=20, box=b, delta=delta, n_cells=64
         )
 
@@ -141,7 +141,7 @@ def test_kind2_effective_radius(delta, build_box_with_eq_voids):
         delta=0.0,
     )
     # Perform Search
-    eff_rad_obj = radius_finder.default_effective_radius_analysis(
+    eff_rad_obj = radius_finder.spherical_density_mapping(
         centers=centers, n_neighbors=50, box=box, delta=delta, n_cells=64
     )
     # Get all the kind 2 errors
@@ -173,7 +173,7 @@ def test_kind1_effective_radius(build_box_with_eq_voids, build_box_from_cloud):
     rho_threshold = ((len(b2) / b2.size() ** 3)) * (1 + delta)
 
     # perform search
-    eff_rad_obj = radius_finder.default_effective_radius_analysis(
+    eff_rad_obj = radius_finder.spherical_density_mapping(
         centers=centers, n_neighbors=100, box=b2, delta=delta, n_cells=64
     )
 
