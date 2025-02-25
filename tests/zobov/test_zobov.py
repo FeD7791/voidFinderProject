@@ -82,6 +82,7 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
                         model_find_parameters={
                             "run_work_dir": run_workdir,
                             "box": box_,
+                            "center_method":"barycentre"
                         }
                     )
 

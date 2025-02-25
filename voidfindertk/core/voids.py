@@ -219,8 +219,8 @@ class Voids:
             The coordinates of the centers of the voids.
         radius : array-like
             The radii of the voids.
-        cleaner_method : str, optional
-            The method used to clean the voids. Default is "overlap".
+        cleaner_method : {'overlap', 'cbl'}, default='overlap'
+            The method used to clean the voids.
         rad_min_max : list, optional
             A list containing the minimum and maximum radius for filtering
             voids. Default is [0.0, 100.0].

@@ -54,7 +54,7 @@ def test_popcorn_model_find(mkbox):
     svf_popcorn_mock.assert_called_once_with(box_)
     model_find_parameters["build_popcorn"].assert_called_once()
 
-def test_popcorn_build_voids(svf_popcorn_paths_and_names, mkbox):
+def test_popcorn_build_voids_true(svf_popcorn_paths_and_names, mkbox):
     params = {
         "auxfiles": "true",
         "boxsize": 1000.0,
@@ -75,6 +75,10 @@ def test_popcorn_build_voids(svf_popcorn_paths_and_names, mkbox):
     run_work_dir = pathlib.Path(".")
     pn = svf_popcorn_paths_and_names()
 
+    # Useful Mocks
+    voids = mock.MagicMock()
+    spheres = mock.MagicMock()
+
     with mock.patch.object(SVFPopCorn, 'model_find') as svf_model_find:
         with mock.patch.object(SVFPopCorn, 'build_voids') as svf_build_voids:
             svf_build_voids.return_value = [
@@ -92,15 +96,18 @@ def test_popcorn_build_voids(svf_popcorn_paths_and_names, mkbox):
                 
                 with mock.patch(
                     "voidfindertk.popcorn._pc_postprocessing.get_properties",
-                    return_value = [mock.MagicMock(), mock.MagicMock()]
-                    ) as get_properties_mock :
+                    return_value = [voids, spheres]
+                    ) as get_properties_mock:
 
                     # Run the function
-                    build_voids = PopCorn(**params).build_voids(
+                    tracers, popcorn_centers, extra = PopCorn(
+                        **params
+                        ).build_voids(
                     model_find_parameters=model_find_parameters
                     )
 
-    # Testing assertions
+
+    # Testing assertions for build_popcorn = True
     _pc_wrapper_mock['read_and_modify_config'].assert_called_once_with(
         config_file_path=run_work_dir / pn.CONFIG,
         section="INPUT_PARAMS",
@@ -122,9 +129,74 @@ def test_popcorn_build_voids(svf_popcorn_paths_and_names, mkbox):
         conf_file_path=run_work_dir / pn.CONFIG,
         work_dir_path=run_work_dir,
     )
+    get_properties_mock.assert_called_once_with(
+        filename=run_work_dir / pn.POPFILE
+    )
+
+    voids.sort_values.assert_called_once_with(
+        by=["id"], inplace=True
+    )
+    spheres.sort_values.assert_called_once_with(
+        by=["id"], inplace=True
+    )
+    assert voids == extra["voids"]
+    assert spheres == extra["spheres"]
+    assert tracers == voids.tracers
+    assert run_work_dir == extra["files_directory_path"]
 
 
+def test_popcorn_build_voids_false(svf_popcorn_paths_and_names, mkbox):
+    params = {
+        "auxfiles": "true",
+        "boxsize": 1000.0,
+        "densth": -0.9,
+        "minradius": 5,
+        "maxradius": 100,
+        "svf_path": pathlib.Path("."),
+        "workdir": pathlib.Path("."),
+        "workdir_clean": False,
+        "shot_noise_threshold" : 20
+    }
+    box_ = mkbox(seed=42)
+    model_find_parameters = {
+        "build_popcorn":False,
+        "box":box_,
+        "run_work_dir": "."
+        }
+    run_work_dir = pathlib.Path(model_find_parameters["run_work_dir"])
+    pn = svf_popcorn_paths_and_names()
+    # Useful Mocks
+    voids = mock.MagicMock()
+    spheres = mock.MagicMock()
 
+    # Testing for build_popcorn: False
+    model_find_parameters = {
+        "build_popcorn":False,
+        "box":box_,
+        "run_work_dir": "."
+        }
+    with mock.patch(
+        "voidfindertk.popcorn._pc_postprocessing.get_properties",
+        return_value = [voids, spheres]
+        ) as get_properties_mock:
+
+
+        tracers, popcorn_centers, extra = PopCorn(
+                        **params
+                        ).build_voids(
+                    model_find_parameters=model_find_parameters
+                    )
+
+    voids.sort_values.assert_called_once_with(
+        by=["id"], inplace=True
+    )
+    spheres.sort_values.assert_called_once_with(
+        by=["id"], inplace=True
+    )
+    assert voids == extra["voids"]
+    assert spheres == extra["spheres"]
+    assert tracers == voids.tracers
+    assert run_work_dir == extra["files_directory_path"]
 
 
 
