@@ -11,9 +11,7 @@
 # DOCS
 # =============================================================================
 
-"""test for voidfindertk.utils.accabc
-
-"""
+"""Test for voidfindertk.utils.accabc."""
 
 
 # =============================================================================
@@ -33,7 +31,7 @@ from voidfindertk.utils.accabc import AccessorABC
 # =============================================================================
 
 
-def test_AccessorABC():
+def test_accessorabc():
     class FooAccessor(AccessorABC):
         _default_kind = "zaraza"
 
@@ -47,7 +45,7 @@ def test_AccessorABC():
     assert acc("zaraza") == acc.zaraza() == acc()
 
 
-def test_AccessorABC_no__default_kind():
+def test_accessorabc_no__default_kind():
     with pytest.raises(TypeError):
 
         class FooAccessor(AccessorABC):
@@ -57,7 +55,7 @@ def test_AccessorABC_no__default_kind():
         AccessorABC()
 
 
-def test_AccessorABC_invalid_kind():
+def test_accessorabc_invalid_kind():
     class FooAccessor(AccessorABC):
         _default_kind = "zaraza"
 

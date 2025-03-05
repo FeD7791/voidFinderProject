@@ -274,7 +274,7 @@ class Voids:
         )
 
     def find_radius_and_clean(
-        self, cleaner_method="overlap", radius_method="default", **kwargs
+        self, cleaner_method="overlap", radius_method="density", **kwargs
     ):
         """
         Finds the radius of voids and cleans them using the specified methods.

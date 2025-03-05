@@ -106,9 +106,9 @@ def get_tracers_in_voids(*, box, popcorn_output_file_path):
     grid = gsp.GriSPy(xyz)
     # Set periodicity
     periodic = {
-        0: (box.min(), box.max()),
-        1: (box.min(), box.max()),
-        2: (box.min(), box.max()),
+        0: (box.min_, box.max_),
+        1: (box.min_, box.max_),
+        2: (box.min_, box.max_),
     }
 
     grid.set_periodicity(periodic, inplace=True)

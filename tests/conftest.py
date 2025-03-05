@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-"""Global configuration for pytest suite.
-
-"""
+"""Global configuration for pytest suite."""
 
 # =============================================================================
 # IMPORTS
@@ -389,9 +387,9 @@ def find_bubble_neighbors():
         """
         grid = gsp.GriSPy(cloud_with_voids)
         periodic = {
-            0: (box.min(), box.max()),
-            1: (box.min(), box.max()),
-            2: (box.min(), box.max()),
+            0: (box.min_, box.max_),
+            1: (box.min_, box.max_),
+            2: (box.min_, box.max_),
         }
         grid.set_periodicity(periodic, inplace=True)
         dist, ind = grid.bubble_neighbors(centers, distance_upper_bound=rad)
@@ -430,7 +428,7 @@ def zobov_model_builder():
         x, y, z = np.hsplit(cloud_with_voids, 3)
         box = Box(x=np.ravel(x), y=np.ravel(y), z=np.ravel(z))
         workdir_path = pathlib.Path(workdir_path)
-        model = ZobovVF(box_size=box.max(), workdir=workdir_path)
+        model = ZobovVF(box_size=box.max_, workdir=workdir_path)
         parameters = model.model_find(box)
         tinv, props, extra = model.build_voids(parameters)
         return extra

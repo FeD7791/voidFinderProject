@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-"""test for voidfindertk.utils.bunch
-
-"""
+"""Test for voidfindertk.utils.bunch."""
 
 
 # =============================================================================
@@ -32,47 +30,47 @@ from voidfindertk.utils import bunch
 # =============================================================================
 
 
-def test_Bunch_creation():
+def test_bunch_creation():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert md["alfa"] == md.alfa == 1
     assert len(md) == 1
 
 
-def test_Bunch_creation_empty():
+def test_bunch_creation_empty():
     md = bunch.Bunch("foo", {})
     assert len(md) == 0
 
 
-def test_Bunch_key_notfound():
+def test_bunch_key_notfound():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert md["alfa"] == md.alfa == 1
     with pytest.raises(KeyError):
         md["bravo"]
 
 
-def test_Bunch_attribute_notfound():
+def test_bunch_attribute_notfound():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert md["alfa"] == md.alfa == 1
     with pytest.raises(AttributeError):
         md.bravo
 
 
-def test_Bunch_iter():
+def test_bunch_iter():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert list(iter(md)) == ["alfa"]
 
 
-def test_Bunch_repr():
+def test_bunch_repr():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert repr(md) == "<foo {'alfa'}>"
 
 
-def test_Bunch_dir():
+def test_bunch_dir():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert "alfa" in dir(md)
 
 
-def test_Bunch_deepcopy():
+def test_bunch_deepcopy():
     md = bunch.Bunch("foo", {"alfa": 1})
     md_c = copy.deepcopy(md)
 
@@ -81,7 +79,7 @@ def test_Bunch_deepcopy():
     assert md._data == md_c._data and md._data is not md_c._data
 
 
-def test_Bunch_copy():
+def test_bunch_copy():
     md = bunch.Bunch("foo", {"alfa": 1})
     md_c = copy.copy(md)
 
@@ -90,12 +88,12 @@ def test_Bunch_copy():
     assert md._data == md_c._data and md._data is md_c._data
 
 
-def test_Bunch_setstate():
+def test_bunch_setstate():
     md = bunch.Bunch("foo", {"alfa": 1})
     reloaded = pickle.loads(pickle.dumps(md))
     assert md == reloaded
 
 
-def test_Bunch_todict():
+def test_bunch_todict():
     md = bunch.Bunch("foo", {"alfa": 1})
     assert md.to_dict() == {"alfa": 1}

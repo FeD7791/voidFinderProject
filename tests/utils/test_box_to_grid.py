@@ -37,9 +37,9 @@ def test_get_grispy_grid_from_box_default(mkbox):
 
     # Check if the grid's periodicity is correctly set for all axes (x, y, z)
     periodic = {
-        0: (mock_box.min(), mock_box.max()),
-        1: (mock_box.min(), mock_box.max()),
-        2: (mock_box.min(), mock_box.max()),
+        0: (mock_box.min_, mock_box.max_),
+        1: (mock_box.min_, mock_box.max_),
+        2: (mock_box.min_, mock_box.max_),
     }
     grid.set_periodicity(periodic, inplace=True)
 
@@ -64,9 +64,9 @@ def test_get_grispy_grid_from_box_with_custom_params(mkbox):
 
     # Check if the grid's periodicity is correctly set for all axes (x, y, z)
     periodic = {
-        0: (mock_box.min(), mock_box.max()),
-        1: (mock_box.min(), mock_box.max()),
-        2: (mock_box.min(), mock_box.max()),
+        0: (mock_box.min_, mock_box.max_),
+        1: (mock_box.min_, mock_box.max_),
+        2: (mock_box.min_, mock_box.max_),
     }
     grid.set_periodicity(periodic, inplace=True)
 

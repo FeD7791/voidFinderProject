@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.utils.context_managers
-
-"""
+"""Test for voidfindertk.utils.context_managers."""
 
 # =============================================================================
 # IMPORTS

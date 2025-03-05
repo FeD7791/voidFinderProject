@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" tests for voidfindertk.datasets.spherical_cloud
-
-"""
+"""Tests for voidfindertk.datasets.spherical_cloud."""
 
 # =============================================================================
 # IMPORTS

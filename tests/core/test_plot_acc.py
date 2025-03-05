@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.plot_acc
-
-"""
+"""Test for voidfindertk.plot_acc."""
 
 # =============================================================================
 # IMPORTS
@@ -90,9 +88,7 @@ def test_invalid_kind_void(build_box_with_eq_voids, find_bubble_neighbors):
         centers_=centers,
         extra_={"extra": ["extra_elements"]},
     )
-    import ipdb
 
-    ipdb.set_trace()
     plotter = plot_acc.VoidPlotter(v)
 
     # Test that a ValueError is raised for an invalid kind

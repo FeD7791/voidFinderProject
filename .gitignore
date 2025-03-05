@@ -76,6 +76,8 @@ voidfindertk/epicsphere/*
 
 #draft
 draft/
+workdir/
+
 
 # zobov
 voidfindertk/zobov/*.txt

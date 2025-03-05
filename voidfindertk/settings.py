@@ -37,11 +37,13 @@ import logging
 import os
 import pathlib
 
+
 import attrs
 
 import yaml
 
-from . import __version__ as VERSION
+
+from . import __version__ as VERSION  # pragma: no cover
 
 
 # =============================================================================

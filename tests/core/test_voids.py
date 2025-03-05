@@ -7,9 +7,17 @@
 # All rights reserved.
 
 # =============================================================================
+# DOCS
+# =============================================================================
+
+"""Tests for the voidfindertk.core.voids."""
+
+# =============================================================================
 # IMPORTS
 # =============================================================================
 
+import os
+import tempfile
 
 import numpy as np
 
@@ -27,7 +35,7 @@ from voidfindertk.datasets import spherical_cloud
 #     "cleaner_method, radius_method",
 #     list(zip(["overlap","cbl"],["default","extra","volume"])))
 @pytest.mark.parametrize("cleaner_method", ["overlap", "cbl"])
-@pytest.mark.parametrize("radius_method", ["default", "extra", "volume"])
+@pytest.mark.parametrize("radius_method", ["density", "extra", "volume"])
 def test_voids(
     cleaner_method,
     radius_method,
@@ -61,9 +69,13 @@ def test_voids(
         },
     )
 
-    vds.find_radius_and_clean(
-        cleaner_method=cleaner_method, radius_method=radius_method
-    )
+    with tempfile.TemporaryDirectory() as tempdir:
+
+        vds.find_radius_and_clean(
+            cleaner_method=cleaner_method,
+            radius_method=radius_method,
+            temporal_dir_path=os.path.abspath(tempdir),
+        )
 
 
 def test_voids_create_new_instance(

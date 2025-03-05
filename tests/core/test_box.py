@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.core.box
-
-"""
+"""Test for voidfindertk.core.box."""
 
 # =============================================================================
 # IMPORTS
@@ -31,7 +29,7 @@ from voidfindertk.core.box import Box
 # =============================================================================
 
 
-def test_Box_initialization(mkbox):
+def test_box_initialization(mkbox):
     box = mkbox(
         seed=42, size=1000
     )  # mkbox inmediatamente retorna _maker(**kwargs)
@@ -44,7 +42,7 @@ def test_Box_initialization(mkbox):
     assert box.vz.unit == u.Mpc / u.second
 
     assert len(box) == 1000
-    assert repr(box) == "<Box size=1000 xyzmin=0             xyzmax=500>"
+    assert repr(box) == "<Box size=1000>"
     assert isinstance(box.x, np.ndarray)
     assert isinstance(box.y, np.ndarray)
     assert isinstance(box.z, np.ndarray)
@@ -54,7 +52,7 @@ def test_Box_initialization(mkbox):
     assert isinstance(box.m, np.ndarray)
 
 
-def test_Box_different_length_tracers(mkbox_params):
+def test_box_different_length_tracers(mkbox_params):
     params = mkbox_params(seed=42, size=1000)
     params["x"] = params["x"][:-1]
 
@@ -77,5 +75,5 @@ def test_box_mass_cutoff(mkbox):
 
     assert m_threshold <= np.min(new_box.m)
     assert len(new_box) < len(box)
-    assert new_box.max() <= box.max()
-    assert box.min() <= box.max()
+    assert new_box.max_ <= box.max_
+    assert box.min_ <= box.max_

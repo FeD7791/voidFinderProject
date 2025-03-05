@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" tests for the voidfindertk.core.vfinder_abc
-
-"""
+"""Tests for the voidfindertk.core.vfinder_abc."""
 
 # =============================================================================
 # IMPORTS
@@ -28,7 +26,7 @@ from voidfindertk.core.vfinder_abc import VoidFinderABC
 # =============================================================================
 
 
-def test_VFinderABC(mkbox):
+def test_vfinderabc(mkbox):
     box = mkbox(seed=42)
 
     class TestVFinder(VoidFinderABC):

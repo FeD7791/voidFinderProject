@@ -57,6 +57,9 @@ dependencies = [
     # io
     "pyyaml",
 
+    # Multiprocessing
+    "joblib",
+
 ]
 
 urls = { Repository = "https://github.com/FeD7791/voidFinderProject.git" }

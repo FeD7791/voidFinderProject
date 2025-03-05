@@ -161,7 +161,8 @@ class _EffectiveRadius(Sequence):
         total = len(self)
         return (
             "<effective_radius "
-            f"{delta=} {n_neighbors=} {n_cells=} | {good}/{total}>"
+            f"delta={delta} n_neighbors={n_neighbors} "
+            f"n_cells={n_cells} | {good}/{total}>"
         )
 
     def __len__(self):
@@ -292,9 +293,7 @@ def _sigle_void_eradius(idx, n_neighbors, crit_density, distance, nn):
             )
 
 
-def spherical_density_mapping(
-    centers, box, *, delta, n_neighbors, n_cells
-):
+def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
     """
     Compute the effective radius of voids based on nearest neighbor distances\
     using grispy.
@@ -348,9 +347,9 @@ def spherical_density_mapping(
 
     # Set periodicity conditions based on limits of the box in each dimension.
     periodic = {
-        0: (box.min(), box.max()),
-        1: (box.min(), box.max()),
-        2: (box.min(), box.max()),
+        0: (box.min_, box.max_),
+        1: (box.min_, box.max_),
+        2: (box.min_, box.max_),
     }
 
     grid.set_periodicity(periodic, inplace=True)
@@ -397,6 +396,42 @@ def spherical_density_mapping(
 
 
 def _spherical_density_radius_mapping(centers, box, **kwargs):
+    """
+    Wrapper for the `spherical_density_mapping` function. Restricts the
+    keyword arguments to "delta", "n_neighbors", and "n_cells".
+
+    Parameters
+    ----------
+    centers : array-like
+        Array of shape (n, d) representing the coordinates of the centers,
+        where 'n' is the number of points and 'd' is the dimensionality.
+
+    box : array-like
+        Array representing the dimensions of the periodic box, typically of
+        shape (d,).
+
+    **kwargs : dict, optional
+        Additional arguments controlling the density mapping behavior:
+
+        - delta : float, optional, default=-0.9
+            Adjustment factor for density calculation.
+        - n_neighbors : int, optional, default=100
+            Number of nearest neighbors to consider in the density calculation.
+        - n_cells : int, optional, default=64
+            Number of cells for Grispy Grid.
+
+    Returns
+    -------
+    tuple
+        Tuple of spherical_density_mapping : error, radius, tracers, densities.
+
+    Notes
+    -----
+    This interface is necesary to deal with several other kwargs arguments that
+    are part of some other process while using the Void class. So this
+    interface will filter the necesary kwargs arguments.
+
+    """
     kwargs.setdefault("delta", -0.9)
     kwargs.setdefault("n_neighbors", 100)
     kwargs.setdefault("n_cells", 64)
@@ -405,9 +440,8 @@ def _spherical_density_radius_mapping(centers, box, **kwargs):
         for k, v in kwargs.items()
         if k in ["delta", "n_neighbors", "n_cells"]
     }
-    eradius = spherical_density_mapping(
-        centers=centers, box=box, **kwargs
-    )
+    eradius = spherical_density_mapping(centers=centers, box=box, **kwargs)
+
     return eradius.radius
 
 

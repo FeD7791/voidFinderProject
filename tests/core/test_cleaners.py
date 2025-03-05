@@ -20,23 +20,37 @@ import os
 import pathlib
 import tempfile
 
+
 import numpy as np
+
+import pytest
+
 
 from voidfindertk.core import cleaners
 from voidfindertk.datasets import spherical_cloud
+
 
 # =============================================================================
 # TESTS
 # =============================================================================
 
 
+def _check_cbl_module():
+    utils_path = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))
+    core_path = utils_path.parent.parent / "voidfindertk" / "core"
+    return (core_path / "libcleaner.so").exists()
+
+
+@pytest.mark.skipif(
+    not _check_cbl_module(), reason="CBL module not available!"
+)
 def test_cbl_cleaner_interface(build_box_with_eq_voids):
 
     # Set initial variables
     rad = 30.0
     cloud = spherical_cloud.build_cloud()
     box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
-        cloud=cloud, rad=rad
+        cloud=cloud, rad=rad, delta=-0.9
     )
 
     # Build temporary directory
@@ -63,9 +77,9 @@ def test_cbl_cleaner_interface(build_box_with_eq_voids):
             "initial_radius": True,
             "delta_r_min": 10.0,
             "delta_r_max": 50.0,
-            "threshold": 0.3,
+            "threshold": 0.1,
             "output_path": workdir / "cleaned_catalogue.txt",
-            "ol_crit": True,
+            "ol_crit": False,
             "rescale": True,
             "checkoverlap": True,
         }
@@ -73,6 +87,9 @@ def test_cbl_cleaner_interface(build_box_with_eq_voids):
         cleaners._cbl_cleaner_interface(**parameters)
 
 
+@pytest.mark.skipif(
+    not _check_cbl_module(), reason="CBL module not available!"
+)
 def test_cbl_cleaner(build_box_with_eq_voids):
     # Setting parameters.
     rad = 30.0
@@ -94,7 +111,7 @@ def test_cbl_cleaner(build_box_with_eq_voids):
             "temporal_dir_path": workdir,
             "clean_directory": True,
             # cbl parameters
-            "ratio": 1.0,
+            "ratio": 1.5,
             "initial_radius": True,
             "delta_r_min": 10.0,
             "delta_r_max": 100.0,

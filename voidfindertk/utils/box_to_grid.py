@@ -42,9 +42,9 @@ def get_grispy_grid_from_box(box, **grispy_kwargs):
         N_cells=grispy_kwargs["N_cells"],
     )
     periodic = {
-        0: (box.min(), box.max()),
-        1: (box.min(), box.max()),
-        2: (box.min(), box.max()),
+        0: (box.min_, box.max_),
+        1: (box.min_, box.max_),
+        2: (box.min_, box.max_),
     }
     grid.set_periodicity(periodic, inplace=True)
     return grid

@@ -28,8 +28,8 @@ try:
     chdir = contextlib.chdir
 except AttributeError:
 
-    class chdir(contextlib.AbstractContextManager):
-        """Non thread-safe context manager to change the current working \
+    class chdir(contextlib.AbstractContextManager):  # pragma: no cover
+        """Non thread-safe context manager to change the current working\
         directory."""
 
         def __init__(self, path):

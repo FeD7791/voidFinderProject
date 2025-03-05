@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.core.radius_finder
-
-"""
+"""Test for voidfindertk.core.radius_finder."""
 
 # =============================================================================
 # IMPORTS
@@ -188,3 +186,26 @@ def test_kind1_effective_radius(build_box_with_eq_voids, build_box_from_cloud):
     assert np.max(down_threshold) < rho_threshold
     assert np.min(up_threshold) > rho_threshold
     assert np.all(last_element < rho_threshold * np.ones(len(last_element)))
+
+
+def test_effective_radius_class(build_box_with_eq_voids):
+
+    delta = -0.9
+    nn = 50
+    n_cells = 64
+
+    cloud = spherical_cloud.build_cloud()
+    box, tracers, centers, updated_cloud = build_box_with_eq_voids(
+        rad=30, cloud=cloud, delta=delta
+    )
+
+    effective_radius = radius_finder.spherical_density_mapping(
+        centers=centers, n_neighbors=nn, box=box, delta=delta, n_cells=64
+    )
+
+    assert str(effective_radius) == (
+        f"<effective_radius delta={delta} "
+        f"n_neighbors={nn} n_cells={n_cells} | {len(centers)}/{len(centers)}>"
+    )
+    assert len(centers) == len(effective_radius)
+    assert len(effective_radius.errors) == len(effective_radius.radius)

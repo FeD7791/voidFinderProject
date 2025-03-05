@@ -153,7 +153,7 @@ class Box:
         """
         cls_name = type(self).__name__
         length = len(self)
-        return f"<{cls_name} size={length}"
+        return f"<{cls_name} size={length}>"
 
     def size(self):
         """
@@ -167,7 +167,8 @@ class Box:
             np.min(self.z.value)
         )
 
-    def min(self):
+    @property
+    def min_(self):
         """
         Returns the minimun value, in length position of the box.
 
@@ -191,7 +192,8 @@ class Box:
             )
         )
 
-    def max(self):
+    @property
+    def max_(self):
         """
         Returns the maximun value, in length position of the box.
 

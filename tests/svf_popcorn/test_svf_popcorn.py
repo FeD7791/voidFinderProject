@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.svf_popcorn.SVFPopCorn
-
-"""
+"""Test for voidfindertk.svf_popcorn.SVFPopCorn."""
 
 # =============================================================================
 # IMPORTS
@@ -21,14 +19,24 @@
 import pathlib
 from unittest import mock
 
+
+import pytest
+
+
 from voidfindertk.datasets import spherical_cloud
+from voidfindertk.settings import SETTINGS
 from voidfindertk.svf_popcorn import SVFPopCorn
+
 
 # =============================================================================
 # TESTS
 # =============================================================================
 
 
+@pytest.mark.skipif(
+    not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
+    reason="POPCORN not available!",
+)
 def test_svfpopcorn_working_example(build_box_with_eq_voids):
     """
     Tests svfpopcorn works with a real run

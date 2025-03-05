@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.svf_popcorn._svf_pc_wrapper
-
-"""
+"""Test for voidfindertk.svf_popcorn._svf_pc_wrapper."""
 
 # =============================================================================
 # IMPORTS

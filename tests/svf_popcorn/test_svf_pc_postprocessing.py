@@ -10,9 +10,7 @@
 # DOCS
 # =============================================================================
 
-""" test for voidfindertk.svf_popcorn._svf_pc_postprocessing
-
-"""
+"""Test for voidfindertk.svf_popcorn._svf_pc_postprocessing."""
 
 # =============================================================================
 # IMPORTS

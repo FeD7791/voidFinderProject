@@ -26,6 +26,8 @@ from voidfindertk.datasets.spherical_cloud import build_cloud
 # =============================================================================
 # TESTS
 # =============================================================================
+
+
 def test_center_calculator(build_box_with_eq_voids, find_bubble_neighbors):
 
     rad = 30

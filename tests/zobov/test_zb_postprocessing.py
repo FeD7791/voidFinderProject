@@ -31,7 +31,6 @@ import pandas as pd
 import pytest
 
 
-
 from voidfindertk.zobov import _zb_postprocessing
 from voidfindertk.zobov._zobov import _Files
 
@@ -89,8 +88,9 @@ def test_get_tracers_in_zones(zobov_model_builder, n_points):
         path = extra["files_directory_path"]
         # Dataframe with out file .txt values
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT, header=1,
-            delim_whitespace=True
+            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            header=1,
+            delim_whitespace=True,
         )
         # Tracers that are in each zone
         tracers = _zb_postprocessing._get_tracers_in_zones(
@@ -119,8 +119,9 @@ def test_get_zones_in_void(zobov_model_builder, n_points):
         path = extra["files_directory_path"]
         # Dataframe with out file .txt values
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT, header=1,
-            delim_whitespace=True
+            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            header=1,
+            delim_whitespace=True,
         )
 
         void_number = np.array(out["Void#"])
@@ -144,15 +145,16 @@ def test_get_tracers_in_voids(zobov_model_builder, n_points):
         path = extra["files_directory_path"]
 
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT, header=1,
-            delim_whitespace=True
+            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            header=1,
+            delim_whitespace=True,
         )
-        (
-            properties_df,
-            tracers_in_void ) = _zb_postprocessing.get_tracers_in_voids(
-            properties_dataframe=out,
-            tracers_in_zones_path=path / _Files.PARTICLES_VS_ZONES_ASCII,
-            zones_in_void_path=path / _Files.ZONES_VS_VOID_ASCII,
+        (properties_df, tracers_in_void) = (
+            _zb_postprocessing.get_tracers_in_voids(
+                properties_dataframe=out,
+                tracers_in_zones_path=path / _Files.PARTICLES_VS_ZONES_ASCII,
+                zones_in_void_path=path / _Files.ZONES_VS_VOID_ASCII,
+            )
         )
     number_tracers_in_void = np.array(list(map(len, tracers_in_void)))
     df_n_tracers_in_void = np.array(properties_df["Void#Part"])
