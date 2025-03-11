@@ -16,12 +16,14 @@
 # IMPORTS
 # =============================================================================
 
-import contextlib
 import os
 import tempfile
 
 
 import pytest
+
+
+from voidfindertk.utils import context_managers
 
 # =============================================================================
 # FUNCTIONS
@@ -40,7 +42,7 @@ def test_chdir_with_temp_directory(temp_dir):
     original_cwd = os.getcwd()
 
     # Use the context manager to change the directory
-    with contextlib.chdir(temp_dir):
+    with context_managers.chdir(temp_dir):
         # Assert that the current directory is now the temp directory
         assert os.getcwd() == temp_dir
 
