@@ -20,6 +20,8 @@ recursive-include voidfindertk *.tpp
 recursive-include voidfindertk *.so
 recursive-include voidfindertk *.md
 
+recursive-include voidfindertk/zobov *.so
+
 recursive-exclude voidfindertk *.txt
 recursive-exclude voidfindertk *.htm
 recursive-exclude voidfindertk *.gif

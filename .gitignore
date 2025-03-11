@@ -5,7 +5,13 @@ __pycache__/
 
 
 # C extensions
-*.so
+config_file_path
+
+# .yaml
+*.yaml
+
+# .ipynb
+*.ipynb
 
 # Distribution / packaging
 bin/
@@ -21,6 +27,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
 
 # Installer logs
 pip-log.txt
@@ -58,8 +65,12 @@ docs/_build/
 *.o
 datasets/*
 #examples/
+# draft/
+local_draft/
+workdir/
+
 main.py
-*.so
+
 .flake8
 .black
 gemini.py
@@ -74,9 +85,8 @@ header.txt
 script_re_run_popcorn.py
 voidfindertk/epicsphere/*
 
-#draft
-draft/
-workdir/
+
+
 
 
 # zobov
@@ -107,3 +117,7 @@ run_popcorn/
 
 #images
 *.jpg
+
+
+# cbl
+voidfindertk/core/*.so
