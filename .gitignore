@@ -13,6 +13,9 @@ config_file_path
 # .ipynb
 *.ipynb
 
+# .so
+*.so
+
 # Distribution / packaging
 bin/
 build/
