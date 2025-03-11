@@ -1,7 +1,9 @@
-from voidfindertk import io, zobov
+from voidfindertk import zobov
 import os
 import pathlib
 import tempfile
+
+from voidfindertk.io import read_table
 
 # Path to this file
 # This path is used to ensure that example works anywhere
@@ -23,7 +25,7 @@ zobov_0 = zobov.ZobovVF(
 )
 
 # Get dataset box object:
-tracers = io.read_table(path_or_buffer=path_dataset)
+tracers = read_table.read_table(path_or_buffer=path_dataset)
 
 # Perform Void Finder method on dataset
 voids = zobov_0.find(tracers)
