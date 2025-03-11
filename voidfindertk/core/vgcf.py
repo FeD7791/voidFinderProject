@@ -32,8 +32,7 @@ from ..utils import box_to_grid
 def _single_vgcf(centers, r_in, r_out, box, **grispy_kwargs):
     """
     Calculate the number density within a spherical shell of radius `r_in` and
-    `r_out` for a given set of tracer particles and a specified 3D periodic
-    box.
+    `r_out` for a given set of centers.
 
     Parameters
     ----------
@@ -90,7 +89,7 @@ def _single_vgcf(centers, r_in, r_out, box, **grispy_kwargs):
     return np.sum(dd) / (len(dd) * rr) - 1
 
 
-def vgcf_statistic(centers, box, rad, delta_r, n_jobs=1):
+def vgcf_statistic(centers, box, max_rad, delta_r, n_jobs=1):
     """Calculates the Void-Galaxy Correlation Function.
 
     The correlation function is obtained as: vgcf = DD/RR - 1. The calculation
@@ -120,8 +119,9 @@ def vgcf_statistic(centers, box, rad, delta_r, n_jobs=1):
     vgcf : list
         Values of the vgcf.
     """
-    r_min = np.array(rad)
-    r_max = r_min + delta_r
+    rad = np.arange(0, max_rad, delta_r)
+    r_min = rad[:-1]
+    r_max = rad[1:]
 
     # Set parallel mapping.
     parallel = Parallel(n_jobs=n_jobs, return_as="generator")

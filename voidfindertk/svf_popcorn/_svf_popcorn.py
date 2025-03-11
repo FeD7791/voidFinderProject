@@ -98,8 +98,6 @@ class SVFPopCorn(VoidFinderABC):
         Minimum radius of a sphere in input units.
     maxradius : int
         Maximum radius of a sphere in input units.
-    massmin : float
-        Minimum halo mass allowed (0 if not applicable).
     svf_path : pathlib.Path
         Path to the source directory of the SVF.
     cores : str or None
@@ -111,9 +109,10 @@ class SVFPopCorn(VoidFinderABC):
 
     Notes
     -----
-    Existen MASSMIN parameter of POPCORN is always se to 0. For use of tracers
-    with a specific mass threshold use Box method mass_cutoff before
-    performing the search.
+    MASSMIN popcorns parameter in vars.conf file is always set to when using
+    this interface. This way all the masses in the input file are considered.
+    In order to constrain the mass of the input please use the box method:
+    box.mass_cutoff(mass_threshold=<threshold>).
     """
 
     _auxfiles = attr.field(default="true", alias="auxfiles")  # AUXILIARY FILES
@@ -264,6 +263,7 @@ class SVFPopCorn(VoidFinderABC):
         """
         # create the sandbox
         run_work_dir = self._create_run_work_dir()
+
         # Create config file on Workdir
         _svf_pc_wrapper.config_file_maker(
             # Files
@@ -284,6 +284,7 @@ class SVFPopCorn(VoidFinderABC):
             eps=str(1e-5),
             path=str(run_work_dir / FileNames.CONFIG),  # Workdir path
         )
+
         # Generate dataset file from box
         _svf_pc_wrapper.popcorn_svf_input_data_builder(
             box=box, file_path=str(run_work_dir / FileNames.TRSFILE)

@@ -109,9 +109,11 @@ class _Paths:
     ZOBOV : pathlib.Path
         Path to the src folder of ZOBOV.
     """
-
+    CURRENT_FILE_PATH = executable_path=pathlib.Path(
+        os.path.abspath(__file__)
+        ).parent
     ZOBOV = pathlib.Path(SETTINGS.zobov_path)
-    SO_PATHS = pathlib.Path(os.path.abspath(__file__)).parent / "src"
+    SO_PATHS = ZOBOV / "src"
 
 
 # =============================================================================
@@ -328,7 +330,7 @@ class ZobovVF(VoidFinderABC):
 
         _wrap.write_input(
             box=box,
-            path_executable=_Paths.SO_PATHS
+            path_executable=pathlib.Path(self._zobov_path)
             / _ExecutableNames.ZOBOV_LOADER_BIN,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
@@ -337,7 +339,7 @@ class ZobovVF(VoidFinderABC):
         # VOZINIT =============================================================
 
         _wrap.run_vozinit(
-            vozinit_dir_path=self._zobov_path,
+            vozinit_dir_path=pathlib.Path(self._zobov_path) / "src",
             input_file_path=tracers_raw_file_path,
             buffer_size=self.buffer_size,
             box_size=self.box_size,
@@ -353,12 +355,12 @@ class ZobovVF(VoidFinderABC):
             preprocess_dir_path=run_work_dir,
             executable_name=Names.OUTPUT_VOZINIT,
             work_dir_path=run_work_dir,
-            voz_executables_path=_Paths.ZOBOV,
+            voz_executables_path=pathlib.Path(self._zobov_path) / "src",
         )
 
         # JOZOV ===============================================================
         _wrap.run_jozov(
-            jozov_dir_path=_Paths.ZOBOV,
+            jozov_dir_path=pathlib.Path(self._zobov_path) / "src",
             executable_name=Names.OUTPUT_VOZINIT,
             output_name_particles_in_zones=Names.PARTICLES_IN_ZONES,
             output_name_zones_in_void=Names.ZONES_IN_VOID,
@@ -399,6 +401,7 @@ class ZobovVF(VoidFinderABC):
             - centers: Coordinates of the centers of the voids.
             - extra: Dictionary with additional properties about the voids.
         """
+
         # Center Method:
         center_method = model_find_parameters["center_method"]
         # Get current working directory
@@ -414,14 +417,14 @@ class ZobovVF(VoidFinderABC):
         # Process 1:
         # a) Parse tracers in zones raw file in the work directory
         _zb_postprocessing.parse_tracers_in_zones_output(
-            executable_path=_Paths.SO_PATHS
+            executable_path=_Paths.CURRENT_FILE_PATH
             / _ExecutableNames.TRACERS_IN_ZONES_BIN,
             input_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_RAW,
             output_file_path=run_work_dir / _Files.PARTICLES_VS_ZONES_ASCII,
         )
         # b) Parse zones in voids raw file in the work directory
         _zb_postprocessing.parse_zones_in_void_output(
-            executable_path=_Paths.SO_PATHS
+            executable_path=_Paths.CURRENT_FILE_PATH
             / _ExecutableNames.ZONES_IN_VOIDS_BIN,
             input_file_path=run_work_dir / _Files.ZONES_VS_VOID_RAW,
             output_file_path=run_work_dir / _Files.ZONES_VS_VOID_ASCII,
