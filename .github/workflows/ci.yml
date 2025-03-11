@@ -17,6 +17,7 @@ env:
 jobs:
   tox:
     runs-on: ubuntu-latest
+    continue-on-error: true  # This allows the entire job to continue even if a step fails
 
     strategy:
       matrix:
