@@ -1,0 +1,37 @@
+# =============================================================================
+# CI WITH GITHUB ACTIONS
+# =============================================================================
+
+name: Tox CI
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+
+  pull_request: 
+    branches: [ "main", "dev" ]
+
+jobs:
+  tox:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11, 3.12, 3.13]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Run tox
+        run: tox  # Run tox with the environments from tox.ini
