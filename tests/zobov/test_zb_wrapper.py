@@ -174,7 +174,6 @@ def test_write_input():
     }
     clibrary = mock.MagicMock()
 
-
     with mock.patch("ctypes.CDLL") as mock_cdll:
         mock_cdll.return_value = clibrary
         _zb_wrapper.write_input(**params)

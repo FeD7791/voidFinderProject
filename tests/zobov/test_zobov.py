@@ -68,16 +68,14 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
                     parse_tracers_in_zones_output=mock.DEFAULT,
                     parse_zones_in_void_output=mock.DEFAULT,
                     get_tracers_in_voids=mock.DEFAULT,
-                    get_center_method=mock.DEFAULT
+                    get_center_method=mock.DEFAULT,
                 ) as mocks2:
                     mocks2["get_tracers_in_voids"].return_value = (
                         # properties, tinv
                         properties,
                         mock_tinv,
                     )
-                    tinv, centers, extra = ZobovVF(
-                        **params
-                    ).build_voids(
+                    tinv, centers, extra = ZobovVF(**params).build_voids(
                         model_find_parameters={
                             "run_work_dir": run_workdir,
                             "box": box_,
@@ -136,7 +134,6 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
 
     assert tinv == tuple(mock_tinv)
     assert np.all(
-        mocks2["get_center_method"]("core_particle").return_value
-        == centers
+        mocks2["get_center_method"]("core_particle").return_value == centers
     )
     assert extra == extra_

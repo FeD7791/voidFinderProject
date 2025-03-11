@@ -79,7 +79,6 @@ class ZobovElements:
     CURRENT_FILE_PATH = _Paths.CURRENT_FILE_PATH
 
 
-
 @attr.define
 class SVFPopcornElements:
     SVF = pathlib.Path(SETTINGS.popcorn_path)

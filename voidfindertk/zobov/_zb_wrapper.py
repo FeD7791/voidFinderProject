@@ -450,4 +450,3 @@ def write_input(*, box, path_executable, raw_file_path, txt_file_path):
         str(raw_file_path).encode("utf-8"),
         str(txt_file_path).encode("utf-8"),
     )
-

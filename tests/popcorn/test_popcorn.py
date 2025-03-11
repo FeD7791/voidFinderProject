@@ -25,7 +25,6 @@ import pytest
 
 from voidfindertk.datasets import spherical_cloud
 from voidfindertk.popcorn import PopCorn
-from voidfindertk.settings import SETTINGS
 from voidfindertk.svf_popcorn import SVFPopCorn
 
 # =============================================================================

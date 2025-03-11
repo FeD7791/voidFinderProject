@@ -109,9 +109,10 @@ class _Paths:
     ZOBOV : pathlib.Path
         Path to the src folder of ZOBOV.
     """
-    CURRENT_FILE_PATH = executable_path=pathlib.Path(
+
+    CURRENT_FILE_PATH = executable_path = pathlib.Path(
         os.path.abspath(__file__)
-        ).parent
+    ).parent
     ZOBOV = pathlib.Path(SETTINGS.zobov_path)
     SO_PATHS = ZOBOV / "src"
 
