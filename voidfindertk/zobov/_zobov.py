@@ -402,7 +402,6 @@ class ZobovVF(VoidFinderABC):
             - centers: Coordinates of the centers of the voids.
             - extra: Dictionary with additional properties about the voids.
         """
-
         # Center Method:
         center_method = model_find_parameters["center_method"]
         # Get current working directory

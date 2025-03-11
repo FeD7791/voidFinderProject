@@ -397,7 +397,7 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
 
 def _spherical_density_radius_mapping(centers, box, **kwargs):
     """
-    Wrapper for the `spherical_density_mapping` function. Restricts the
+    Wrapper for the `spherical_density_mapping` function. Restricts the \
     keyword arguments to "delta", "n_neighbors", and "n_cells".
 
     Parameters

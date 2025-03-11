@@ -31,8 +31,8 @@ from ..utils import box_to_grid
 
 def _single_vgcf(centers, r_in, r_out, box, **grispy_kwargs):
     """
-    Calculate the number density within a spherical shell of radius `r_in` and
-    `r_out` for a given set of centers.
+    Calculate the number density within a spherical shell of radius `r_in` \
+    and `r_out` for a given set of centers.
 
     Parameters
     ----------
@@ -61,7 +61,6 @@ def _single_vgcf(centers, r_in, r_out, box, **grispy_kwargs):
         The number density of tracers per unit volume for each shell.
 
     """
-
     # Check r_in < r_out
     if r_in >= r_out:
         raise ValueError("Bad relation between radii, should be r_in < r_out")
@@ -115,7 +114,6 @@ def vgcf_statistic(centers, box, max_rad, delta_r, n_jobs=1):
 
     Returns
     -------
-
     vgcf : list
         Values of the vgcf.
     """
