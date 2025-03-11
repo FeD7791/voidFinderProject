@@ -30,9 +30,7 @@ from voidfindertk.core.box import Box
 
 
 def test_box_initialization(mkbox):
-    box = mkbox(
-        seed=42, size=1000
-    )
+    box = mkbox(seed=42, size=1000)
     assert box.x.unit == u.Mpc
     assert box.y.unit == u.Mpc
     assert box.z.unit == u.Mpc
