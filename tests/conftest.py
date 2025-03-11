@@ -42,6 +42,7 @@ from voidfindertk.datasets import spherical_cloud
 from voidfindertk.settings import SETTINGS
 from voidfindertk.utils import box_to_grid
 from voidfindertk.zobov import ZobovVF
+from voidfindertk.zobov._zobov import _Paths
 
 # =============================================================================
 # CONSTANTS
@@ -75,6 +76,8 @@ class ZobovElements:
     TRACERS_IN_ZONES_BIN = "tracers_in_zones.so"
     ZONES_IN_VOIDS_BIN = "zones_in_void.so"
     ZOBOV = pathlib.Path(SETTINGS.zobov_path)
+    CURRENT_FILE_PATH = _Paths.CURRENT_FILE_PATH
+
 
 
 @attr.define
@@ -224,7 +227,7 @@ def build_box_with_eq_voids():
     radii and that are equidistant between them.
     """
 
-    def _maker(*, rad=30, cloud=None, delta=-0.9, **mass_kwargs):
+    def _maker(*, rad=30, cloud=None, delta=-0.9, sep=10, **mass_kwargs):
         """
         Parameters
         ----------
@@ -248,7 +251,7 @@ def build_box_with_eq_voids():
         """
         lmax = np.max(cloud)
         # Generate centers
-        xyz_ = np.arange(0.0, lmax, rad + 10)
+        xyz_ = np.arange(0.0, lmax, rad + sep)
         centers = np.column_stack((xyz_, xyz_, xyz_))
         # Get cloud with spherical voids
         cloud_with_voids = spherical_cloud.build_spherical_void(
@@ -429,6 +432,7 @@ def zobov_model_builder():
         box = Box(x=np.ravel(x), y=np.ravel(y), z=np.ravel(z))
         workdir_path = pathlib.Path(workdir_path)
         model = ZobovVF(box_size=box.max_, workdir=workdir_path)
+
         parameters = model.model_find(box)
         tinv, props, extra = model.build_voids(parameters)
         return extra

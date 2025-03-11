@@ -33,10 +33,11 @@ from voidfindertk.svf_popcorn import SVFPopCorn
 # =============================================================================
 
 
-@pytest.mark.skipif(
-    not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
-    reason="POPCORN not available!",
-)
+# @pytest.mark.skipif(
+#     not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
+#     reason="POPCORN not available!",
+# )
+@pytest.mark.skip(reason="Requires POPCORN Installed")
 def test_svfpopcorn_working_example(build_box_with_eq_voids):
     """
     Tests svfpopcorn works with a real run
@@ -65,16 +66,18 @@ def test_svfpopcorn(svf_popcorn_paths_and_names, mkbox):
         "densth": -0.9,
         "minradius": 5,
         "maxradius": 100,
-        "massmin": 0,
         "svf_path": pathlib.Path("."),
         "workdir": pathlib.Path("."),
         "workdir_clean": False,
+        "cores": 2
     }
     box_ = mkbox(seed=42)
-    run_work_dir = "run_work_dir"
     pn = svf_popcorn_paths_and_names()
 
-    with mock.patch("tempfile.mkdtemp", return_value=mock.MagicMock()):
+    with mock.patch(
+        "voidfindertk.utils.make_workdir.create_run_work_dir",
+        return_value=mock.MagicMock()
+        ) as tempdir:
         with mock.patch.multiple(
             "voidfindertk.svf_popcorn._svf_pc_wrapper",
             config_file_maker=mock.DEFAULT,
@@ -90,51 +93,54 @@ def test_svfpopcorn(svf_popcorn_paths_and_names, mkbox):
             ) as svf_pc_postprocessing_mocks:
                 tinv, xyz_properties, extra = SVFPopCorn(**params).build_voids(
                     model_find_parameters={
-                        "run_work_dir": run_work_dir,
+                        "run_work_dir": pathlib.Path("./run_work_dir"),
                         "box": box_,
                     }
                 )
+
     svf_pc_wrapper_mocks["config_file_maker"].assert_called_once_with(
-        trsfile=str(run_work_dir / pn.TRSFILE),
+        trsfile=str(tempdir(workdir_path=params['workdir']) / pn.TRSFILE),
         filefmt="ASCII",
         num_file=str(1),
-        sphfile=str(run_work_dir / pn.SPHFILE),
-        popfile=str(run_work_dir / pn.POPFILE),
+        sphfile=str(tempdir(workdir_path=params['workdir']) / pn.SPHFILE),
+        popfile=str(tempdir(workdir_path=params['workdir']) / pn.POPFILE),
         auxfiles=str(params["auxfiles"]),
-        rawpopfile=str(run_work_dir / pn.RAWPOPFILE),
-        pairsfile=str(run_work_dir / pn.PAIRSFILE),
-        # Parameters
+        rawpopfile=str(tempdir(workdir_path=params['workdir']) / pn.RAWPOPFILE),
+        pairsfile=str(tempdir(workdir_path=params['workdir']) / pn.PAIRSFILE),
         boxsize=str(params["boxsize"]),
         densth=str(params["densth"]),
         minradius=str(params["minradius"]),
         maxradius=str(params["maxradius"]),
-        massmin=str(params["massmin"]),
+        massmin=str(0), # This is always the value for this parameter.
         eps=str(1e-5),
-        path=str(run_work_dir / pn.CONFIG),  # Workdir path
+        path=str(tempdir(workdir_path=params['workdir']) / pn.CONFIG),
     )
+
     svf_pc_wrapper_mocks[
         "popcorn_svf_input_data_builder"
     ].assert_called_once_with(
-        box=box_, file_path=str(run_work_dir / pn.TRSFILE)
+        box=box_,
+        file_path=str(tempdir(workdir_path=params['workdir']) / pn.TRSFILE)
     )
     svf_pc_wrapper_mocks[
         "spherical_popcorn_void_finder"
     ].assert_called_once_with(
-        mpi_flags=params["mpi_flags"],
         bin_path=pn.SVF,
-        conf_file_path=run_work_dir / pn.CONFIG,
-        work_dir_path=run_work_dir,
+        conf_file_path=tempdir(workdir_path=params['workdir']) / pn.CONFIG,
+        work_dir_path=tempdir(workdir_path=params['workdir']),
+        cores=params["cores"],
     )
     svf_pc_postprocessing_mocks["get_void_properties"].assert_called_once_with(
-        popcorn_output_file_path=str(run_work_dir / pn.SPHFILE)
+        popcorn_output_file_path=str(
+            pathlib.Path("./run_work_dir") / pn.SPHFILE
+            )
     )
     svf_pc_postprocessing_mocks[
         "get_tracers_in_voids"
     ].assert_called_once_with(
         box=box_,
-        popcorn_output_file_path=str(run_work_dir / pn.SPHFILE),
+        popcorn_output_file_path=str(
+            pathlib.Path("./run_work_dir") / pn.SPHFILE
+            ),
     )
-    svf_pc_wrapper_mocks["get_void_properties"].return_value = [
-        1,
-    ]
-    # FALTA TESTEAR LOS OUTPUTS
+

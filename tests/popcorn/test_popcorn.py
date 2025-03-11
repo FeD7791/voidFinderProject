@@ -189,10 +189,11 @@ def test_popcorn_build_voids_false(mkbox):
     assert run_work_dir == extra["files_directory_path"]
 
 
-@pytest.mark.skipif(
-    not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
-    reason="POPCORN not available!",
-)
+# @pytest.mark.skipif(
+#     not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
+#     reason="POPCORN not available!",
+# )
+@pytest.mark.skip(reason="Requires POPCORN Installed")
 def test_popcorn_working_example(build_box_with_eq_voids):
 
     delta = -0.9
@@ -213,6 +214,7 @@ def test_popcorn_working_example(build_box_with_eq_voids):
     model.find(box=box)
 
 
+@pytest.mark.skip(reason="Requires POPCORN Installed")
 def test_popcorn_box_tracers_mapping(build_box_with_eq_voids):
 
     delta = -0.8

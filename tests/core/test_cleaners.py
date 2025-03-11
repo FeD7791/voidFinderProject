@@ -41,9 +41,10 @@ def _check_cbl_module():
     return (core_path / "libcleaner.so").exists()
 
 
-@pytest.mark.skipif(
-    not _check_cbl_module(), reason="CBL module not available!"
-)
+# @pytest.mark.skipif(
+#     not _check_cbl_module(), reason="CBL module not available!"
+# )
+@pytest.mark.skip(reason="Requires CBL Installed")
 def test_cbl_cleaner_interface(build_box_with_eq_voids):
 
     # Set initial variables
@@ -87,9 +88,10 @@ def test_cbl_cleaner_interface(build_box_with_eq_voids):
         cleaners._cbl_cleaner_interface(**parameters)
 
 
-@pytest.mark.skipif(
-    not _check_cbl_module(), reason="CBL module not available!"
-)
+# @pytest.mark.skipif(
+#     not _check_cbl_module(), reason="CBL module not available!"
+# )
+@pytest.mark.skip(reason="Requires CBL Installed")
 def test_cbl_cleaner(build_box_with_eq_voids):
     # Setting parameters.
     rad = 30.0

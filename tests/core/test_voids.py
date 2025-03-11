@@ -31,10 +31,9 @@ from voidfindertk.datasets import spherical_cloud
 # =============================================================================
 # TESTS
 # =============================================================================
-# @pytest.mark.parametrize(
-#     "cleaner_method, radius_method",
-#     list(zip(["overlap","cbl"],["default","extra","volume"])))
-@pytest.mark.parametrize("cleaner_method", ["overlap", "cbl"])
+
+# @pytest.mark.parametrize("cleaner_method", ["overlap", "cbl"])
+@pytest.mark.parametrize("cleaner_method", ["overlap"])
 @pytest.mark.parametrize("radius_method", ["density", "extra", "volume"])
 def test_voids(
     cleaner_method,

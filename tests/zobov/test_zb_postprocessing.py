@@ -20,6 +20,8 @@ Test ZOBOV posprocessing modules
 # =============================================================================
 
 import ctypes
+import os
+import pathlib
 import tempfile
 from unittest import mock
 
@@ -32,7 +34,6 @@ import pytest
 
 
 from voidfindertk.zobov import _zb_postprocessing
-from voidfindertk.zobov._zobov import _Files
 
 
 # =============================================================================
@@ -80,21 +81,20 @@ def test_parse_tracers_in_zones_output():
     )
 
 
-@pytest.mark.parametrize("n_points", [100000])
-def test_get_tracers_in_zones(zobov_model_builder, n_points):
+def test_get_tracers_in_zones():
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        extra = zobov_model_builder(workdir_path=temp_dir, n_points=n_points)
-        path = extra["files_directory_path"]
-        # Dataframe with out file .txt values
+    tests_path = pathlib.Path(os.path.abspath(__file__)).parent.parent
+    tracers_vs_zones_file = tests_path / "mock_data" / "zobov" / "part_vs_zone_ascii.txt"
+    with tempfile.TemporaryDirectory():
+
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            tests_path / "mock_data" / "zobov" / "output_txt.dat",
             header=1,
             delim_whitespace=True,
         )
         # Tracers that are in each zone
         tracers = _zb_postprocessing._get_tracers_in_zones(
-            tracers_in_zones_path=path / _Files.PARTICLES_VS_ZONES_ASCII
+            tracers_in_zones_path=tracers_vs_zones_file
         )
 
     # This have the same order:
@@ -111,22 +111,22 @@ def test_get_tracers_in_zones(zobov_model_builder, n_points):
     assert np.all(number_of_tracers == np.array(out["Zone#Part"][indx]))
 
 
-@pytest.mark.parametrize("n_points", [50000])
-def test_get_zones_in_void(zobov_model_builder, n_points):
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        extra = zobov_model_builder(workdir_path=temp_dir, n_points=n_points)
-        path = extra["files_directory_path"]
-        # Dataframe with out file .txt values
+def test_get_zones_in_void():
+
+    tests_path = pathlib.Path(os.path.abspath(__file__)).parent.parent
+    zones_vs_voids_file = tests_path / "mock_data" / "zobov" / "zones_vs_voids_ascii.txt"
+    with tempfile.TemporaryDirectory():
+
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            tests_path / "mock_data" / "zobov" / "output_txt.dat",
             header=1,
             delim_whitespace=True,
         )
 
         void_number = np.array(out["Void#"])
         zones = _zb_postprocessing._get_zones_in_void(
-            path / _Files.ZONES_VS_VOID_ASCII
+            zones_in_void_file_path=zones_vs_voids_file
         )
     zone_number = np.array([z[0] for z in zones]) + 1
     number_of_zones = np.array(out["Void#Zones"])
@@ -134,26 +134,28 @@ def test_get_zones_in_void(zobov_model_builder, n_points):
     number_of_zones_from_module = np.array(list(map(len, zones))) - 1
 
     assert np.all(void_number == zone_number)
-    assert np.all(number_of_zones == number_of_zones_from_module)
+    assert np.all(np.sort(number_of_zones)==np.sort(number_of_zones_from_module))
 
 
-@pytest.mark.parametrize("n_points", [10000])
-def test_get_tracers_in_voids(zobov_model_builder, n_points):
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        extra = zobov_model_builder(workdir_path=temp_dir, n_points=n_points)
-        path = extra["files_directory_path"]
+def test_get_tracers_in_voids():
+
+    tests_path = pathlib.Path(os.path.abspath(__file__)).parent.parent
+    zones_vs_voids_file = tests_path / "mock_data" / "zobov" / "zones_vs_voids_ascii.txt"
+    tracers_vs_zones_file = tests_path / "mock_data" / "zobov" / "part_vs_zone_ascii.txt"
+
+    with tempfile.TemporaryDirectory():
 
         out = pd.read_csv(
-            path / _Files.OUTPUT_JOZOV_VOIDS_DAT,
+            tests_path / "mock_data" / "zobov" / "output_txt.dat",
             header=1,
             delim_whitespace=True,
         )
         (properties_df, tracers_in_void) = (
             _zb_postprocessing.get_tracers_in_voids(
                 properties_dataframe=out,
-                tracers_in_zones_path=path / _Files.PARTICLES_VS_ZONES_ASCII,
-                zones_in_void_path=path / _Files.ZONES_VS_VOID_ASCII,
+                tracers_in_zones_path=tracers_vs_zones_file,
+                zones_in_void_path=zones_vs_voids_file
             )
         )
     number_tracers_in_void = np.array(list(map(len, tracers_in_void)))

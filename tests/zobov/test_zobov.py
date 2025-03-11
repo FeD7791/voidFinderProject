@@ -46,7 +46,7 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
     properties = {"CoreParticle": [0, 1, 2]}
     extra_ = {
         "zobov_path": params["zobov_path"],
-        "void_properties": properties,
+        "properties": properties,
         "files_directory_path": run_workdir,
     }
 
@@ -68,13 +68,14 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
                     parse_tracers_in_zones_output=mock.DEFAULT,
                     parse_zones_in_void_output=mock.DEFAULT,
                     get_tracers_in_voids=mock.DEFAULT,
+                    get_center_method=mock.DEFAULT
                 ) as mocks2:
                     mocks2["get_tracers_in_voids"].return_value = (
                         # properties, tinv
                         properties,
                         mock_tinv,
                     )
-                    tinv, xyz_properties, extra = ZobovVF(
+                    tinv, centers, extra = ZobovVF(
                         **params
                     ).build_voids(
                         model_find_parameters={
@@ -103,10 +104,10 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
         preprocess_dir_path=run_workdir,
         executable_name=zpn.OUTPUT_VOZINIT,
         work_dir_path=run_workdir,
-        voz_executables_path=zpn.ZOBOV / "src",
+        voz_executables_path=params["zobov_path"] / "src",
     )
     mocks["run_jozov"].assert_called_once_with(
-        jozov_dir_path=zpn.ZOBOV / "src",
+        jozov_dir_path=params["zobov_path"] / "src",
         executable_name="output_vozinit",
         output_name_particles_in_zones=zpn.PARTICLES_IN_ZONES,
         output_name_zones_in_void=zpn.ZONES_IN_VOID,
@@ -116,13 +117,13 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
     )
 
     mocks2["parse_tracers_in_zones_output"].assert_called_once_with(
-        executable_path=zpn.ZOBOV / zpn.TRACERS_IN_ZONES_BIN,
+        executable_path=zpn.CURRENT_FILE_PATH / zpn.TRACERS_IN_ZONES_BIN,
         input_file_path=run_workdir / zpn.PARTICLES_VS_ZONES_RAW,
         output_file_path=run_workdir / zpn.PARTICLES_VS_ZONES_ASCII,
     )
 
     mocks2["parse_zones_in_void_output"].assert_called_once_with(
-        executable_path=zpn.ZOBOV / zpn.ZONES_IN_VOIDS_BIN,
+        executable_path=zpn.CURRENT_FILE_PATH / zpn.ZONES_IN_VOIDS_BIN,
         input_file_path=run_workdir / zpn.ZONES_VS_VOID_RAW,
         output_file_path=run_workdir / zpn.ZONES_VS_VOID_ASCII,
     )
@@ -132,11 +133,10 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
         tracers_in_zones_path=(run_workdir / zpn.PARTICLES_VS_ZONES_ASCII),
         zones_in_void_path=run_workdir / zpn.ZONES_VS_VOID_ASCII,
     )
+
     assert tinv == tuple(mock_tinv)
     assert np.all(
-        xyz_properties
-        == np.column_stack((box_.arr_.x, box_.arr_.y, box_.arr_.z))[
-            properties["CoreParticle"]
-        ]
+        mocks2["get_center_method"]("core_particle").return_value
+        == centers
     )
     assert extra == extra_
