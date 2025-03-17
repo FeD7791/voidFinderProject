@@ -52,3 +52,44 @@ def test_vgcf(delta, delta_r, build_box_with_eq_voids):
     nn = int(np.rint(8 * len(v_g_cf) / 10))
 
     assert np.all(vgcf_abs[nn:] < 0.2)
+
+
+@pytest.mark.parametrize("wrong_n_jobs", [-11, 12.1, 0])
+def test_void_galaxy_corr_wrong_n_jobs(wrong_n_jobs, build_box_with_eq_voids):
+    cloud = spherical_cloud.build_cloud()
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud
+    )
+
+    with pytest.raises(ValueError, match="Invalid n_jobs value"):
+        vgcf.vgcf_statistic(
+            centers, box, max_rad=40, delta_r=5, n_jobs=wrong_n_jobs
+        )
+
+
+@pytest.mark.parametrize("wrong_rad_search", [-1, 0])
+def test_void_galaxy_corr_wrong_max_rad(
+    wrong_rad_search, build_box_with_eq_voids
+):
+    cloud = spherical_cloud.build_cloud()
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud
+    )
+
+    with pytest.raises(ValueError, match="Invalid max_rad value"):
+        vgcf.vgcf_statistic(
+            centers, box, max_rad=wrong_rad_search, delta_r=5, n_jobs=4
+        )
+
+
+@pytest.mark.parametrize("wrong_delta", [-1, 0])
+def test_void_galaxy_corr_wrong_delta_r(wrong_delta, build_box_with_eq_voids):
+    cloud = spherical_cloud.build_cloud()
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud
+    )
+
+    with pytest.raises(ValueError, match="Invalid delta_r value"):
+        vgcf.vgcf_statistic(
+            centers, box, max_rad=40, delta_r=wrong_delta, n_jobs=4
+        )

@@ -109,3 +109,44 @@ def test_voids_create_new_instance(
         "extra_": {"radius": rad * np.ones(len(centers))},
     }
     vds._create_new_instance(parameters=parameters)
+
+
+@pytest.mark.parametrize("max_radius_search", [10, 30, 60, 70])
+@pytest.mark.parametrize("delta_rad", [1, 5, 10, 20])
+@pytest.mark.parametrize("n_jobs", [1, 4, 8])
+def test_void_galaxy_corr(
+    max_radius_search, delta_rad, n_jobs, generic_void_builder
+):
+    vds = generic_void_builder(rad=30.0)
+    vds.void_galaxy_corr(
+        max_radius_search=max_radius_search, delta_rad=delta_rad, n_jobs=n_jobs
+    )
+
+
+@pytest.mark.parametrize("wrong_n_jobs", [-11, 12.1, 0])
+def test_void_galaxy_corr_wrong_n_jobs(wrong_n_jobs, generic_void_builder):
+    vds = generic_void_builder(rad=30.0)
+    with pytest.raises(ValueError, match="Invalid n_jobs value"):
+        vds.void_galaxy_corr(
+            max_radius_search=40, delta_rad=5, n_jobs=wrong_n_jobs
+        )
+
+
+@pytest.mark.parametrize("wrong_rad_search", [-1, 0])
+def test_void_galaxy_corr_wrong_max_rad(
+    wrong_rad_search, generic_void_builder
+):
+    vds = generic_void_builder(rad=30.0)
+    with pytest.raises(ValueError, match="Invalid max_rad value"):
+        vds.void_galaxy_corr(
+            max_radius_search=wrong_rad_search, delta_rad=5, n_jobs=2
+        )
+
+
+@pytest.mark.parametrize("wrong_delta", [-1, 0])
+def test_void_galaxy_corr_wrong_delta_r(wrong_delta, generic_void_builder):
+    vds = generic_void_builder(rad=30.0)
+    with pytest.raises(ValueError, match="Invalid delta_r value"):
+        vds.void_galaxy_corr(
+            max_radius_search=40, delta_rad=wrong_delta, n_jobs=2
+        )

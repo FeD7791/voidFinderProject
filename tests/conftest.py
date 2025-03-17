@@ -38,6 +38,7 @@ from scipy.spatial.distance import cdist
 
 
 from voidfindertk.core.box import Box
+from voidfindertk.core.voids import Voids
 from voidfindertk.datasets import spherical_cloud
 from voidfindertk.settings import SETTINGS
 from voidfindertk.utils import box_to_grid
@@ -489,3 +490,36 @@ def find_tracers():
         return tracers_in_voids
 
     return _find_tracers
+
+
+@pytest.fixture
+def generic_void_builder(build_box_with_eq_voids, find_bubble_neighbors):
+    def _generic_void_builder(rad):
+        # All voids have same radius: rad
+        cloud = spherical_cloud.build_cloud()
+        box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+            cloud=cloud, rad=rad
+        )
+        dist, idx = find_bubble_neighbors(
+            box=box,
+            cloud_with_voids=cloud_with_voids,
+            centers=centers,
+            rad=rad * np.ones(len(centers)),
+        )
+        vds = Voids(
+            method="VoidFinderMethod",
+            box=box,
+            tracers_in_voids_=tuple(idx),
+            centers_=centers,
+            extra_={
+                "radius": rad * np.ones(len(centers)),
+                "properties": {
+                    "VoidVol": (4 / 3)
+                    * np.pi
+                    * (rad * np.ones(len(centers))) ** 3
+                },
+            },
+        )
+        return vds
+
+    return _generic_void_builder

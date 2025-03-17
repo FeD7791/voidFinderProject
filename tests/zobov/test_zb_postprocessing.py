@@ -30,6 +30,8 @@ import numpy as np
 
 import pandas as pd
 
+import pytest
+
 
 from voidfindertk.zobov import _zb_postprocessing
 
@@ -168,3 +170,76 @@ def test_get_tracers_in_voids():
     df_n_tracers_in_void = np.array(properties_df["Void#Part"])
 
     assert np.all(number_tracers_in_void == df_n_tracers_in_void)
+
+
+def test_get_center_method():
+
+    with mock.patch(
+        "voidfindertk.zobov._zb_postprocessing._centers_barycentre_method"
+    ) as mock_centers_barycentre_method:
+        with mock.patch(
+            "".join(
+                [
+                    "voidfindertk.zobov._zb_postprocessing.",
+                    "_center_core_particle_method",
+                ]
+            )
+        ) as mock_center_core_particle_method:
+            output_1 = _zb_postprocessing.get_center_method(
+                center_method="barycentre"
+            )
+            output_2 = _zb_postprocessing.get_center_method(
+                center_method="core_particle"
+            )
+    with pytest.raises(
+        ValueError, match="This center_method is not available!"
+    ):
+        _zb_postprocessing.get_center_method(center_method="undefined_method")
+    assert mock_centers_barycentre_method == output_1
+    assert mock_center_core_particle_method == output_2
+
+
+def test_center_core_particle_method(mkbox):
+    box = mkbox()
+    properties_df = {"CoreParticle": pd.Series([0, 1, 5])}
+
+    xyz = _zb_postprocessing._center_core_particle_method(
+        properties_df=properties_df, box=box
+    )
+
+    assert xyz[0][0] == box.arr_.x[0]
+    assert xyz[1][0] == box.arr_.x[1]
+    assert xyz[2][0] == box.arr_.x[5]
+
+    assert xyz[0][1] == box.arr_.y[0]
+    assert xyz[1][1] == box.arr_.y[1]
+    assert xyz[2][1] == box.arr_.y[5]
+
+    assert xyz[0][2] == box.arr_.z[0]
+    assert xyz[1][2] == box.arr_.z[1]
+    assert xyz[2][2] == box.arr_.z[5]
+
+
+def test_read_volume_file():
+    # The volumes are from the voronoi cells, there were 700070 tracers
+    # then volumes should have 700070 elements.
+    path = pathlib.Path(os.path.abspath(__file__)).parent.parent
+
+    volumes = _zb_postprocessing._read_volume_file(
+        filename=path / "mock_data" / "zobov" / "voloutput_vozinit.dat"
+    )
+    assert volumes.shape == (700070,)
+
+
+def test_get_tracers_xyz(mkbox):
+    box = mkbox()
+    assert _zb_postprocessing._get_tracers_xyz(box=box).shape == (len(box), 3)
+
+
+# def test_centers_barycentre_method():
+
+#     with tempfile.TemporaryDirectory() as tempdir:
+#         model = zobov.ZobovVF(
+#             workdir=workdir_path,
+#             box_size=1000,
+# )
