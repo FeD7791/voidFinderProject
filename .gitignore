@@ -16,6 +16,9 @@ config_file_path
 # .so
 *.so
 
+# .coverage
+*.coverage
+
 # Distribution / packaging
 bin/
 build/
