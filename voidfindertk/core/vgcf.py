@@ -117,21 +117,30 @@ def vgcf_statistic(centers, box, max_rad, delta_r, n_jobs=1):
     vgcf : list
         Values of the vgcf.
     """
-    rad = np.arange(0, max_rad, delta_r)
-    r_min = rad[:-1]
-    r_max = rad[1:]
+    # Check reasonable values
+    if max_rad <= 0:
+        raise ValueError("Invalid max_rad value")
+    elif delta_r <= 0:
+        raise ValueError("Invalid delta_r value")
+    elif n_jobs < -1 or n_jobs == 0 or not isinstance(n_jobs, int):
+        raise ValueError("Invalid n_jobs value")
+    else:
 
-    # Set parallel mapping.
-    parallel = Parallel(n_jobs=n_jobs, return_as="generator")
+        rad = np.arange(0, max_rad, delta_r)
+        r_min = rad[:-1]
+        r_max = rad[1:]
 
-    vgcf = parallel(
-        delayed(_single_vgcf)(  # Function
-            centers=centers,  # Parameters
-            box=box,
-            r_in=rmin,  # loop variables
-            r_out=rmax,
+        # Set parallel mapping.
+        parallel = Parallel(n_jobs=n_jobs, return_as="generator")
+
+        vgcf = parallel(
+            delayed(_single_vgcf)(  # Function
+                centers=centers,  # Parameters
+                box=box,
+                r_in=rmin,  # loop variables
+                r_out=rmax,
+            )
+            for rmax, rmin in zip(r_max, r_min)
         )
-        for rmax, rmin in zip(r_max, r_min)
-    )
 
-    return list(vgcf)
+        return list(vgcf)

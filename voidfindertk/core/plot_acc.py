@@ -18,6 +18,8 @@
 
 import matplotlib.pyplot as plt
 
+import numpy as np
+
 import seaborn as sns
 
 from ..utils import accabc
@@ -184,3 +186,50 @@ class VoidPlotter(accabc.AccessorABC):
         return ax
 
     vsf = void_size_function
+
+    def void_galaxy_corr(
+        self, max_radius_search, delta_rad=1, n_jobs=1, ax=None
+    ):
+        """
+        Compute the Void-Galaxy Correlation Function (VGCF) and plot the \
+        result.
+
+        This method calculates the Void-Galaxy Correlation Function (VGCF)
+        over a range of radii and plots the result on the provided axis. If no
+        axis is provided, it will use the current active axis.
+
+
+        Parameters
+        ----------
+        max_radius_search : float
+            The maximum radius to search for void-galaxy correlations (in the
+            same units as the box dimensions).
+        delta_rad : float, optional, default: 1
+            The radial bin size for calculating the correlation function.
+        n_jobs : int, optional, default: 1
+            The number of parallel jobs to run for the correlation function
+            calculation.
+        ax : matplotlib.axes.Axes, optional, default: None
+            The axis on which to plot the result. If None, the current active
+            axis is used.
+
+        Returns
+        -------
+        ax : matplotlib.axes.Axes
+            The axis with the Void-Galaxy Correlation Function plotted.
+
+        """
+        voids = self._voids
+        ax = plt.gca() if ax is None else ax
+
+        vgcf = voids.void_galaxy_corr(
+            max_radius_search=max_radius_search,
+            delta_rad=delta_rad,
+            n_jobs=n_jobs,
+        )
+
+        rad = np.arange(0, max_radius_search, 1)
+        ax.scatter(rad[1:], vgcf, s=0.7, c="k")
+        ax.set_xlabel(f"radius[{voids.box.x.unit}]")
+        ax.set_ylabel("vgcf")
+        return ax

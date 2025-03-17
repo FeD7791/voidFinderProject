@@ -253,6 +253,8 @@ def get_center_method(center_method):
         return _centers_barycentre_method
     if center_method == "core_particle":
         return _center_core_particle_method
+    else:
+        raise ValueError("This center_method is not available!")
 
 
 # =============================================================================
@@ -351,9 +353,9 @@ def _get_tracers_xyz(*, box):
         Array of N rows, 3 cols where each row is the x,y,z position of a
         tracer.
     """
-    tracer_x = box.x.value
-    tracer_y = box.y.value
-    tracer_z = box.z.value
+    tracer_x = box.arr_.x
+    tracer_y = box.arr_.y
+    tracer_z = box.arr_.z
     xyz_arr = np.stack([tracer_x, tracer_y, tracer_z], axis=1)
     return xyz_arr
 
@@ -397,10 +399,10 @@ def _centers_barycentre_method(
 
     Parameters
     ----------
-    tracer_volumes : list
-        List of the voronoi cell volumes holding each particle.
+    tracers_volumes_file_path : pathlike object, str
+        Path to binary file that holds volumes fund by ZOBOV Void Finder.
     tracers_in_voids : list
-        List of particles within voids.
+        List of indexes of all the tracers within voids.
     box : Object
         Box Object that holds information about the tracers data.
 

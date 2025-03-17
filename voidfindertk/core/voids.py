@@ -23,6 +23,7 @@ from . import plot_acc, vsf
 from . import radius_finder
 from .box import Box
 from ..core import cleaners
+from ..core import vgcf
 from ..utils import Bunch
 
 
@@ -119,7 +120,7 @@ class Voids:
 
         """
         voids_w_tracer = []
-        for idx, void in enumerate(self.tracers_in_voids):
+        for idx, void in enumerate(self.tracers_in_voids_):
             if tracer in void:
                 voids_w_tracer.append(idx)
         return np.array(voids_w_tracer)
@@ -322,17 +323,58 @@ class Voids:
         """
         Finds and calculates the centers of voids.
 
-        This method computes the centers of the voids based on tracer particles
-        and the properties of the box.
+        This method computes the centers of the voids based on a set of tracers
+        that are inside voids.
 
         Returns
         -------
-        numpy.ndarray
-            An array containing the calculated centers of the voids.
+        Voids
+            A new instance of the Voids class with the new centers, the
+            tracers inside each void are the same.
         """
-        return center_finder.center_calculator(
+        new_centers = center_finder.center_calculator(
             box=self.box,
             tracers_in_voids=self.tracers_in_voids_,
             n_neighbors=3.0,
             threshold=0.8,
+        )
+        # Build new void
+        parameters = {
+            "method": self.method,
+            "box": self.box,
+            "tracers_in_voids_": self.tracers_in_voids_,
+            "centers_": new_centers,
+            "extra_": {},
+        }
+        return self._create_new_instance(parameters=parameters)
+
+    def void_galaxy_corr(self, max_radius_search, delta_rad=1, n_jobs=1):
+        """
+        Calculates the void-galaxy cross correlation function.
+
+        The search is performed by calculating the tracers inside of concentric
+        spherical shells with width [rad ,rad+delta_rad] up to
+        max_radius_search distance around void centers.
+
+        Parameters
+        ----------
+        max_radius_search : float
+            Maximum radius of the search.
+        delta_rad : float, default=1
+            Width in r of the concentric shells.
+        n_jobs : int , default=1
+            Measure of the number of cores used to perform a parallel search.
+            Use -1 to exhaust the cores.
+
+        Returns
+        -------
+        vgcf : list
+            Values of the vgcf.
+        """
+        return vgcf.vgcf_statistic(
+            centers=self.centers_,
+            box=self.box,
+            max_rad=max_radius_search,
+            delta_r=delta_rad,
+            n_jobs=n_jobs,
         )
