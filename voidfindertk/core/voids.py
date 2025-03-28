@@ -105,6 +105,7 @@ class Voids:
     # utilities ===============================================================
 
     def filter_by_index(self, index):
+        """Filters Voids based on Index."""
         parameters = {
             "method": self.method,
             "box": self.box,
@@ -249,7 +250,6 @@ class Voids:
         Voids
             A new instance of the Voids class with cleaned voids.
         """
-
         cleaner = cleaners.get_cleaner(cleaner_method=cleaner_method)
         centers_, radius_ = cleaner(**kwargs)
         # Post cleaning
@@ -320,7 +320,6 @@ class Voids:
             A new instance of the Voids class with cleaned voids and calculated
             radii.
         """
-
         # 1) Find radius by method radius_method
         radius = self.effective_radius(method=radius_method, **kwargs)
 

@@ -338,7 +338,6 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
         List of densities for each void.
 
     """
-
     # Create spatial gridding
     x = box.arr_.x
     y = box.arr_.y

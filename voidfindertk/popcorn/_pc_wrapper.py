@@ -50,7 +50,6 @@ def popcorn_void_finder(*, bin_path, conf_file_path, work_dir_path, cores):
     output : str
         The output from the Popcorn command execution.
     """
-
     mpirun = sh.Command("mpirun")
     popcorn = sh.Command("popcorn", search_paths=[bin_path])
 

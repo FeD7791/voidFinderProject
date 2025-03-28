@@ -372,7 +372,6 @@ def run_jozov(
     str
         Output of the jozov run.
     """
-
     jozov = sh.Command("jozov", search_paths=[jozov_dir_path])
 
     args = (

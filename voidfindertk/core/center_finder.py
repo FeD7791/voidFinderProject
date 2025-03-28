@@ -78,7 +78,54 @@ def _single_center_search(*, tracers, box_size, threshold, n_neighbors, grid):
 def center_calculator(
     *, box, tracers_in_voids, n_neighbors, threshold, n_jobs, batch_size
 ):
+    """Calculate the center of mass for multiple voids in parallel.
 
+    This function computes the center of mass for each void region defined by
+    tracers, using a density-weighted approach and accounting for periodic
+    boundary conditions. The calculation is performed in parallel batches for
+    efficiency.
+
+    Parameters
+    ----------
+    box : Box
+        Simulation box object containing tracer positions and size information.
+        Must have `arr_.x`, `arr_.y`, `arr_.z` attributes and `size()` method.
+
+    tracers_in_voids : list of lists
+        List where each element contains the indices of tracers belonging to
+        a single void region.
+
+    n_neighbors : int
+        Number of nearest neighbors to consider for local density estimation.
+
+    threshold : float
+        Fraction of box size used to determine periodic boundary handling.
+        Tracers beyond `threshold * box_size` are shifted.
+
+    n_jobs : int
+        Number of parallel jobs to use for computation.
+
+    batch_size : int
+        Number of voids to process in each parallel batch. Voids are grouped
+        by similar tracer count for efficiency.
+
+    Returns
+    -------
+    numpy.ndarray
+        Array of shape (n_voids, 3) containing the (x,y,z) coordinates of each
+        void center, ordered to match the input `tracers_in_voids`.
+
+    Notes
+    -----
+    The center calculation:
+    1. Estimates local density using the distance to the nth nearest neighbor
+    2. Handles periodic boundaries by shifting tracers near box edges
+    3. Computes a density-weighted center of mass
+    4. Applies periodic boundary conditions to the final center position
+
+    The computation is performed in parallel batches of voids with similar
+    tracer counts for optimal performance.
+    """
     # Build grispy grid from Box
     grid = get_grispy_grid_from_box(box=box, N_cells=64)
     # Get (x,y,z) positions from tracers in each void.
