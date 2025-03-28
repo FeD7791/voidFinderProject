@@ -17,7 +17,7 @@
 # IMPORTS
 # =============================================================================
 
-from functools import reduce
+from joblib import Parallel, delayed
 
 import numpy as np
 
@@ -43,105 +43,77 @@ def _get_xyz_tracers_from_indx(*, box, tracers_idx):
     return [centers[idx] for idx in tracers_idx]
 
 
-def center_calculator(box, tracers_in_voids, n_neighbors, threshold=0.8):
-    """Calculates the centers of voids based on the positions of tracers \
-    within each void.
+def _single_center_search(*, tracers, box_size, threshold, n_neighbors, grid):
 
-    The function first constructs a grid from the provided 3D box and extracts
-    the tracer positions from the specified voids. It then calculates the
-    distance to the n_neighbors closest points for each tracer, determines the
-    density of the tracers, and computes the weighted center of each void
-    based on the tracer positions and densities.
+    # Calculate the distances to n_neighbors to each of the tracers in the
+    # array
+    distances_, nn = grid.nearest_neighbors(centres=tracers, n=n_neighbors)
+    # Get the fartest distance and make it as radius. This is an array of
+    # fartest radius to each tracer in the void
+    radius = np.array([d[-1] for d in distances_])
+    # Using that radius calculate as density.
+    density = 1 / (n_neighbors / ((4 / 3) * np.pi * radius**3))
 
-    Border conditions are handled to ensure that the calculated centers fall
-    within the specified box.
+    counts = np.histogram(
+        tracers,
+        range=[0, box_size],
+        bins=np.arange(0, box_size, np.abs(box_size - threshold * box_size)),
+    )[0]
 
-    Parameters
-    ----------
-    box : object
-        A 3D box object representing the spatial domain. This is used to
-        create a grid and define boundaries for the calculations.
+    if (counts[0] > 0) & (counts[-1] > 0):
+        # We shift the tracers near superior border
+        tracers_ = np.where(
+            tracers > threshold * box_size,  # Condition
+            tracers - box_size,  # If condition condition fullfilled
+            tracers,  # Else
+        )
+    else:
+        tracers_ = tracers
 
-    tracers_in_voids : list of list of int
-        A list where each element corresponds to a void and contains the
-        indices of tracers that are part of that void.
+    center = np.sum((tracers_.T * density).T, axis=0) / np.sum(density)
 
-    n_neighbors : int
-        The number of nearest neighbors to consider when calculating distances
-        and densities.
+    return np.mod(center, box_size)
 
-    threshold : float, optional, default=0.8
-        A threshold used to handle border conditions by adjusting tracer
-        positions that are near the edge of the box. If a tracer's position
-        exceeds the threshold times the box size, it is adjusted.
 
-    Returns
-    -------
-    np.ndarray
-        An array of shape (n_voids, 3) containing the weighted centers
-        (x, y, z) of each void, where each center is calculated as the
-        weighted average of tracer positions within the void, with weights
-        determined by the density of tracers.
+def center_calculator(
+    *, box, tracers_in_voids, n_neighbors, threshold, n_jobs, batch_size
+):
 
-    Notes
-    -----
-    - The function assumes that the tracers are indexed by their positions in
-    the box.
-    - The grid for nearest neighbors is built using the
-    `get_grispy_grid_from_box` function and requires an appropriate grid
-    resolution (N_cells=64).
-    - The density calculation is based on the inverse of the volume of a
-    sphere with a radius equal to the farthest neighbor distance for each
-    tracer.
-    - The method also accounts for edge effects, ensuring centers are
-    correctly positioned within the box.
-    """
     # Build grispy grid from Box
     grid = get_grispy_grid_from_box(box=box, N_cells=64)
     # Get (x,y,z) positions from tracers in each void.
     # We get a list of positions of tracers for each void
     tinv = _get_xyz_tracers_from_indx(box=box, tracers_idx=tracers_in_voids)
 
-    # Merge the list into a single array
-    all_tracers_joined = reduce(
-        lambda x, y: np.concatenate((x, y), axis=0), tinv
-    )
+    # Sort by increasing number of tracers
+    n_tracers = np.array(list(map(len, tinv)))
 
-    # The following is to account for border conditions:
-    atj = np.where(
-        all_tracers_joined > threshold * box.size(),  # Condition
-        all_tracers_joined - box.size(),  # If condition condition fullfilled
-        all_tracers_joined,
-    )  # Else
+    tinv_sorted = [tinv[i] for i in np.argsort(n_tracers)]
 
-    # Calculate the distances to n_neighbors to each of the tracers in the
-    # array
-    distances_result, nn = grid.nearest_neighbors(centres=atj, n=n_neighbors)
+    # Build batches of objects with similar number of tracers.
 
-    radius = np.array([d[-1] for d in distances_result])
-    density = 1 / (n_neighbors / ((4 / 3) * np.pi * radius**3))
-    # Get the density as:
-    # density = [n_neighbors/vol_sphere(r)]^(-1) (Inverse density actually)
-    # r = farthest distane to n_neighbor
+    centers_ = []
+    batches = [
+        tinv_sorted[i : i + batch_size]
+        for i in np.arange(0, len(tinv), batch_size)
+    ]
 
-    # Secial index to iterate
-    index_list = [0]
-    [index_list.append(index_list[-1] + len(arr)) for arr in tinv]
+    parallel = Parallel(n_jobs=n_jobs, return_as="generator")
 
-    centers_ = np.array(
-        [
-            # For each set of k tracers in a single void: center =
-            # (Sum i=0,k (x[i],y[i],z[i])*density[i])/ Sum(i=0,k density[k])
-            # , i-est tracer in void
-            np.sum(
-                (value.T * density[index_list[idx] : index_list[idx + 1]]).T,
-                axis=0,
+    print(f"Beginning, number of batches:{len(batches)}")
+    for idx, batch in enumerate(batches):
+        c_ = parallel(
+            delayed(_single_center_search)(
+                tracers=tracers,
+                box_size=box.size(),
+                threshold=threshold,
+                n_neighbors=n_neighbors,
+                grid=grid,
             )
-            / np.sum(density[index_list[idx] : index_list[idx + 1]])
-            for idx, value in enumerate(tinv)
-        ]
-    )
+            for tracers in batch
+        )
+        centers_ = centers_ + list(c_)
+        print(f"batch {idx + 1}/{len(batches)} compleated")
 
-    # Final version will account for border conditions
-    # return np.where(centers_ < box.min(), centers_+box.size(), centers_)
-    return centers_
+    # Sort back the result to the original order
+    return np.array(centers_)[np.argsort(np.argsort(n_tracers))]

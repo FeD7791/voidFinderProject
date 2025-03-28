@@ -126,7 +126,7 @@ class SVFPopCorn(VoidFinderABC):
         default=None, alias="svf_path"
     )  # Path to source directory of SVF
     # mpi flags:
-    _cores = attr.field(default=1, alias="cores")
+    _cores = attr.field(default=None, alias="cores")
     # Path to working directory
     _workdir = attr.field(default=None, alias="workdir")
     # Whether to clean or not the working directory

@@ -19,9 +19,12 @@
 import os
 import pathlib
 import tempfile
+from unittest import mock
 
 
 import numpy as np
+
+import pandas as pd
 
 import pytest
 
@@ -186,3 +189,168 @@ def test_overlap_cleaner():
     )
     assert all(np.all(centers_new2 == centers2, axis=1))
     assert np.all(radius_new2 == radius2)
+
+
+def test_get_cleaner():
+
+    with mock.patch(
+        "voidfindertk.core.cleaners._overlap_cleaner"
+    ) as mock_ov_cl:
+        with mock.patch(
+            "voidfindertk.core.cleaners._cbl_cleaner"
+        ) as mock_cbl_cl:
+            out1 = cleaners.get_cleaner(cleaner_method="overlap")
+            out2 = cleaners.get_cleaner(cleaner_method="cbl")
+
+    cleaner_method = "<fake_method>"
+
+    with pytest.raises(
+        ValueError, match=f"{cleaner_method} in not a valid cleaner method"
+    ):
+        cleaners.get_cleaner(cleaner_method=cleaner_method)
+
+    assert mock_cbl_cl == out2
+    assert mock_ov_cl == out1
+
+
+def test_cbl_cleaner_mock_version():
+    parameters = {
+        "center": [1, 5, 9],
+        "radius": [5, 6, 8],
+        "box": "BOX",
+        # temp directory
+        "temporal_dir_path": ".",
+        "clean_directory": True,
+        # cbl parameters
+        "ratio": 1.5,
+        "initial_radius": True,
+        "delta_r_min": 10.0,
+        "delta_r_max": 100.0,
+        "threshold": 0.2,
+        "ol_crit": "density_contrast",
+        "rescale": True,
+        "checkoverlap": True,
+    }
+    directory_path = pathlib.Path("tempdir_path")
+    cleaned_catalogue_path = (
+        pathlib.Path(directory_path) / "cleaned_catalogue.txt"
+    )
+
+    input_centers_path = directory_path / "input_xyz_rad.txt"
+    input_tracers_path = directory_path / "input_tracers.txt"
+    with mock.patch("tempfile.mkdtemp", return_value=directory_path):
+        with mock.patch("shutil.rmtree"):
+            with mock.patch("numpy.linalg.norm"):
+                with mock.patch(
+                    "voidfindertk.core.cleaners._read_cleaned_catalogue",
+                    new=mock.Mock(
+                        return_value=[mock.MagicMock(), mock.MagicMock()]
+                    ),
+                ) as rcc_mock:
+                    with mock.patch.multiple(
+                        "voidfindertk.core.cleaners",
+                        _save_xyz_tracers=mock.DEFAULT,
+                        _save_r_eff_center=mock.DEFAULT,
+                        _cbl_cleaner_interface=mock.DEFAULT,
+                    ) as mocks:
+                        cleaners._cbl_cleaner(**parameters)
+
+    mocks["_save_xyz_tracers"].assert_called_once_with(
+        box=parameters["box"], path=input_tracers_path
+    )
+    mocks["_save_r_eff_center"].assert_called_once_with(
+        centers=parameters["center"],
+        r_eff=parameters["radius"],
+        path=input_centers_path,
+    )
+
+    mocks["_cbl_cleaner_interface"].assert_called_once_with(
+        file_voids=input_centers_path,
+        file_tracers=input_tracers_path,
+        ratio=parameters["ratio"],
+        initial_radius=parameters["initial_radius"],
+        delta_r_min=parameters["delta_r_min"],
+        delta_r_max=parameters["delta_r_max"],
+        threshold=parameters["threshold"],
+        output_path=cleaned_catalogue_path,
+        # If ol_crit = "density_contrast" => this parameters is equal to
+        # True inside function.
+        ol_crit=True,
+        rescale=parameters["rescale"],
+        checkoverlap=parameters["checkoverlap"],
+    )
+
+    rcc_mock.assert_called_once_with(
+        cleaned_catalogue_path=cleaned_catalogue_path
+    )
+
+
+def test_cbl_cleaner_interface_mock_version():
+    # Mock the ctypes.CDLL to return a mock object
+    with mock.patch("ctypes.CDLL") as mock_cdll:
+        # Create a mock for the 'clibrary' object returned by ctypes.CDLL
+        mock_clibrary = mock.Mock()
+
+        # Assign the mock object to be returned when ctypes.CDLL is called
+        mock_cdll.return_value = mock_clibrary
+
+        # Mock the 'process_catalogues' function inside the clibrary mock
+        mock_clibrary.process_catalogues = mock.Mock()
+
+        # Test data for the function call
+        parameters = {
+            "file_voids": "voids_file.txt",
+            "file_tracers": "tracers_file.txt",
+            "ratio": 0.5,
+            "initial_radius": True,
+            "delta_r_min": 10.0,
+            "delta_r_max": 100.0,
+            "threshold": 0.2,
+            "output_path": "output_catalogue.txt",
+            "ol_crit": True,
+            "rescale": True,
+            "checkoverlap": True,
+        }
+
+        # Call the function being tested
+        cleaners._cbl_cleaner_interface(**parameters)
+
+        # Assert that the 'process_catalogues' method was called with the
+        # correct arguments
+        mock_clibrary.process_catalogues.assert_called_once_with(
+            parameters["file_voids"].encode("utf-8"),
+            parameters["file_tracers"].encode("utf-8"),
+            parameters["ratio"],
+            parameters["initial_radius"],
+            mock.ANY,
+            mock.ANY,
+            parameters["threshold"],
+            parameters["output_path"].encode("utf-8"),
+            parameters["ol_crit"],
+            parameters["rescale"],
+            parameters["checkoverlap"],
+        )
+
+
+def test_save_xyz_tracers():
+    mock_box = mock.MagicMock()
+    with mock.patch("numpy.column_stack"):
+        with mock.patch("pandas.DataFrame") as mock_df:
+            cleaners._save_xyz_tracers(box=mock_box, path=pathlib.Path("path"))
+    mock_df.assert_called_once()
+
+
+def test_save_r_eff_center():
+    centers = np.ones((15, 3))
+    r_eff = 30.0 * np.ones((15,))
+    with tempfile.TemporaryDirectory() as tempdir:
+        path = pathlib.Path(tempdir) / "file.txt"
+        cleaners._save_r_eff_center(centers=centers, path=path, r_eff=r_eff)
+        # Now we will retrieve this variables
+        centers_r_eff = pd.read_csv(
+            path, delim_whitespace=True, names=["x", "y", "z", "r"]
+        )
+
+    assert centers_r_eff.shape == (15, 4)
+    assert np.all(np.array(centers_r_eff[["x", "y", "z"]]) == centers)
+    assert np.all(np.array(centers_r_eff["r"]) == r_eff)

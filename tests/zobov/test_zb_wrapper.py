@@ -25,26 +25,24 @@ from voidfindertk.zobov import _zb_wrapper
 def test_vozinit(load_mock_data):
     mock_data = load_mock_data("zobov", "vozinit.jpkl")
 
-    # extract the output value and left alone the inputs
-    expected_output = mock_data.pop("output")
-
     # put "." as working dir
     mock_data["work_dir_path"] = "."
 
-    # mock the instance of command mock
-    mock_vozinit = mock.Mock(return_value=expected_output)
-
     # mock the class and run
-    with mock.patch("sh.Command", return_value=mock_vozinit):
-        output = _zb_wrapper.run_vozinit(**mock_data)
+    with mock.patch("sh.Command") as shcommand:
+        _zb_wrapper.run_vozinit(**mock_data)
 
-    assert output == expected_output
-    mock_vozinit.assert_called_once_with(
+    shcommand(
+        "vozinit", search_paths=[mock_data["vozinit_dir_path"]]
+    ).assert_called_once_with(
         str(mock_data["input_file_path"]),
         str(mock_data["buffer_size"]),
         str(mock_data["box_size"]),
         str(mock_data["number_of_divisions"]),
         str(mock_data["executable_name"]),
+        _cwd=mock_data["work_dir_path"],
+        _out=shcommand("vozinit").call_args[1]["_out"],
+        _err_to_out=True,
     )
 
 
@@ -105,13 +103,19 @@ def test_run_voz1b1():
         str(params["binary_division"][1]),
         str(params["binary_division"][2]),
     ]
-    mock_voz1b1 = mock.MagicMock()
-    with mock.patch("sh.Command") as mock_command:
-        mock_command.return_value = mock_voz1b1
+
+    with mock.patch("sh.Command") as shcommand:
+
         _zb_wrapper.run_voz1b1(**params)
 
-    mock_command.assert_called_once_with(params["voz1b1_dir_path"] / "voz1b1")
-    mock_voz1b1.assert_called_once_with(*args)
+    shcommand(
+        "voz1b1", search_paths=[params["voz1b1_dir_path"]]
+    ).assert_called_once_with(
+        *args,
+        _cwd=params["work_dir_path"],
+        _out=shcommand("mpirun").call_args[1]["_out"],
+        _err_to_out=True,
+    )
 
 
 def test_run_voztie():
@@ -122,16 +126,18 @@ def test_run_voztie():
         "voztie_dir_path": pathlib.Path("voztie_dir_path"),
         "work_dir_path": ".",
     }
-    mock_voztie = mock.MagicMock()
-    with mock.patch("sh.Command") as mock_command:
-        mock_command.return_value = mock_voztie
+
+    with mock.patch("sh.Command") as shcommand:
         _zb_wrapper.run_voztie(**params)
 
-    mock_command.assert_called_once_with(
-        pathlib.Path(params["voztie_dir_path"]) / "voztie"
-    )
-    mock_voztie.assert_called_once_with(
-        params["number_of_divisions"], params["executable_name"]
+    shcommand(
+        "voztie", search_paths=[params["voztie_dir_path"]]
+    ).assert_called_once_with(
+        params["number_of_divisions"],
+        params["executable_name"],
+        _cwd=params["work_dir_path"],
+        _out=shcommand("mpirun").call_args[1]["_out"],
+        _err_to_out=True,
     )
 
 
@@ -153,15 +159,18 @@ def test_run_jozov():
         f"{params['output_name_text_file']}.dat",
         f"{params['density_threshold']}",
     )
-    mock_jozov = mock.MagicMock()
-    with mock.patch("sh.Command") as mock_command:
-        mock_command.return_value = mock_jozov
+
+    with mock.patch("sh.Command") as shcommand:
         _zb_wrapper.run_jozov(**params)
 
-    mock_command.assert_called_once_with(
-        pathlib.Path(params["jozov_dir_path"] / "jozov")
+    shcommand(
+        "jozov", search_paths=[params["jozov_dir_path"]]
+    ).assert_called_once_with(
+        *args,
+        _cwd=params["work_dir_path"],
+        _out=shcommand("jozov").call_args[1]["_out"],
+        _err_to_out=True,
     )
-    mock_jozov.assert_called_once_with(*args)
 
 
 def test_write_input():

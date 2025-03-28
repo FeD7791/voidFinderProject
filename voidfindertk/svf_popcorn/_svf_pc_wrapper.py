@@ -17,14 +17,13 @@ utilities."""
 # IMPORTS
 # =============================================================================
 
-import subprocess
 from configparser import ConfigParser
 
 import numpy as np
 
 import pandas as pd
 
-from ..utils import chdir
+import sh
 
 # =============================================================================
 # DOCS
@@ -152,7 +151,7 @@ def popcorn_svf_input_data_builder(*, box, file_path):
 
 
 def spherical_popcorn_void_finder(
-    *, bin_path, conf_file_path, work_dir_path, cores=1
+    *, bin_path, conf_file_path, work_dir_path, cores
 ):
     """
     Runs the Popcorn-Spherical Void Finder using MPI.
@@ -180,30 +179,30 @@ def spherical_popcorn_void_finder(
     # Reference to mpi
     # https://docs.oracle.com/cd/E19356-01/820-3176-10/ExecutingPrograms.html
 
-    params = "config=" + str(conf_file_path)
-
     # Command will be executed from work_dir_path path.
-    with chdir(work_dir_path):
-        output = _run_mpi(search_paths=bin_path, params=params, cores=cores)
-    return output
 
+    mpirun = sh.Command("mpirun")
+    svf_popcorn = sh.Command("svf", search_paths=[bin_path])
 
-def _run_mpi(search_paths, params, cores):
+    if type(cores) is int:
 
-    # By means of safety only integer values are allowed
-    if type(cores) is not int:
-        raise ValueError("Not integer number")
-
-    # Define the MPI-related command
-
-    subprocess.run(
-        [
-            "mpirun",
+        mpirun(
             "-np",
             str(cores),
             "--bind-to",
             "core",
-            str(search_paths / "svf"),
-            params,
-        ]
-    )
+            str(svf_popcorn),
+            f"config={conf_file_path}",
+            _cwd=work_dir_path,
+            _out=lambda line: print(line, end=""),
+            _err_to_out=True,
+        )
+    if cores is None:
+        print("Running without MPI")
+
+        svf_popcorn(
+            f"config={conf_file_path}",
+            _cwd=work_dir_path,
+            _out=lambda line: print(line, end=""),
+            _err_to_out=True,
+        )

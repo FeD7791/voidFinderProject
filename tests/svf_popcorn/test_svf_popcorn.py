@@ -32,12 +32,9 @@ from voidfindertk.svf_popcorn import SVFPopCorn
 # =============================================================================
 
 
-# @pytest.mark.skipif(
-#     not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
-#     reason="POPCORN not available!",
-# )
 @pytest.mark.skip(reason="Requires POPCORN Installed")
-def test_svfpopcorn_working_example(build_box_with_eq_voids):
+@pytest.mark.parametrize("cores", [8])
+def test_svf_popcorn_working_example(cores, build_box_with_eq_voids):
     """
     Tests svfpopcorn works with a real run
     """
@@ -52,6 +49,7 @@ def test_svfpopcorn_working_example(build_box_with_eq_voids):
         densth=delta,
         minradius=5,
         maxradius=100,
+        cores=cores,
     )
 
     model.find(box=box)

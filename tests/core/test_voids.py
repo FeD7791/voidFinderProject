@@ -36,7 +36,7 @@ from voidfindertk.datasets import spherical_cloud
 # @pytest.mark.parametrize("cleaner_method", ["overlap", "cbl"])
 @pytest.mark.parametrize("cleaner_method", ["overlap"])
 @pytest.mark.parametrize("radius_method", ["density", "extra", "volume"])
-def test_voids(
+def test_find_radius_and_clean(
     cleaner_method,
     radius_method,
     build_box_with_eq_voids,
@@ -150,3 +150,59 @@ def test_void_galaxy_corr_wrong_delta_r(wrong_delta, generic_void_builder):
         vds.void_galaxy_corr(
             max_radius_search=40, delta_rad=wrong_delta, n_jobs=2
         )
+
+
+def test_find_centers(build_box_with_eq_voids, find_bubble_neighbors):
+    rad = 30.0
+    cloud = spherical_cloud.build_cloud()
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud, rad=rad
+    )
+
+    dist, idx = find_bubble_neighbors(
+        box=box,
+        cloud_with_voids=cloud_with_voids,
+        centers=centers,
+        rad=rad * np.ones(len(centers)),
+    )
+
+    vds = voids.Voids(
+        method="VoidFinderMethod",
+        box=box,
+        tracers_in_voids_=tuple(idx),
+        centers_=centers,
+        extra_={"radius": rad * np.ones(len(centers))},
+    )
+
+    vds.find_centers()
+
+
+def test_voids_chain_methods(build_box_with_eq_voids, find_bubble_neighbors):
+    rad = 30.0
+    cloud = spherical_cloud.build_cloud()
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud, rad=rad
+    )
+
+    dist, idx = find_bubble_neighbors(
+        box=box,
+        cloud_with_voids=cloud_with_voids,
+        centers=centers,
+        rad=rad * np.ones(len(centers)),
+    )
+
+    vds = voids.Voids(
+        method="VoidFinderMethod",
+        box=box,
+        tracers_in_voids_=tuple(idx),
+        centers_=centers,
+        extra_={"radius": rad * np.ones(len(centers))},
+    )
+
+    vds.find_centers()
+    vds3 = vds.find_radius_and_clean(eventual_parameter="param")
+    vds3.find_radius_and_clean()
+    # This should work for any eventual parameter a radius finder and cleaner
+    # could have.
+    vds3.void_galaxy_corr()
+    vds3.void_size_function(radius=vds3.extra_.radius)

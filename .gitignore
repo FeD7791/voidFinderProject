@@ -17,7 +17,7 @@ config_file_path
 *.so
 
 # .coverage
-*.coverage
+.coverage*
 
 # Distribution / packaging
 bin/
@@ -74,6 +74,7 @@ datasets/*
 # draft/
 local_draft/
 workdir/
+work_directory/
 
 main.py
 

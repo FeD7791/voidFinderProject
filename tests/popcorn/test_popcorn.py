@@ -51,7 +51,7 @@ def test_popcorn_model_find(mkbox):
         model_find_parameters = PopCorn(**params).model_find(box=box_)
 
     svf_popcorn_mock.assert_called_once()
-    svf_popcorn_mock.assert_called_once_with(box_)
+    svf_popcorn_mock.assert_called_once_with(box=box_)
     model_find_parameters.__setitem__.assert_called_once_with(
         "build_popcorn", True
     )
@@ -68,6 +68,7 @@ def test_popcorn_build_voids_true(svf_popcorn_paths_and_names, mkbox):
         "workdir": pathlib.Path("."),
         "workdir_clean": False,
         "shot_noise_threshold": 20,
+        "cores": 1,
     }
     box_ = mkbox(seed=42)
     model_find_parameters = {
@@ -118,6 +119,7 @@ def test_popcorn_build_voids_true(svf_popcorn_paths_and_names, mkbox):
         bin_path=pn.SVF,
         conf_file_path=run_work_dir / pn.CONFIG,
         work_dir_path=run_work_dir,
+        cores=params["cores"],
     )
     _pc_wrapper_mock["compute_intersects"].assert_called_once_with(
         bin_path=pn.SVF,
@@ -152,6 +154,7 @@ def test_popcorn_build_voids_false(mkbox):
         "workdir": pathlib.Path("."),
         "workdir_clean": False,
         "shot_noise_threshold": 20,
+        "cores": 1,
     }
     box_ = mkbox(seed=42)
     model_find_parameters = {
@@ -188,12 +191,9 @@ def test_popcorn_build_voids_false(mkbox):
     assert run_work_dir == extra["files_directory_path"]
 
 
-# @pytest.mark.skipif(
-#     not (pathlib.Path(SETTINGS.popcorn_path) / "svf").exists(),
-#     reason="POPCORN not available!",
-# )
 @pytest.mark.skip(reason="Requires POPCORN Installed")
-def test_popcorn_working_example(build_box_with_eq_voids):
+@pytest.mark.parametrize("cores", [16])
+def test_popcorn_working_example(cores, build_box_with_eq_voids):
 
     delta = -0.9
     cloud = spherical_cloud.build_cloud(lmin=0, lmax=1000)
@@ -201,13 +201,13 @@ def test_popcorn_working_example(build_box_with_eq_voids):
         cloud=cloud, delta=delta, rad=30
     )
     model = PopCorn(
-        workdir_clean=True,
+        workdir_clean=False,
         boxsize=1000,
         densth=delta,
         minradius=5,
         maxradius=100,
         shot_noise_threshold=15,
-        cores=4,
+        cores=cores,
     )
 
     model.find(box=box)

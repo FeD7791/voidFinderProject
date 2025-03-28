@@ -104,6 +104,22 @@ class Voids:
 
     # utilities ===============================================================
 
+    def filter_by_index(self, index):
+        parameters = {
+            "method": self.method,
+            "box": self.box,
+            "tracers_in_voids_": tuple(
+                np.array(self.tracers_in_voids_, dtype=object)[index]
+            ),
+            "centers_": self.centers_[index],
+        }
+
+        if "radius" in self.extra_:
+            parameters["extra_"] = np.array(self.extra_["radius"])[index]
+        else:
+            parameters["extra_"] = {}
+        return self._create_new_instance(parameters=parameters)
+
     def void_of(self, tracer):
         """
         Returns indices of voids containing a specific tracer particle.
@@ -143,7 +159,9 @@ class Voids:
             An array containing the calculated effective radii of the voids.
         """
         rad_method = radius_finder.get_radius_searcher(method=method)
-        return rad_method(**kwargs)
+        return rad_method(
+            centers=self.centers_, box=self.box, extra=self.extra_, **kwargs
+        )
 
     def void_size_function(
         self,
@@ -200,10 +218,8 @@ class Voids:
 
     vsf = void_size_function
 
-    def cleaner(
+    def _cleaner(
         self,
-        centers,
-        radius,
         cleaner_method="overlap",
         rad_min_max=[0.0, 100.0],
         **kwargs,
@@ -233,8 +249,9 @@ class Voids:
         Voids
             A new instance of the Voids class with cleaned voids.
         """
+
         cleaner = cleaners.get_cleaner(cleaner_method=cleaner_method)
-        centers_, radius_ = cleaner(center=centers, radius=radius, **kwargs)
+        centers_, radius_ = cleaner(**kwargs)
         # Post cleaning
         idx = np.where(
             (radius_ < rad_min_max[1]) & (radius_ > rad_min_max[0])
@@ -243,7 +260,9 @@ class Voids:
         parameters = {
             "method": self.method,
             "box": self.box,
-            "tracers_in_voids_": self.tracers_in_voids_,
+            "tracers_in_voids_": tuple(
+                [self.tracers_in_voids_[i] for i in idx]
+            ),
             "centers_": centers_[idx],
             "extra_": {"radius": radius_[idx]},
         }
@@ -286,9 +305,9 @@ class Voids:
 
         Parameters
         ----------
-        cleaner_method : str, optional
-            The cleaner method to use. Default is "overlap".
-        radius_method : str, optional
+        cleaner_method : str, {'overlap','cbl'}, default='overlap'
+            The cleaner method to use.
+        radius_method : str, {'density','extra','volume'}
             The method to use for calculating the effective radius. Default is
             "default".
         **kwargs : keyword arguments
@@ -301,25 +320,34 @@ class Voids:
             A new instance of the Voids class with cleaned voids and calculated
             radii.
         """
-        # Default Parameters
-        kwargs.setdefault("centers", self.centers_)
-        kwargs.setdefault("box", self.box)
-        kwargs.setdefault("extra", self.extra_)
-        # 1) Find radius by method radius_method
 
+        # 1) Find radius by method radius_method
         radius = self.effective_radius(method=radius_method, **kwargs)
+
         # 2) Clean found radius
         # 2.1) Pre cleaning
         idx = np.where(radius > 0)[0]
         radius = radius[idx]
         centers = self.centers_[idx]
-        # 2.2) Use class cleaner method
-        kwargs["centers"] = centers
+
+        # Set default params
+        kwargs.setdefault("box", self.box)
+        kwargs.setdefault("extra", self.extra_)
+        kwargs["center"] = centers
         kwargs["radius"] = radius
-        new_void = self.cleaner(cleaner_method=cleaner_method, **kwargs)
+
+        # 2.2) Use class cleaner method
+        new_void = self._cleaner(cleaner_method=cleaner_method, **kwargs)
         return new_void
 
-    def find_centers(self):
+    def find_centers(
+        self,
+        n_neighbors=3,
+        threshold=0.8,
+        n_tracers_threshold=[0, 1000],
+        n_jobs=1,
+        batch_size=10,
+    ):
         """
         Finds and calculates the centers of voids.
 
@@ -332,23 +360,37 @@ class Voids:
             A new instance of the Voids class with the new centers, the
             tracers inside each void are the same.
         """
+        # Get number of tracers in each void
+        n_tracers = np.array(list(map(len, self.tracers_in_voids_)))
+
+        # Filter centers by number of tracers
+        idx = np.where(
+            (n_tracers > n_tracers_threshold[0])
+            & (n_tracers < n_tracers_threshold[1])
+        )[0]
+
+        # Briefly map tracers to numpy array to perform filter
+        _tracers = tuple([self.tracers_in_voids_[i] for i in idx])
+
         new_centers = center_finder.center_calculator(
             box=self.box,
-            tracers_in_voids=self.tracers_in_voids_,
-            n_neighbors=3.0,
-            threshold=0.8,
+            tracers_in_voids=_tracers,
+            n_neighbors=n_neighbors,
+            threshold=threshold,
+            n_jobs=n_jobs,
+            batch_size=batch_size,
         )
         # Build new void
         parameters = {
             "method": self.method,
             "box": self.box,
-            "tracers_in_voids_": self.tracers_in_voids_,
+            "tracers_in_voids_": _tracers,
             "centers_": new_centers,
             "extra_": {},
         }
         return self._create_new_instance(parameters=parameters)
 
-    def void_galaxy_corr(self, max_radius_search, delta_rad=1, n_jobs=1):
+    def void_galaxy_corr(self, max_radius_search=30, delta_rad=1, n_jobs=1):
         """
         Calculates the void-galaxy cross correlation function.
 

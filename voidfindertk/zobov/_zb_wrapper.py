@@ -23,8 +23,6 @@ import numpy as np
 
 import sh
 
-from ..utils import chdir
-
 
 def _move_inputs(src, dst_dir):
     """Move input files to the destination directory if necessary.
@@ -121,10 +119,12 @@ def run_vozinit(
 
     args = [str(param) for param in params]
 
-    with chdir(work_dir_path):
-        output = vozinit(*args)
-
-    return output
+    vozinit(
+        *args,
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 # =============================================================================
@@ -181,10 +181,11 @@ def run_voz_step(
     full_executable_name = preprocess_dir_path / f"scr{executable_name}"
     preprocess = sh.Command(str(full_executable_name))
 
-    with chdir(work_dir_path):
-        output = preprocess()
-
-    return output
+    preprocess(
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 # =============================================================================
@@ -243,7 +244,7 @@ def run_voz1b1(
     str
         Output of the voz1b1 run.
     """
-    voz1b1 = sh.Command(voz1b1_dir_path / "voz1b1")
+    voz1b1 = sh.Command("voz1b1", search_paths=[voz1b1_dir_path])
 
     params = [
         input_file_path,
@@ -257,9 +258,13 @@ def run_voz1b1(
     ]
 
     args = [str(param) for param in params]
-    with chdir(work_dir_path):
-        output = voz1b1(*args)
-    return output
+
+    voz1b1(
+        *args,
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 # =============================================================================
@@ -305,16 +310,19 @@ def run_voztie(
     str
         Output of the sh voztie run.
     """
-    voztie = sh.Command(voztie_dir_path / "voztie")
+    voztie = sh.Command("voztie", search_paths=[voztie_dir_path])
 
     params = [
         number_of_divisions,
         executable_name,
     ]
     args = [str(param) for param in params]
-    with chdir(work_dir_path):
-        output = voztie(*args)
-    return output
+    voztie(
+        *args,
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 def run_jozov(
@@ -364,7 +372,8 @@ def run_jozov(
     str
         Output of the jozov run.
     """
-    jozov = sh.Command(jozov_dir_path / "jozov")
+
+    jozov = sh.Command("jozov", search_paths=[jozov_dir_path])
 
     args = (
         f"adj{executable_name}.dat",
@@ -374,11 +383,12 @@ def run_jozov(
         f"{output_name_text_file}.dat",
         f"{density_threshold}",
     )
-
-    with chdir(work_dir_path):
-        output = jozov(*args)
-
-    return output
+    jozov(
+        *args,
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 def write_input(*, box, path_executable, raw_file_path, txt_file_path):

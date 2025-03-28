@@ -57,7 +57,7 @@ def get_cleaner(*, cleaner_method):
     if cleaner_method == "cbl":
         return _cbl_cleaner
     else:
-        ValueError(f"{cleaner_method} in not a valid cleaner method")
+        raise ValueError(f"{cleaner_method} in not a valid cleaner method")
 
 
 # =============================================================================
@@ -276,6 +276,7 @@ def _cbl_cleaner(
         rescale=rescale,
         checkoverlap=checkoverlap,
     )
+
     centers, radius = _read_cleaned_catalogue(
         cleaned_catalogue_path=cleaned_catalogue_path
     )
@@ -466,9 +467,9 @@ def _save_xyz_tracers(*, box, path):
     The output file will have columns for x, y, and z coordinates, separated
     by tabs. The file will not include an index or header row.
     """
-    x = box.x.value
-    y = box.y.value
-    z = box.z.value
+    x = box.arr_.x
+    y = box.arr_.y
+    z = box.arr_.z
     xyz = np.column_stack((x, y, z))
     df = pd.DataFrame(xyz)
     df.to_csv(path, index=False, header=False, sep="\t")

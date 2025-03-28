@@ -22,8 +22,6 @@ import configparser
 
 import sh
 
-from ..utils import chdir
-
 # =============================================================================
 # FUNCTIONS
 # =============================================================================
@@ -32,7 +30,7 @@ from ..utils import chdir
 # https://gitlab.com/dante.paz/popcorn_void_finder#43-popcorn-void-finder
 
 
-def popcorn_void_finder(*, mpi_flags, bin_path, conf_file_path, work_dir_path):
+def popcorn_void_finder(*, bin_path, conf_file_path, work_dir_path, cores):
     """
     Executes the Popcorn void finder with the specified configuration.
 
@@ -52,12 +50,32 @@ def popcorn_void_finder(*, mpi_flags, bin_path, conf_file_path, work_dir_path):
     output : str
         The output from the Popcorn command execution.
     """
+
+    mpirun = sh.Command("mpirun")
     popcorn = sh.Command("popcorn", search_paths=[bin_path])
-    params = "config=" + str(conf_file_path)
-    # Command will be executed from work_dir_path path.
-    with chdir(work_dir_path):
-        output = popcorn(params)
-    return output
+
+    if type(cores) is int:
+        mpirun(
+            "-np",
+            str(cores),
+            "--bind-to",
+            "core",
+            str(popcorn),
+            f"config={conf_file_path}",
+            _cwd=work_dir_path,
+            _out=lambda line: print(line, end=""),
+            _err_to_out=True,
+        )
+
+    if cores is None:
+        print("Running without MPI")
+
+        popcorn(
+            f"config={conf_file_path}",
+            _cwd=work_dir_path,
+            _out=lambda line: print(line, end=""),
+            _err_to_out=True,
+        )
 
 
 def compute_intersects(*, bin_path, conf_file_path, work_dir_path):
@@ -79,14 +97,16 @@ def compute_intersects(*, bin_path, conf_file_path, work_dir_path):
     output : str
         The output from the compute_intersecs command execution.
     """
-    compute_intersecs = sh.Command(
+    compute_intersects = sh.Command(
         "compute_intersecs", search_paths=[bin_path]
     )
-    params = "config=" + str(conf_file_path)
     # Command will be executed from work_dir_path path.
-    with chdir(work_dir_path):
-        output = compute_intersecs(params)
-    return output
+    compute_intersects(
+        f"config={conf_file_path}",
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 def clean_duplicates(*, bin_path, conf_file_path, work_dir_path):
@@ -109,11 +129,13 @@ def clean_duplicates(*, bin_path, conf_file_path, work_dir_path):
         The output from the clean_duplicates command execution.
     """
     clean_duplicates = sh.Command("clean_duplicates", search_paths=[bin_path])
-    params = "config=" + str(conf_file_path)
-    # Command will be executed from work_dir_path path.
-    with chdir(work_dir_path):
-        output = clean_duplicates(params)
-    return output
+
+    clean_duplicates(
+        f"config={conf_file_path}",
+        _cwd=work_dir_path,
+        _out=lambda line: print(line, end=""),
+        _err_to_out=True,
+    )
 
 
 def read_and_modify_config(*, config_file_path, section, parameter, new_value):

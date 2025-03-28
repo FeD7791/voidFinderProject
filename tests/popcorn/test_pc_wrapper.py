@@ -20,23 +20,49 @@ from voidfindertk.popcorn import _pc_wrapper
 
 
 def test_popcorn_void_finder():
-    parameters = {
-        "mpi_flags": "mpi_flags",
+    parameters1 = {
         "bin_path": "bin_path",
         "conf_file_path": "conf_file_path",
         "work_dir_path": ".",
+        "cores": 1,
     }
 
-    popcorn_mock = mock.MagicMock()
-    with mock.patch("sh.Command", return_value=popcorn_mock) as shcommand:
-        _pc_wrapper.popcorn_void_finder(**parameters)
+    parameters2 = {
+        "bin_path": "bin_path",
+        "conf_file_path": "conf_file_path",
+        "work_dir_path": ".",
+        "cores": None,
+    }
 
-    shcommand.assert_called_once_with(
-        "popcorn", search_paths=[parameters["bin_path"]]
+    with mock.patch("sh.Command") as shcommand:
+        _pc_wrapper.popcorn_void_finder(**parameters1)
+
+    with mock.patch("sh.Command") as shcommand2:
+
+        _pc_wrapper.popcorn_void_finder(**parameters2)
+
+    popcorn = shcommand2("popcorn", search_paths=["bin_path"])
+
+    shcommand("mpirun").assert_called_with(
+        "-np",
+        str(parameters1["cores"]),
+        "--bind-to",
+        "core",
+        str(shcommand("popcorn", search_paths=[parameters1["bin_path"]])),
+        f"config={parameters1['conf_file_path']}",
+        _cwd=parameters1["work_dir_path"],
+        _out=shcommand("mpirun").call_args[1]["_out"],
+        _err_to_out=True,
     )
-    popcorn_mock.assert_called_once_with(
-        "config=" + str(parameters["conf_file_path"])
+
+    popcorn.assert_called_with(
+        f"config={parameters2['conf_file_path']}",
+        _cwd=parameters2["work_dir_path"],
+        _out=shcommand2("mpirun").call_args[1]["_out"],
+        _err_to_out=True,
     )
+    # Had to take out lambda function explicitly otherwise is imposible to get
+    # the same reference
 
 
 def test_compute_intersects():
@@ -45,19 +71,17 @@ def test_compute_intersects():
         "conf_file_path": "conf_file_path",
         "work_dir_path": ".",
     }
-    compute_intersects_mock = mock.MagicMock()
 
-    with mock.patch(
-        "sh.Command", return_value=compute_intersects_mock
-    ) as shcommand:
+    with mock.patch("sh.Command") as shcommand:
         _pc_wrapper.compute_intersects(**parameters)
 
-    shcommand.assert_called_once_with(
+    shcommand(
         "compute_intersecs", search_paths=[parameters["bin_path"]]
-    )
-
-    compute_intersects_mock.assert_called_once_with(
-        "config=" + parameters["conf_file_path"]
+    ).assert_called_once_with(
+        f"config={parameters['conf_file_path']}",
+        _cwd=parameters["work_dir_path"],
+        _out=shcommand("ANY").call_args[1]["_out"],
+        _err_to_out=True,
     )
 
 
@@ -67,19 +91,17 @@ def test_clean_duplicates():
         "conf_file_path": "conf_file_path",
         "work_dir_path": ".",
     }
-    clean_duplicates_mock = mock.MagicMock()
 
-    with mock.patch(
-        "sh.Command", return_value=clean_duplicates_mock
-    ) as shcommand:
+    with mock.patch("sh.Command") as shcommand:
         _pc_wrapper.clean_duplicates(**parameters)
 
-    shcommand.assert_called_once_with(
+    shcommand(
         "clean_duplicates", search_paths=[parameters["bin_path"]]
-    )
-
-    clean_duplicates_mock.assert_called_once_with(
-        "config=" + parameters["conf_file_path"]
+    ).assert_called_once_with(
+        f"config={parameters['conf_file_path']}",
+        _cwd=parameters["work_dir_path"],
+        _out=shcommand("ANY").call_args[1]["_out"],
+        _err_to_out=True,
     )
 
 

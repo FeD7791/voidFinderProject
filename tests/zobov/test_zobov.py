@@ -22,7 +22,10 @@ from unittest import mock
 
 import numpy as np
 
+import pytest
 
+
+from voidfindertk.datasets import spherical_cloud
 from voidfindertk.zobov import ZobovVF
 
 
@@ -85,7 +88,7 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
 
     mocks["write_input"].assert_called_once_with(
         box=box_,
-        path_executable=params["zobov_path"] / "zobov_loader.so",
+        path_executable=zpn.CURRENT_FILE_PATH / zpn.ZOBOV_LOADER_BIN,
         raw_file_path=run_workdir / zpn.TRACERS_RAW,
         txt_file_path=run_workdir / zpn.TRACERS_TXT,
     )
@@ -137,3 +140,17 @@ def test_zobovvf(zobov_paths_and_names, mkbox):
         mocks2["get_center_method"]("core_particle").return_value == centers
     )
     assert extra == extra_
+
+
+@pytest.mark.skip(reason="Requires ZOBOV Installed")
+def test_zobov_working_example(build_box_with_eq_voids):
+    delta = -0.8
+    cloud = spherical_cloud.build_cloud(lmin=0, lmax=1000)
+    box, threshold, centers, cloud_with_voids = build_box_with_eq_voids(
+        cloud=cloud, delta=delta, rad=30
+    )
+    model = ZobovVF(
+        workdir_clean=True,
+        box_size=box.size(),
+    )
+    model.find(box=box)

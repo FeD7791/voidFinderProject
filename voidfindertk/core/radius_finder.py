@@ -61,7 +61,7 @@ def get_radius_searcher(method):
     if method == "volume":
         return _volume_effective_radius
     else:
-        ValueError(f"{method} in not a valid method")
+        raise ValueError(f"{method} in not a valid method")
 
 
 # =============================================================================
@@ -338,6 +338,7 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
         List of densities for each void.
 
     """
+
     # Create spatial gridding
     x = box.arr_.x
     y = box.arr_.y
@@ -422,8 +423,8 @@ def _spherical_density_radius_mapping(centers, box, **kwargs):
 
     Returns
     -------
-    tuple
-        Tuple of spherical_density_mapping : error, radius, tracers, densities.
+    array
+        Array of void radius elements.
 
     Notes
     -----
@@ -432,15 +433,19 @@ def _spherical_density_radius_mapping(centers, box, **kwargs):
     interface will filter the necesary kwargs arguments.
 
     """
+    sph_dens_kwargs = {}
     kwargs.setdefault("delta", -0.9)
     kwargs.setdefault("n_neighbors", 100)
     kwargs.setdefault("n_cells", 64)
-    kwargs = {
+    sph_dens_kwargs = {
         k: v
         for k, v in kwargs.items()
         if k in ["delta", "n_neighbors", "n_cells"]
     }
-    eradius = spherical_density_mapping(centers=centers, box=box, **kwargs)
+
+    eradius = spherical_density_mapping(
+        centers=centers, box=box, **sph_dens_kwargs
+    )
 
     return eradius.radius
 

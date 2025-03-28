@@ -133,23 +133,37 @@ def test_spherical_popcorn_void_finder():
         "cores": 1,
     }
 
-    params = "config=" + str(parameters["conf_file_path"])
-    input_args = [
-        "mpirun",
+    parameters_2 = {
+        "bin_path": pathlib.Path("<bin_path>"),
+        "conf_file_path": "<conf_file_path>",
+        "work_dir_path": ".",
+        "cores": None,
+    }
+
+    with mock.patch("sh.Command") as shcommand:
+        _svf_pc_wrapper.spherical_popcorn_void_finder(**parameters)
+
+    with mock.patch("sh.Command") as shcommand_2:
+        _svf_pc_wrapper.spherical_popcorn_void_finder(**parameters_2)
+
+    svf_popcorn = shcommand("svf", search_paths=[parameters["bin_path"]])
+    shcommand("mpirun").assert_called_once_with(
         "-np",
         str(parameters["cores"]),
         "--bind-to",
         "core",
-        str(parameters["bin_path"] / "svf"),
-        params,
-    ]
+        str(svf_popcorn),
+        f"config={parameters['conf_file_path']}",
+        _cwd=parameters["work_dir_path"],
+        _out=shcommand("ANY").call_args[1]["_out"],
+        _err_to_out=True,
+    )
 
-    with mock.patch("subprocess.run") as mock_subprocess_run:
-
-        _svf_pc_wrapper.spherical_popcorn_void_finder(**parameters)
-
-    args, kwargs = mock_subprocess_run.call_args
-
-    mock_subprocess_run.assert_called_once()
-
-    assert all([a == b for a, b in zip(args[0], input_args)])
+    shcommand_2(
+        "svf", search_paths=[parameters["bin_path"]]
+    ).assert_called_once_with(
+        f"config={parameters['conf_file_path']}",
+        _cwd=parameters["work_dir_path"],
+        _out=shcommand_2("ANY").call_args[1]["_out"],
+        _err_to_out=True,
+    )

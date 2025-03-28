@@ -16,6 +16,7 @@
 # =============================================================================
 from .box import Box
 from .plot_acc import VoidPlotter
+from .radius_finder import spherical_density_mapping
 from .vfinder_abc import VoidFinderABC
 from .voids import Voids
 
@@ -27,4 +28,5 @@ __all__ = [
     "VoidFinderABC",
     "Voids",
     "VoidPlotter",
+    "spherical_density_mapping",
 ]

@@ -209,3 +209,58 @@ def test_effective_radius_class(build_box_with_eq_voids):
     )
     assert len(centers) == len(effective_radius)
     assert len(effective_radius.errors) == len(effective_radius.radius)
+
+
+def test_effective_radius_method_sanity(build_box_with_eq_voids):
+    delta = -0.5
+    nn = 50
+    n_cells = 64
+
+    cloud = spherical_cloud.build_cloud()
+    box, tracers, centers, updated_cloud = build_box_with_eq_voids(
+        rad=30, cloud=cloud, delta=delta
+    )
+
+    delta_for_search_1 = -0.6
+    delta_for_search_2 = -0.8
+    delta_for_search_3 = -0.8
+    delta_for_search_4 = -0.9
+
+    effective_radius_1 = radius_finder.spherical_density_mapping(
+        centers=centers,
+        n_neighbors=nn,
+        box=box,
+        delta=delta_for_search_1,
+        n_cells=n_cells,
+    )
+    effective_radius_2 = radius_finder.spherical_density_mapping(
+        centers=centers,
+        n_neighbors=nn,
+        box=box,
+        delta=delta_for_search_2,
+        n_cells=n_cells,
+    )
+    effective_radius_3 = radius_finder.spherical_density_mapping(
+        centers=centers,
+        n_neighbors=nn,
+        box=box,
+        delta=delta_for_search_3,
+        n_cells=n_cells,
+    )
+    effective_radius_4 = radius_finder.spherical_density_mapping(
+        centers=centers,
+        n_neighbors=nn,
+        box=box,
+        delta=delta_for_search_4,
+        n_cells=n_cells,
+    )
+
+    assert np.max(np.where(effective_radius_1.radius > 0)[0]) >= np.max(
+        np.where(effective_radius_2.radius > 0)[0]
+    )
+    assert np.max(np.where(effective_radius_2.radius > 0)[0]) >= np.max(
+        np.where(effective_radius_3.radius > 0)[0]
+    )
+    assert np.max(np.where(effective_radius_3.radius > 0)[0]) >= np.max(
+        np.where(effective_radius_4.radius > 0)[0]
+    )

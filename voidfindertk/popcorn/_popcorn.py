@@ -62,7 +62,7 @@ class PopCorn(SVFPopCorn):
 
     def model_find(self, box):
         """Performs PopCorn Search."""
-        model_find_parameters = super().model_find(box)
+        model_find_parameters = super().model_find(box=box)
         model_find_parameters["build_popcorn"] = True
         return model_find_parameters
 
@@ -98,6 +98,7 @@ class PopCorn(SVFPopCorn):
                 bin_path=Paths.SVF,
                 conf_file_path=run_work_dir / FileNames.CONFIG,
                 work_dir_path=run_work_dir,
+                cores=self._cores,
             )
             _pc_wrapper.compute_intersects(
                 bin_path=Paths.SVF,
@@ -111,6 +112,7 @@ class PopCorn(SVFPopCorn):
             )
         else:
             run_work_dir = pathlib.Path(model_find_parameters["run_work_dir"])
+
         # Get popvoids
         voids, spheres = _pc_postprocessing.get_properties(
             filename=run_work_dir / FileNames.POPFILE

@@ -155,6 +155,13 @@ class ZobovVF(VoidFinderABC):
         False).
     dtype : numpy.dtype, optional
         Data type used for computations (default is np.float32).
+    center_method : str {"barycentre", "core_particle"}, default="barycentre".
+        Selects the kind of center to be asociated to the final output. If
+        barycentre is selected, (x,y,z) coordinates of centers will be
+        asociated to centers gotten from the weighted sum of the volumes of
+        voronoi cells asociated to a void. If core_particle is selected then
+        the centers (x,y,z) coordinates will be asociated to the positions of
+        the core particles in the watershed density algorythm.
 
 
     Methods
@@ -197,6 +204,7 @@ class ZobovVF(VoidFinderABC):
     _workdir = attr.field(default=None, alias="workdir")
     _workdir_clean = attr.field(default=False, alias="workdir_clean")
     _dtype = attr.field(default=np.float32, alias="dtype")
+    _center_method = attr.field(default="barycentre", alias="center_method")
 
     def __attrs_post_init__(self):
         """Post init Method."""
@@ -209,6 +217,9 @@ class ZobovVF(VoidFinderABC):
             if self._workdir is None
             else pathlib.Path(os.path.abspath(self._workdir))
         )
+
+        if self._center_method not in ["barycentre", "core_particle"]:
+            raise ValueError("This is not a valid center_method")
 
     # PROPERTIES ==============================================================
     @property
@@ -252,9 +263,9 @@ class ZobovVF(VoidFinderABC):
         return self._dtype
 
     @property
-    def centre_method(self):
+    def center_method(self):
         """Return the centre calculation method."""
-        return self._centre_method
+        return self._center_method
 
     # INTERNAL ================================================================
 
@@ -331,7 +342,7 @@ class ZobovVF(VoidFinderABC):
 
         _wrap.write_input(
             box=box,
-            path_executable=pathlib.Path(self._zobov_path)
+            path_executable=_Paths.CURRENT_FILE_PATH
             / _ExecutableNames.ZOBOV_LOADER_BIN,
             raw_file_path=tracers_raw_file_path,
             txt_file_path=tracers_txt_file_path,
@@ -372,7 +383,6 @@ class ZobovVF(VoidFinderABC):
         return {
             "run_work_dir": run_work_dir,
             "box": box,
-            "center_method": "barycentre",
         }
 
     def build_voids(self, model_find_parameters):
@@ -403,7 +413,7 @@ class ZobovVF(VoidFinderABC):
             - extra: Dictionary with additional properties about the voids.
         """
         # Center Method:
-        center_method = model_find_parameters["center_method"]
+        center_method = self._center_method
         # Get current working directory
         run_work_dir = model_find_parameters["run_work_dir"]
         # Get box
