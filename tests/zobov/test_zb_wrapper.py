@@ -22,25 +22,32 @@ from voidfindertk.zobov import _zb_wrapper
 # =============================================================================
 
 
-def test_vozinit(load_mock_data):
-    mock_data = load_mock_data("zobov", "vozinit.jpkl")
+def test_run_vozinit(load_mock_data):
 
-    # put "." as working dir
-    mock_data["work_dir_path"] = "."
+    params = {
+        "input_file_path":pathlib.Path("."),
+        "buffer_size":2,
+        "box_size":1000,
+        "number_of_divisions":2,
+        "executable_name":"vozinit",
+        "work_dir_path":pathlib.Path("./workdir"),
+        "vozinit_dir_path": pathlib.Path("./vozinit")
+    }
+
 
     # mock the class and run
     with mock.patch("sh.Command") as shcommand:
-        _zb_wrapper.run_vozinit(**mock_data)
+        _zb_wrapper.run_vozinit(**params)
 
     shcommand(
-        "vozinit", search_paths=[mock_data["vozinit_dir_path"]]
+        "vozinit", search_paths=[params["vozinit_dir_path"]]
     ).assert_called_once_with(
-        str(mock_data["input_file_path"]),
-        str(mock_data["buffer_size"]),
-        str(mock_data["box_size"]),
-        str(mock_data["number_of_divisions"]),
-        str(mock_data["executable_name"]),
-        _cwd=mock_data["work_dir_path"],
+        str(params["input_file_path"]),
+        str(params["buffer_size"]),
+        str(params["box_size"]),
+        str(params["number_of_divisions"]),
+        str(params["executable_name"]),
+        _cwd=params["work_dir_path"],
         _out=shcommand("vozinit").call_args[1]["_out"],
         _err_to_out=True,
     )
