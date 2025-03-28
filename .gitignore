@@ -75,7 +75,8 @@ datasets/*
 local_draft/
 workdir/
 work_directory/
-*cbl_cleaner
+tmp*/
+
 
 main.py
 
