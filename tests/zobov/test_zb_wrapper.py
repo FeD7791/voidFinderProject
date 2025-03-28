@@ -25,15 +25,14 @@ from voidfindertk.zobov import _zb_wrapper
 def test_run_vozinit(load_mock_data):
 
     params = {
-        "input_file_path":pathlib.Path("."),
-        "buffer_size":2,
-        "box_size":1000,
-        "number_of_divisions":2,
-        "executable_name":"vozinit",
-        "work_dir_path":pathlib.Path("./workdir"),
-        "vozinit_dir_path": pathlib.Path("./vozinit")
+        "input_file_path": pathlib.Path("."),
+        "buffer_size": 2,
+        "box_size": 1000,
+        "number_of_divisions": 2,
+        "executable_name": "vozinit",
+        "work_dir_path": pathlib.Path("./workdir"),
+        "vozinit_dir_path": pathlib.Path("./vozinit"),
     }
-
 
     # mock the class and run
     with mock.patch("sh.Command") as shcommand:
