@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>voidfindertk.core.plot_acc module &mdash; voidfindertk 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="voidfindertk.core.radius_finder module" href="voidfindertk.core.radius_finder.html" />
+    <link rel="prev" title="voidfindertk.core.cleaners module" href="voidfindertk.core.cleaners.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            voidfindertk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">voidfindertk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="voidfindertk.html">voidfindertk package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="voidfindertk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="voidfindertk.core.html">voidfindertk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.html">voidfindertk.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.popcorn.html">voidfindertk.popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.svf_popcorn.html">voidfindertk.svf_popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.html">voidfindertk.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.zobov.html">voidfindertk.zobov package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">voidfindertk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">voidfindertk</a></li>
+          <li class="breadcrumb-item"><a href="voidfindertk.html">voidfindertk package</a></li>
+          <li class="breadcrumb-item"><a href="voidfindertk.core.html">voidfindertk.core package</a></li>
+      <li class="breadcrumb-item active">voidfindertk.core.plot_acc module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/voidfindertk.core.plot_acc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-voidfindertk.core.plot_acc">
+<span id="voidfindertk-core-plot-acc-module"></span><h1>voidfindertk.core.plot_acc module<a class="headerlink" href="#module-voidfindertk.core.plot_acc" title="Link to this heading"></a></h1>
+<p>Module for plotting data related to boxes and voids.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.BoxPlotter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.plot_acc.</span></span><span class="sig-name descname"><span class="pre">BoxPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC" title="voidfindertk.utils.accabc.AccessorABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></p>
+<p>Plotter: Plotter object that plots the boxes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.BoxPlotter.hist2d">
+<span class="sig-name descname"><span class="pre">hist2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter.hist2d" title="Link to this definition"></a></dt>
+<dd><p>Create a 2D histogram plot.</p>
+<p>This method generates a 2D histogram plot of the specified x and
+y data from the box. It uses seaborn’s histplot function for
+visualization.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">str</span></dt><dd><p>The name of the attribute in the box for the x-axis data.</p>
+</dd>
+<dt>y<span class="classifier">str</span></dt><dd><p>The name of the attribute in the box for the y-axis data.</p>
+</dd>
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional</span></dt><dd><p>The axes on which to plot. If None, the current axes are used.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs :</dt><dd><p>Additional keyword arguments passed to the seaborn histplot.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axes with the histogram plot.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>The x and y attributes in the box should have a <cite>unit</cite> attribute
+for labeling the axes correctly.</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.plot_acc.</span></span><span class="sig-name descname"><span class="pre">VoidPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC" title="voidfindertk.utils.accabc.AccessorABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></p>
+<p>Plotter: Plotter object that plots the voids.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter.void_galaxy_corr">
+<span class="sig-name descname"><span class="pre">void_galaxy_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_radius_search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter.void_galaxy_corr" title="Link to this definition"></a></dt>
+<dd><p>Compute the Void-Galaxy Correlation Function (VGCF) and plot the         result.</p>
+<p>This method calculates the Void-Galaxy Correlation Function (VGCF)
+over a range of radii and plots the result on the provided axis. If no
+axis is provided, it will use the current active axis.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>max_radius_search<span class="classifier">float</span></dt><dd><p>The maximum radius to search for void-galaxy correlations (in the
+same units as the box dimensions).</p>
+</dd>
+<dt>delta_rad<span class="classifier">float, optional, default: 1</span></dt><dd><p>The radial bin size for calculating the correlation function.</p>
+</dd>
+<dt>n_jobs<span class="classifier">int, optional, default: 1</span></dt><dd><p>The number of parallel jobs to run for the correlation function
+calculation.</p>
+</dd>
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional, default: None</span></dt><dd><p>The axis on which to plot the result. If None, the current active
+axis is used.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axis with the Void-Galaxy Correlation Function plotted.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter.void_size_function">
+<span class="sig-name descname"><span class="pre">void_size_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsf_kws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter.void_size_function" title="Link to this definition"></a></dt>
+<dd><p>Create a plot of the void size function.</p>
+<p>This method generates a plot for the void size function using data
+derived from the voids. It visualizes the relationship between the
+logarithm of the radius and the density of voids.</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional</span></dt><dd><p>The axes on which to plot. If None, the current axes are used.</p>
+</dd>
+<dt>vsf_kws<span class="classifier">dict, optional</span></dt><dd><p>Additional keyword arguments passed to the void size function
+calculation.</p>
+</dd>
+<dt><a href="#id6"><span class="problematic" id="id7">**</span></a>kwargs :</dt><dd><p>Additional keyword arguments passed to the seaborn lineplot.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axes with the void size function plot.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h2>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<p>The x-axis is logarithmically scaled, and the y-axis represents
+the density of voids. The plot includes a grid and is titled with
+the density contrast.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter.vsf">
+<span class="sig-name descname"><span class="pre">vsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsf_kws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter.vsf" title="Link to this definition"></a></dt>
+<dd><p>Create a plot of the void size function.</p>
+<p>This method generates a plot for the void size function using data
+derived from the voids. It visualizes the relationship between the
+logarithm of the radius and the density of voids.</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional</span></dt><dd><p>The axes on which to plot. If None, the current axes are used.</p>
+</dd>
+<dt>vsf_kws<span class="classifier">dict, optional</span></dt><dd><p>Additional keyword arguments passed to the void size function
+calculation.</p>
+</dd>
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs :</dt><dd><p>Additional keyword arguments passed to the seaborn lineplot.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axes with the void size function plot.</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h2>Notes<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<p>The x-axis is logarithmically scaled, and the y-axis represents
+the density of voids. The plot includes a grid and is titled with
+the density contrast.</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="voidfindertk.core.cleaners.html" class="btn btn-neutral float-left" title="voidfindertk.core.cleaners module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="voidfindertk.core.radius_finder.html" class="btn btn-neutral float-right" title="voidfindertk.core.radius_finder module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Federico Bustillos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

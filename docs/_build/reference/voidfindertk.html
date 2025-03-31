@@ -1,0 +1,952 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>voidfindertk package &mdash; voidfindertk 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="voidfindertk.core package" href="voidfindertk.core.html" />
+    <link rel="prev" title="voidfindertk" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            voidfindertk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">voidfindertk</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">voidfindertk package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#voidfindertk.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.arr_"><code class="docutils literal notranslate"><span class="pre">Box.arr_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.copy"><code class="docutils literal notranslate"><span class="pre">Box.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.mass_cutoff"><code class="docutils literal notranslate"><span class="pre">Box.mass_cutoff()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.max_"><code class="docutils literal notranslate"><span class="pre">Box.max_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.min_"><code class="docutils literal notranslate"><span class="pre">Box.min_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.size"><code class="docutils literal notranslate"><span class="pre">Box.size()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Box.to_dict"><code class="docutils literal notranslate"><span class="pre">Box.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#voidfindertk.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.VoidFinderABC.build_voids"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.build_voids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.VoidFinderABC.find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.VoidFinderABC.model_find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.model_find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.VoidFinderABC.preprocess"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#voidfindertk.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.box"><code class="docutils literal notranslate"><span class="pre">Voids.box</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.centers"><code class="docutils literal notranslate"><span class="pre">Voids.centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.centers_"><code class="docutils literal notranslate"><span class="pre">Voids.centers_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.e_"><code class="docutils literal notranslate"><span class="pre">Voids.e_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.effective_radius"><code class="docutils literal notranslate"><span class="pre">Voids.effective_radius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.extra_"><code class="docutils literal notranslate"><span class="pre">Voids.extra_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.filter_by_index"><code class="docutils literal notranslate"><span class="pre">Voids.filter_by_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.find_centers"><code class="docutils literal notranslate"><span class="pre">Voids.find_centers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.find_radius_and_clean"><code class="docutils literal notranslate"><span class="pre">Voids.find_radius_and_clean()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.method"><code class="docutils literal notranslate"><span class="pre">Voids.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.numbers_of_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.numbers_of_voids_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.plot"><code class="docutils literal notranslate"><span class="pre">Voids.plot</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.tracers"><code class="docutils literal notranslate"><span class="pre">Voids.tracers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.tracers_in_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.tracers_in_voids_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.void_galaxy_corr"><code class="docutils literal notranslate"><span class="pre">Voids.void_galaxy_corr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.void_of"><code class="docutils literal notranslate"><span class="pre">Voids.void_of()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.void_size_function"><code class="docutils literal notranslate"><span class="pre">Voids.void_size_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voidfindertk.Voids.vsf"><code class="docutils literal notranslate"><span class="pre">Voids.vsf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#voidfindertk.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.html">voidfindertk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.html">voidfindertk.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.popcorn.html">voidfindertk.popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.svf_popcorn.html">voidfindertk.svf_popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.html">voidfindertk.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.zobov.html">voidfindertk.zobov package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.io.html">voidfindertk.io module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.settings.html">voidfindertk.settings module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">voidfindertk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">voidfindertk</a></li>
+      <li class="breadcrumb-item active">voidfindertk package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/voidfindertk.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-voidfindertk">
+<span id="voidfindertk-package"></span><h1>voidfindertk package<a class="headerlink" href="#module-voidfindertk" title="Link to this heading"></a></h1>
+<p>Voidfindertk inicialization.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.Box">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.</span></span><span class="sig-name descname"><span class="pre">Box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Box" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Box Class.</p>
+<p>Class used to describe a set of points (x,y,z) alongside with its
+velocities (vx,vy,vz)</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>y<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>z<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>vx<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>vy<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>vz<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>m<span class="classifier">numpy.ndarray</span></dt><dd><p>array of masses</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Box.arr_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arr_</span></span><a class="headerlink" href="#voidfindertk.Box.arr_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Box.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Box.copy" title="Link to this definition"></a></dt>
+<dd><p>Method used to perform a deep copy of the class Box.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Keyword arguments to update the Box parameters.</p>
+</dd>
+</dl>
+</section>
+<section id="retruns">
+<h3>Retruns<a class="headerlink" href="#retruns" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>Box object with a copy of Box Parameters.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Box.mass_cutoff">
+<span class="sig-name descname"><span class="pre">mass_cutoff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass_threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Box.mass_cutoff" title="Link to this definition"></a></dt>
+<dd><p>Filter the points by mass threshold.</p>
+<p>Returns a new <cite>Box</cite> object that only includes points with a mass
+greater than the given threshold.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mass_threshold<span class="classifier">float</span></dt><dd><p>The mass threshold above which points will be included.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Box</dt><dd><p>A new <cite>Box</cite> object containing only points with mass greater
+than the threshold.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Box.max_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_</span></span><a class="headerlink" href="#voidfindertk.Box.max_" title="Link to this definition"></a></dt>
+<dd><p>Returns the maximun value, in length position of the box.</p>
+<p>This value is the same for the x,y,z coordinates since all tracers are
+aligned in a box.</p>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>int</dt><dd><p>The lenght maximun value of the box.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Box.min_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_</span></span><a class="headerlink" href="#voidfindertk.Box.min_" title="Link to this definition"></a></dt>
+<dd><p>Returns the minimun value, in length position of the box.</p>
+<p>This value is the same for the x,y,z coordinates since all tracers are
+aligned in a box.</p>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>int</dt><dd><p>The lenght minimun value of the box.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Box.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Box.size" title="Link to this definition"></a></dt>
+<dd><p>Returns the lenght of side of the box.</p>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>int : Lenght of box.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Box.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Box.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Method used to convert the class Box to a dictionary.</p>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>dict</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.VoidFinderABC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.</span></span><span class="sig-name descname"><span class="pre">VoidFinderABC</span></span><a class="headerlink" href="#voidfindertk.VoidFinderABC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for finding voids in a given box.</p>
+<p>This class defines the interface for subclasses to implement the
+functionality to preprocess data, model the findings, and build voids.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.VoidFinderABC.build_voids">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_voids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_find_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.VoidFinderABC.build_voids" title="Link to this definition"></a></dt>
+<dd><p>Build voids from the model find parameters.</p>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>model_find_parameters<span class="classifier">object</span></dt><dd><p>The parameters resulting from the model finding process.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h2>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tracers_in_voids<span class="classifier">object</span></dt><dd><p>Information about tracers within the identified voids.</p>
+</dd>
+<dt>centers<span class="classifier">object</span></dt><dd><p>The centers of the identified voids.</p>
+</dd>
+<dt>extra<span class="classifier">object</span></dt><dd><p>Any additional information generated during void construction.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.VoidFinderABC.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.VoidFinderABC.find" title="Link to this definition"></a></dt>
+<dd><p>Find voids in the provided box.</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>box<span class="classifier">object</span></dt><dd><p>The input data structure representing the box of tracers in which
+voids are to be found.</p>
+</dd>
+<dt>box_copy<span class="classifier">bool, optional</span></dt><dd><p>Whether to copy the box before preprocessing it. Default is False.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h2>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Voids</dt><dd><p>An instance of the Voids class containing the voids information,
+including tracers in voids, their centers, and any extra
+information.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.VoidFinderABC.model_find">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">procesed_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.VoidFinderABC.model_find" title="Link to this definition"></a></dt>
+<dd><p>Execute the search for voids in the Box.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>procesed_box<span class="classifier">object</span></dt><dd><p>Box object resulting from the preprocessing step.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>model_find_parameters<span class="classifier">object</span></dt><dd><p>The parameters resulting from the model finding process.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.VoidFinderABC.preprocess">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.VoidFinderABC.preprocess" title="Link to this definition"></a></dt>
+<dd><p>Preprocess the input box if needed.</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>box<span class="classifier">object</span></dt><dd><p>The input data structure to preprocess.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>preprocess_parameters<span class="classifier">object</span></dt><dd><p>Returns Box object with procesed parameters.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.Voids">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.</span></span><span class="sig-name descname"><span class="pre">Voids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box" title="voidfindertk.core.box.Box"><span class="pre">Box</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers_in_voids_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to represent and manage voids in a system of particles.</p>
+<p>This class provides methods to analyze voids and the particles within them,
+including retrieving the method used to find the voids, accessing the box
+properties, and finding specific voids associated with tracer particles.</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>method<span class="classifier">str</span></dt><dd><p>The name of the method used to find the voids.</p>
+</dd>
+<dt>box<span class="classifier">Box</span></dt><dd><p>The Box object containing properties of the box.</p>
+</dd>
+<dt>tracers_in_voids<span class="classifier">tuple of numpy.ndarray</span></dt><dd><p>A tuple of arrays, where each array contains the IDs of particles
+inside a void.</p>
+</dd>
+<dt>centers<span class="classifier">array-like</span></dt><dd><p>Coordinates of the centers of the voids.</p>
+</dd>
+<dt>extra<span class="classifier">dict</span></dt><dd><p>Additional results and information of the run.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.box">
+<span class="sig-name descname"><span class="pre">box</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box" title="voidfindertk.core.box.Box"><span class="pre">Box</span></a></em><a class="headerlink" href="#voidfindertk.Voids.box" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Voids.centers">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centers</span></span><a class="headerlink" href="#voidfindertk.Voids.centers" title="Link to this definition"></a></dt>
+<dd><p>Returns the center/s of void/s.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.centers_">
+<span class="sig-name descname"><span class="pre">centers_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.Voids.centers_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Voids.e_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">e_</span></span><a class="headerlink" href="#voidfindertk.Voids.e_" title="Link to this definition"></a></dt>
+<dd><p>dict: Holds extra results and information of the run.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.effective_radius">
+<span class="sig-name descname"><span class="pre">effective_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.effective_radius" title="Link to this definition"></a></dt>
+<dd><p>Computes the effective radius of voids using the given method.</p>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>method<span class="classifier">{‘density’, ‘extra’, ‘volume’}, default=’density’</span></dt><dd><p>The method used to calculate the effective radius.</p>
+</dd>
+<dt><a href="#id18"><span class="problematic" id="id19">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the method used to calculate
+the effective radius.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h3>Returns<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array containing the calculated effective radii of the voids.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.extra_">
+<span class="sig-name descname"><span class="pre">extra_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.utils.bunch.html#voidfindertk.utils.bunch.Bunch" title="voidfindertk.utils.bunch.Bunch"><span class="pre">Bunch</span></a></em><a class="headerlink" href="#voidfindertk.Voids.extra_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.filter_by_index">
+<span class="sig-name descname"><span class="pre">filter_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.filter_by_index" title="Link to this definition"></a></dt>
+<dd><p>Filters Voids based on Index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.find_centers">
+<span class="sig-name descname"><span class="pre">find_centers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_tracers_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1000]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.find_centers" title="Link to this definition"></a></dt>
+<dd><p>Finds and calculates the centers of voids.</p>
+<p>This method computes the centers of the voids based on a set of tracers
+that are inside voids.</p>
+<section id="id21">
+<h3>Returns<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class with the new centers, the
+tracers inside each void are the same.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.find_radius_and_clean">
+<span class="sig-name descname"><span class="pre">find_radius_and_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleaner_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'overlap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.find_radius_and_clean" title="Link to this definition"></a></dt>
+<dd><p>Finds the radius of voids and cleans them using the specified methods.</p>
+<p>This method calculates the effective radius of voids using the
+specified radius method, applies a cleaning process, and returns a new
+instance of the Voids class with cleaned voids.</p>
+<section id="id22">
+<h3>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>cleaner_method<span class="classifier">str, {‘overlap’,’cbl’}, default=’overlap’</span></dt><dd><p>The cleaner method to use.</p>
+</dd>
+<dt>radius_method<span class="classifier">str, {‘density’,’extra’,’volume’}</span></dt><dd><p>The method to use for calculating the effective radius. Default is
+“default”.</p>
+</dd>
+<dt><a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the effective radius and
+cleaner methods.</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h3>Returns<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class with cleaned voids and calculated
+radii.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.method">
+<span class="sig-name descname"><span class="pre">method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#voidfindertk.Voids.method" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Voids.numbers_of_voids_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">numbers_of_voids_</span></span><a class="headerlink" href="#voidfindertk.Voids.numbers_of_voids_" title="Link to this definition"></a></dt>
+<dd><p>int: Number of voids.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter" title="voidfindertk.core.plot_acc.VoidPlotter"><span class="pre">VoidPlotter</span></a></em><a class="headerlink" href="#voidfindertk.Voids.plot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.Voids.tracers">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tracers</span></span><a class="headerlink" href="#voidfindertk.Voids.tracers" title="Link to this definition"></a></dt>
+<dd><p>Returns the tracers that belong to a void.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.Voids.tracers_in_voids_">
+<span class="sig-name descname"><span class="pre">tracers_in_voids_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#voidfindertk.Voids.tracers_in_voids_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.void_galaxy_corr">
+<span class="sig-name descname"><span class="pre">void_galaxy_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_radius_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.void_galaxy_corr" title="Link to this definition"></a></dt>
+<dd><p>Calculates the void-galaxy cross correlation function.</p>
+<p>The search is performed by calculating the tracers inside of concentric
+spherical shells with width [rad ,rad+delta_rad] up to
+max_radius_search distance around void centers.</p>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>max_radius_search<span class="classifier">float</span></dt><dd><p>Maximum radius of the search.</p>
+</dd>
+<dt>delta_rad<span class="classifier">float, default=1</span></dt><dd><p>Width in r of the concentric shells.</p>
+</dd>
+<dt>n_jobs<span class="classifier">int , default=1</span></dt><dd><p>Measure of the number of cores used to perform a parallel search.
+Use -1 to exhaust the cores.</p>
+</dd>
+</dl>
+</section>
+<section id="id27">
+<h3>Returns<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vgcf<span class="classifier">list</span></dt><dd><p>Values of the vgcf.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.void_of">
+<span class="sig-name descname"><span class="pre">void_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.void_of" title="Link to this definition"></a></dt>
+<dd><p>Returns indices of voids containing a specific tracer particle.</p>
+<section id="id28">
+<h3>Parameters<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tracer<span class="classifier">int</span></dt><dd><p>ID of the tracer particle to search for in voids.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h3>Returns<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>Array of indices of voids containing the tracer particle.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.void_size_function">
+<span class="sig-name descname"><span class="pre">void_size_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_1_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_2_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.void_size_function" title="Link to this definition"></a></dt>
+<dd><p>Calculate the void size distribution based on the effective radius.</p>
+<p>This function computes the log of radius, count of voids, and delta
+values using the provided parameters for scaling and sampling.</p>
+<section id="id30">
+<h3>Parameters<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
+of tracers (See vsf.void_size_function)</p>
+</dd>
+<dt>n_step2<span class="classifier">int, optional</span></dt><dd><p>Steps for the second scale. Default is 10.</p>
+</dd>
+<dt>scale_1_num_samples<span class="classifier">int, optional</span></dt><dd><p>Number of the first part of bins. Default is 7.</p>
+</dd>
+<dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
+</dd>
+<dt><a href="#id31"><span class="problematic" id="id32">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+method.</p>
+</dd>
+</dl>
+</section>
+<section id="id33">
+<h3>Returns<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<dl>
+<dt>tuple</dt><dd><p>A tuple containing:
+- log_of_radius : array</p>
+<blockquote>
+<div><p>The logarithm of the effective radius values.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>count<span class="classifier">array</span></dt><dd><p>The count of voids corresponding to each radius.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>delta<span class="classifier">array</span></dt><dd><p>The delta values for the void size distribution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.Voids.vsf">
+<span class="sig-name descname"><span class="pre">vsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_1_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_2_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.Voids.vsf" title="Link to this definition"></a></dt>
+<dd><p>Calculate the void size distribution based on the effective radius.</p>
+<p>This function computes the log of radius, count of voids, and delta
+values using the provided parameters for scaling and sampling.</p>
+<section id="id34">
+<h3>Parameters<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
+of tracers (See vsf.void_size_function)</p>
+</dd>
+<dt>n_step2<span class="classifier">int, optional</span></dt><dd><p>Steps for the second scale. Default is 10.</p>
+</dd>
+<dt>scale_1_num_samples<span class="classifier">int, optional</span></dt><dd><p>Number of the first part of bins. Default is 7.</p>
+</dd>
+<dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
+</dd>
+<dt><a href="#id35"><span class="problematic" id="id36">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+method.</p>
+</dd>
+</dl>
+</section>
+<section id="id37">
+<h3>Returns<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+<dl>
+<dt>tuple</dt><dd><p>A tuple containing:
+- log_of_radius : array</p>
+<blockquote>
+<div><p>The logarithm of the effective radius values.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>count<span class="classifier">array</span></dt><dd><p>The count of voids corresponding to each radius.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>delta<span class="classifier">array</span></dt><dd><p>The delta values for the void size distribution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.read_table">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.</span></span><span class="sig-name descname"><span class="pre">read_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_buffer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.read_table" title="Link to this definition"></a></dt>
+<dd><p>Input reader.</p>
+<p>Read a table from a file or buffer and returns a <cite>box.Box</cite> object.</p>
+<p>The table must contain 7 columns, with the following format:</p>
+<p>x y z vx vy vz m</p>
+<p>where:</p>
+<ul class="simple">
+<li><p><cite>x</cite>, <cite>y</cite>, and <cite>z</cite> are the coordinates of the box center</p></li>
+<li><p><cite>vx</cite>, <cite>vy</cite>, and <cite>vz</cite> are the velocities of the box center</p></li>
+<li><p><cite>m</cite> is the mass of the box</p></li>
+</ul>
+<section id="id38">
+<h2>Parameters<a class="headerlink" href="#id38" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>path_or_buffer: The path to the file or buffer containing the table.
+<a href="#id39"><span class="problematic" id="id40">**</span></a>kwargs: Keyword arguments to be passed to <cite>pandas.read_csv()</cite>.</p>
+</div></blockquote>
+</section>
+<section id="id41">
+<h2>Returns<a class="headerlink" href="#id41" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>A <cite>box.Box</cite> object containing the data from the table.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.html">voidfindertk.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.arr_"><code class="docutils literal notranslate"><span class="pre">Box.arr_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.copy"><code class="docutils literal notranslate"><span class="pre">Box.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.mass_cutoff"><code class="docutils literal notranslate"><span class="pre">Box.mass_cutoff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.max_"><code class="docutils literal notranslate"><span class="pre">Box.max_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.min_"><code class="docutils literal notranslate"><span class="pre">Box.min_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.size"><code class="docutils literal notranslate"><span class="pre">Box.size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Box.to_dict"><code class="docutils literal notranslate"><span class="pre">Box.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidFinderABC.build_voids"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.build_voids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidFinderABC.find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidFinderABC.model_find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.model_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidFinderABC.preprocess"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.preprocess()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidPlotter"><code class="docutils literal notranslate"><span class="pre">VoidPlotter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidPlotter.void_galaxy_corr"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.void_galaxy_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidPlotter.void_size_function"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.void_size_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.VoidPlotter.vsf"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.vsf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.box"><code class="docutils literal notranslate"><span class="pre">Voids.box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.centers"><code class="docutils literal notranslate"><span class="pre">Voids.centers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.centers_"><code class="docutils literal notranslate"><span class="pre">Voids.centers_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.e_"><code class="docutils literal notranslate"><span class="pre">Voids.e_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.effective_radius"><code class="docutils literal notranslate"><span class="pre">Voids.effective_radius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.extra_"><code class="docutils literal notranslate"><span class="pre">Voids.extra_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.filter_by_index"><code class="docutils literal notranslate"><span class="pre">Voids.filter_by_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.find_centers"><code class="docutils literal notranslate"><span class="pre">Voids.find_centers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.find_radius_and_clean"><code class="docutils literal notranslate"><span class="pre">Voids.find_radius_and_clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.method"><code class="docutils literal notranslate"><span class="pre">Voids.method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.numbers_of_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.numbers_of_voids_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.plot"><code class="docutils literal notranslate"><span class="pre">Voids.plot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.tracers"><code class="docutils literal notranslate"><span class="pre">Voids.tracers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.tracers_in_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.tracers_in_voids_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.void_galaxy_corr"><code class="docutils literal notranslate"><span class="pre">Voids.void_galaxy_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.void_of"><code class="docutils literal notranslate"><span class="pre">Voids.void_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.void_size_function"><code class="docutils literal notranslate"><span class="pre">Voids.void_size_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.Voids.vsf"><code class="docutils literal notranslate"><span class="pre">Voids.vsf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#voidfindertk.core.spherical_density_mapping"><code class="docutils literal notranslate"><span class="pre">spherical_density_mapping()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html">voidfindertk.core.box module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.center_finder.html">voidfindertk.core.center_finder module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.center_finder.html#voidfindertk.core.center_finder.center_calculator"><code class="docutils literal notranslate"><span class="pre">center_calculator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.cleaners.html">voidfindertk.core.cleaners module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.cleaners.html#voidfindertk.core.cleaners.get_cleaner"><code class="docutils literal notranslate"><span class="pre">get_cleaner()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.plot_acc.html">voidfindertk.core.plot_acc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.BoxPlotter"><code class="docutils literal notranslate"><span class="pre">BoxPlotter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter"><code class="docutils literal notranslate"><span class="pre">VoidPlotter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.radius_finder.html">voidfindertk.core.radius_finder module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.get_radius_searcher"><code class="docutils literal notranslate"><span class="pre">get_radius_searcher()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.spherical_density_mapping"><code class="docutils literal notranslate"><span class="pre">spherical_density_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html">voidfindertk.core.vfinder_abc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vgcf.html">voidfindertk.core.vgcf module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.vgcf.html#voidfindertk.core.vgcf.vgcf_statistic"><code class="docutils literal notranslate"><span class="pre">vgcf_statistic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html">voidfindertk.core.voids module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vsf.html">voidfindertk.core.vsf module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.vsf.html#voidfindertk.core.vsf.void_size_function"><code class="docutils literal notranslate"><span class="pre">void_size_function()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.datasets.html">voidfindertk.datasets package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.datasets.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.datasets.spherical_cloud.html">voidfindertk.datasets.spherical_cloud module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.spherical_cloud.html#voidfindertk.datasets.spherical_cloud.add_mass_to_cloud"><code class="docutils literal notranslate"><span class="pre">add_mass_to_cloud()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.spherical_cloud.html#voidfindertk.datasets.spherical_cloud.build_cloud"><code class="docutils literal notranslate"><span class="pre">build_cloud()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.spherical_cloud.html#voidfindertk.datasets.spherical_cloud.build_spherical_overdensity"><code class="docutils literal notranslate"><span class="pre">build_spherical_overdensity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.spherical_cloud.html#voidfindertk.datasets.spherical_cloud.build_spherical_void"><code class="docutils literal notranslate"><span class="pre">build_spherical_void()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.popcorn.html">voidfindertk.popcorn package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.popcorn.html#voidfindertk.popcorn.PopCorn"><code class="docutils literal notranslate"><span class="pre">PopCorn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.popcorn.html#voidfindertk.popcorn.PopCorn.build_voids"><code class="docutils literal notranslate"><span class="pre">PopCorn.build_voids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.popcorn.html#voidfindertk.popcorn.PopCorn.model_find"><code class="docutils literal notranslate"><span class="pre">PopCorn.model_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.popcorn.html#voidfindertk.popcorn.PopCorn.shot_noise_threshold"><code class="docutils literal notranslate"><span class="pre">PopCorn.shot_noise_threshold</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.svf_popcorn.html">voidfindertk.svf_popcorn package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames"><code class="docutils literal notranslate"><span class="pre">FileNames</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.CONFIG"><code class="docutils literal notranslate"><span class="pre">FileNames.CONFIG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.PAIRSFILE"><code class="docutils literal notranslate"><span class="pre">FileNames.PAIRSFILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.POPFILE"><code class="docutils literal notranslate"><span class="pre">FileNames.POPFILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.RAWPOPFILE"><code class="docutils literal notranslate"><span class="pre">FileNames.RAWPOPFILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.SPHFILE"><code class="docutils literal notranslate"><span class="pre">FileNames.SPHFILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.FileNames.TRSFILE"><code class="docutils literal notranslate"><span class="pre">FileNames.TRSFILE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.Paths"><code class="docutils literal notranslate"><span class="pre">Paths</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.Paths.CONFFILE"><code class="docutils literal notranslate"><span class="pre">Paths.CONFFILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.Paths.SVF"><code class="docutils literal notranslate"><span class="pre">Paths.SVF</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.auxfiles"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.auxfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.boxsize"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.boxsize</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.build_voids"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.build_voids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.cores"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.cores</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.densth"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.densth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.maxradius"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.maxradius</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.minradius"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.minradius</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.model_find"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.model_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.preprocess"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.preprocess()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.svf_path"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.svf_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.workdir"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.workdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.svf_popcorn.html#voidfindertk.svf_popcorn.SVFPopCorn.workdir_clean"><code class="docutils literal notranslate"><span class="pre">SVFPopCorn.workdir_clean</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.utils.html">voidfindertk.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.utils.html#voidfindertk.utils.Bunch"><code class="docutils literal notranslate"><span class="pre">Bunch</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.html#voidfindertk.utils.Bunch.to_dict"><code class="docutils literal notranslate"><span class="pre">Bunch.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.utils.html#voidfindertk.utils.chdir"><code class="docutils literal notranslate"><span class="pre">chdir</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.utils.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.accabc.html">voidfindertk.utils.accabc module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC"><code class="docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.box_to_grid.html">voidfindertk.utils.box_to_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.box_to_grid.html#voidfindertk.utils.box_to_grid.get_grispy_grid_from_box"><code class="docutils literal notranslate"><span class="pre">get_grispy_grid_from_box()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.bunch.html">voidfindertk.utils.bunch module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.bunch.html#voidfindertk.utils.bunch.Bunch"><code class="docutils literal notranslate"><span class="pre">Bunch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.context_managers.html">voidfindertk.utils.context_managers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.utils.make_workdir.html">voidfindertk.utils.make_workdir module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.make_workdir.html#voidfindertk.utils.make_workdir.create_run_work_dir"><code class="docutils literal notranslate"><span class="pre">create_run_work_dir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.zobov.html">voidfindertk.zobov package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.Names"><code class="docutils literal notranslate"><span class="pre">Names</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.Names.OUTPUT_JOZOV_VOIDS"><code class="docutils literal notranslate"><span class="pre">Names.OUTPUT_JOZOV_VOIDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.Names.OUTPUT_VOZINIT"><code class="docutils literal notranslate"><span class="pre">Names.OUTPUT_VOZINIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.Names.PARTICLES_IN_ZONES"><code class="docutils literal notranslate"><span class="pre">Names.PARTICLES_IN_ZONES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.Names.ZONES_IN_VOID"><code class="docutils literal notranslate"><span class="pre">Names.ZONES_IN_VOID</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF"><code class="docutils literal notranslate"><span class="pre">ZobovVF</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.box_size"><code class="docutils literal notranslate"><span class="pre">ZobovVF.box_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.buffer_size"><code class="docutils literal notranslate"><span class="pre">ZobovVF.buffer_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.build_voids"><code class="docutils literal notranslate"><span class="pre">ZobovVF.build_voids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.center_method"><code class="docutils literal notranslate"><span class="pre">ZobovVF.center_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.dtype"><code class="docutils literal notranslate"><span class="pre">ZobovVF.dtype</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.ensity_threshold"><code class="docutils literal notranslate"><span class="pre">ZobovVF.ensity_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.model_find"><code class="docutils literal notranslate"><span class="pre">ZobovVF.model_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.number_of_divisions"><code class="docutils literal notranslate"><span class="pre">ZobovVF.number_of_divisions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.preprocess"><code class="docutils literal notranslate"><span class="pre">ZobovVF.preprocess()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.workdir"><code class="docutils literal notranslate"><span class="pre">ZobovVF.workdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.workdir_clean"><code class="docutils literal notranslate"><span class="pre">ZobovVF.workdir_clean</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.ZobovVF.zobov_path"><code class="docutils literal notranslate"><span class="pre">ZobovVF.zobov_path</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.parse_tracers_in_zones_output"><code class="docutils literal notranslate"><span class="pre">parse_tracers_in_zones_output()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.zobov.html#voidfindertk.zobov.parse_zones_in_void_output"><code class="docutils literal notranslate"><span class="pre">parse_zones_in_void_output()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.io.html">voidfindertk.io module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.io.html#voidfindertk.io.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.settings.html">voidfindertk.settings module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.settings.html#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.settings.html#voidfindertk.settings.CWD_CONF_PATH"><code class="docutils literal notranslate"><span class="pre">CWD_CONF_PATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.settings.html#voidfindertk.settings.DEFAULT_CONF_PATH"><code class="docutils literal notranslate"><span class="pre">DEFAULT_CONF_PATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.settings.html#voidfindertk.settings.SETTINGS"><code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.settings.html#voidfindertk.settings.load_default_settings"><code class="docutils literal notranslate"><span class="pre">load_default_settings()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="voidfindertk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="voidfindertk.core.html" class="btn btn-neutral float-right" title="voidfindertk.core package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Federico Bustillos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

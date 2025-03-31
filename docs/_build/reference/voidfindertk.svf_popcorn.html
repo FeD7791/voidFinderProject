@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>voidfindertk.svf_popcorn package &mdash; voidfindertk 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="voidfindertk.utils package" href="voidfindertk.utils.html" />
+    <link rel="prev" title="voidfindertk.popcorn package" href="voidfindertk.popcorn.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            voidfindertk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">voidfindertk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="voidfindertk.html">voidfindertk package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="voidfindertk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.core.html">voidfindertk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.html">voidfindertk.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.popcorn.html">voidfindertk.popcorn package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">voidfindertk.svf_popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.html">voidfindertk.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.zobov.html">voidfindertk.zobov package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">voidfindertk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">voidfindertk</a></li>
+          <li class="breadcrumb-item"><a href="voidfindertk.html">voidfindertk package</a></li>
+      <li class="breadcrumb-item active">voidfindertk.svf_popcorn package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/voidfindertk.svf_popcorn.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-voidfindertk.svf_popcorn">
+<span id="voidfindertk-svf-popcorn-package"></span><h1>voidfindertk.svf_popcorn package<a class="headerlink" href="#module-voidfindertk.svf_popcorn" title="Link to this heading"></a></h1>
+<p>Spherical PopCorn Void Finder Interface.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.svf_popcorn.</span></span><span class="sig-name descname"><span class="pre">FileNames</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to hold the file names used in the Popcorn void finder project.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>CONFIG<span class="classifier">str</span></dt><dd><p>Name of the configuration file.</p>
+</dd>
+<dt>TRSFILE<span class="classifier">str</span></dt><dd><p>Name of the tracer file.</p>
+</dd>
+<dt>SPHFILE<span class="classifier">str</span></dt><dd><p>Name of the spherical voids catalogue file.</p>
+</dd>
+<dt>POPFILE<span class="classifier">str</span></dt><dd><p>Name of the popcorn voids catalogue file.</p>
+</dd>
+<dt>RAWPOPFILE<span class="classifier">str</span></dt><dd><p>Name of the raw popcorn voids file before cleaning.</p>
+</dd>
+<dt>PAIRSFILE<span class="classifier">str</span></dt><dd><p>Name of the file containing pairs of touching popcorn voids.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.CONFIG">
+<span class="sig-name descname"><span class="pre">CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vars.conf'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.CONFIG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.PAIRSFILE">
+<span class="sig-name descname"><span class="pre">PAIRSFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pairsfile.dat'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.PAIRSFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.POPFILE">
+<span class="sig-name descname"><span class="pre">POPFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'popfile.dat'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.POPFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.RAWPOPFILE">
+<span class="sig-name descname"><span class="pre">RAWPOPFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rawpopfile.dat'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.RAWPOPFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.SPHFILE">
+<span class="sig-name descname"><span class="pre">SPHFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sphfile.dat'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.SPHFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.FileNames.TRSFILE">
+<span class="sig-name descname"><span class="pre">TRSFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'trsfile.dat'</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.FileNames.TRSFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.Paths">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.svf_popcorn.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.Paths" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to store paths used in the Popcorn void finder.</p>
+<section id="id1">
+<h2>Attributes<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>SVF<span class="classifier">pathlib.Path</span></dt><dd><p>Path to the source folder of the Popcorn void finder.</p>
+</dd>
+<dt>CONFFILE<span class="classifier">pathlib.Path</span></dt><dd><p>Path to the configuration folder within the SVF directory.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.Paths.CONFFILE">
+<span class="sig-name descname"><span class="pre">CONFFILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/home/jorgefederico/updates/vftk_1109/vftk_updated/voidFinderProject/voidfindertk/svf_popcorn/popcorn_void_finder/Source/configuration')</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.Paths.CONFFILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.Paths.SVF">
+<span class="sig-name descname"><span class="pre">SVF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/home/jorgefederico/updates/vftk_1109/vftk_updated/voidFinderProject/voidfindertk/svf_popcorn/popcorn_void_finder/Source')</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.Paths.SVF" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.svf_popcorn.</span></span><span class="sig-name descname"><span class="pre">SVFPopCorn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auxfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'true'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">densth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minradius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxradius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">svf_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir_clean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC" title="voidfindertk.core.vfinder_abc.VoidFinderABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a></p>
+<p>PopCornVF class for void finding and analysis.</p>
+<section id="id2">
+<h2>Attributes<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>auxfiles<span class="classifier">str</span></dt><dd><p>Flag indicating the use of auxiliary files.</p>
+</dd>
+<dt>boxsize<span class="classifier">float</span></dt><dd><p>Length of the box in the same units as the tracer input file.</p>
+</dd>
+<dt>densth<span class="classifier">float</span></dt><dd><p>Density threshold for void identification.</p>
+</dd>
+<dt>minradius<span class="classifier">int</span></dt><dd><p>Minimum radius of a sphere in input units.</p>
+</dd>
+<dt>maxradius<span class="classifier">int</span></dt><dd><p>Maximum radius of a sphere in input units.</p>
+</dd>
+<dt>svf_path<span class="classifier">pathlib.Path</span></dt><dd><p>Path to the source directory of the SVF.</p>
+</dd>
+<dt>cores<span class="classifier">str or None</span></dt><dd><p>MPI flags for parallel computation.</p>
+</dd>
+<dt>workdir<span class="classifier">pathlib.Path</span></dt><dd><p>Path to the working directory.</p>
+</dd>
+<dt>workdir_clean<span class="classifier">bool</span></dt><dd><p>Flag to clean the working directory on deletion.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>MASSMIN popcorns parameter in vars.conf file is always set to when using
+this interface. This way all the masses in the input file are considered.
+In order to constrain the mass of the input please use the box method:
+box.mass_cutoff(mass_threshold=&lt;threshold&gt;).</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.auxfiles">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">auxfiles</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.auxfiles" title="Link to this definition"></a></dt>
+<dd><p>Returns the flag for auxiliary files.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.boxsize">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boxsize</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.boxsize" title="Link to this definition"></a></dt>
+<dd><p>Returns the length of the box.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.build_voids">
+<span class="sig-name descname"><span class="pre">build_voids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_find_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.build_voids" title="Link to this definition"></a></dt>
+<dd><p>Postprocess outputs from PopCorn Void Finder output files.</p>
+<p>Postprocesses the outputs of the POPCORN (spherical) void finder to get
+the list of tracers inside each void (if any) and properties found by
+this method.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>model_find_parameters<span class="classifier">Dict</span></dt><dd><p>Parameters obtained from the model_find step.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>tracers_in_voids<span class="classifier">tuple</span></dt><dd><p>List of indexes of tracers (relative to the Box object index)
+inside each void.</p>
+</dd>
+<dt>centers<span class="classifier">numpy 2D array</span></dt><dd><p>(x, y, z) coordinates of each center for each void.</p>
+</dd>
+<dt>extra<span class="classifier">Dict</span></dt><dd><p>Dictionary with extra parameters, varying from properties to
+directory paths.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.cores">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cores</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.cores" title="Link to this definition"></a></dt>
+<dd><p>Returns the MPI flags.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.densth">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">densth</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.densth" title="Link to this definition"></a></dt>
+<dd><p>Returns the density threshold.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.maxradius">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxradius</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.maxradius" title="Link to this definition"></a></dt>
+<dd><p>Returns the maximum radius for void detection.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.minradius">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">minradius</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.minradius" title="Link to this definition"></a></dt>
+<dd><p>Returns the minimum radius for void detection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.model_find">
+<span class="sig-name descname"><span class="pre">model_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.model_find" title="Link to this definition"></a></dt>
+<dd><p>Performs Void Finding with PopCorn Void Finder.</p>
+<p>Runs the POPCORN void finder by creating the input file and the
+vars.conf parameter file and then running the binary using command line
+instructions.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>box<span class="classifier">Object</span></dt><dd><p>Box object that holds the tracer properties.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>Dictionary with two parameters:</dt><dd><ul class="simple">
+<li><p>run_work_dir : path to the working directory.</p></li>
+<li><p>box : Box Object.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="id5">
+<h3>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>To run the POPCORN void finder, an input tracer and a configuration
+file are needed. The input tracer file is built using the Box Object.
+The configuration file is built using the parameters of the class.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.preprocess" title="Link to this definition"></a></dt>
+<dd><p>Placeholder for preprocessing the box object.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>box<span class="classifier">Object</span></dt><dd><p>The box object to preprocess.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Object</dt><dd><p>The processed box object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.svf_path">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">svf_path</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.svf_path" title="Link to this definition"></a></dt>
+<dd><p>Returns the path to the SVF directory.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.workdir">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">workdir</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.workdir" title="Link to this definition"></a></dt>
+<dd><p>Returns the working directory path.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.workdir_clean">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">workdir_clean</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.workdir_clean" title="Link to this definition"></a></dt>
+<dd><p>Returns the flag for cleaning the working directory.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="voidfindertk.popcorn.html" class="btn btn-neutral float-left" title="voidfindertk.popcorn package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="voidfindertk.utils.html" class="btn btn-neutral float-right" title="voidfindertk.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Federico Bustillos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

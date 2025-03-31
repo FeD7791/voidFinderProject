@@ -1,0 +1,911 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>voidfindertk.core package &mdash; voidfindertk 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="voidfindertk.core.box module" href="voidfindertk.core.box.html" />
+    <link rel="prev" title="voidfindertk package" href="voidfindertk.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            voidfindertk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">voidfindertk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="voidfindertk.html">voidfindertk package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#voidfindertk.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="voidfindertk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">voidfindertk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.datasets.html">voidfindertk.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.popcorn.html">voidfindertk.popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.svf_popcorn.html">voidfindertk.svf_popcorn package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.utils.html">voidfindertk.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="voidfindertk.zobov.html">voidfindertk.zobov package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">voidfindertk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">voidfindertk</a></li>
+          <li class="breadcrumb-item"><a href="voidfindertk.html">voidfindertk package</a></li>
+      <li class="breadcrumb-item active">voidfindertk.core package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/voidfindertk.core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-voidfindertk.core">
+<span id="voidfindertk-core-package"></span><h1>voidfindertk.core package<a class="headerlink" href="#module-voidfindertk.core" title="Link to this heading"></a></h1>
+<p>Void Finder Toolkit core modules.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.Box">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.</span></span><span class="sig-name descname"><span class="pre">Box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Box" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Box Class.</p>
+<p>Class used to describe a set of points (x,y,z) alongside with its
+velocities (vx,vy,vz)</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>y<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>z<span class="classifier">numpy.ndarray</span></dt><dd><p>(x,y,z) array of position elements</p>
+</dd>
+<dt>vx<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>vy<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>vz<span class="classifier">numpy.ndarray</span></dt><dd><p>(vx,vy,vz) array of velocity elements</p>
+</dd>
+<dt>m<span class="classifier">numpy.ndarray</span></dt><dd><p>array of masses</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.arr_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arr_</span></span><a class="headerlink" href="#voidfindertk.core.Box.arr_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Box.copy" title="Link to this definition"></a></dt>
+<dd><p>Method used to perform a deep copy of the class Box.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Keyword arguments to update the Box parameters.</p>
+</dd>
+</dl>
+</section>
+<section id="retruns">
+<h3>Retruns<a class="headerlink" href="#retruns" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>Box object with a copy of Box Parameters.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.mass_cutoff">
+<span class="sig-name descname"><span class="pre">mass_cutoff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mass_threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Box.mass_cutoff" title="Link to this definition"></a></dt>
+<dd><p>Filter the points by mass threshold.</p>
+<p>Returns a new <cite>Box</cite> object that only includes points with a mass
+greater than the given threshold.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mass_threshold<span class="classifier">float</span></dt><dd><p>The mass threshold above which points will be included.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Box</dt><dd><p>A new <cite>Box</cite> object containing only points with mass greater
+than the threshold.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.max_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_</span></span><a class="headerlink" href="#voidfindertk.core.Box.max_" title="Link to this definition"></a></dt>
+<dd><p>Returns the maximun value, in length position of the box.</p>
+<p>This value is the same for the x,y,z coordinates since all tracers are
+aligned in a box.</p>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>int</dt><dd><p>The lenght maximun value of the box.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.min_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_</span></span><a class="headerlink" href="#voidfindertk.core.Box.min_" title="Link to this definition"></a></dt>
+<dd><p>Returns the minimun value, in length position of the box.</p>
+<p>This value is the same for the x,y,z coordinates since all tracers are
+aligned in a box.</p>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>int</dt><dd><p>The lenght minimun value of the box.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Box.size" title="Link to this definition"></a></dt>
+<dd><p>Returns the lenght of side of the box.</p>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>int : Lenght of box.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Box.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Box.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Method used to convert the class Box to a dictionary.</p>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>dict</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidFinderABC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.</span></span><span class="sig-name descname"><span class="pre">VoidFinderABC</span></span><a class="headerlink" href="#voidfindertk.core.VoidFinderABC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for finding voids in a given box.</p>
+<p>This class defines the interface for subclasses to implement the
+functionality to preprocess data, model the findings, and build voids.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidFinderABC.build_voids">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_voids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_find_parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidFinderABC.build_voids" title="Link to this definition"></a></dt>
+<dd><p>Build voids from the model find parameters.</p>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>model_find_parameters<span class="classifier">object</span></dt><dd><p>The parameters resulting from the model finding process.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h2>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tracers_in_voids<span class="classifier">object</span></dt><dd><p>Information about tracers within the identified voids.</p>
+</dd>
+<dt>centers<span class="classifier">object</span></dt><dd><p>The centers of the identified voids.</p>
+</dd>
+<dt>extra<span class="classifier">object</span></dt><dd><p>Any additional information generated during void construction.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidFinderABC.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidFinderABC.find" title="Link to this definition"></a></dt>
+<dd><p>Find voids in the provided box.</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>box<span class="classifier">object</span></dt><dd><p>The input data structure representing the box of tracers in which
+voids are to be found.</p>
+</dd>
+<dt>box_copy<span class="classifier">bool, optional</span></dt><dd><p>Whether to copy the box before preprocessing it. Default is False.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h2>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Voids</dt><dd><p>An instance of the Voids class containing the voids information,
+including tracers in voids, their centers, and any extra
+information.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidFinderABC.model_find">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">procesed_box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidFinderABC.model_find" title="Link to this definition"></a></dt>
+<dd><p>Execute the search for voids in the Box.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>procesed_box<span class="classifier">object</span></dt><dd><p>Box object resulting from the preprocessing step.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>model_find_parameters<span class="classifier">object</span></dt><dd><p>The parameters resulting from the model finding process.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidFinderABC.preprocess">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidFinderABC.preprocess" title="Link to this definition"></a></dt>
+<dd><p>Preprocess the input box if needed.</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>box<span class="classifier">object</span></dt><dd><p>The input data structure to preprocess.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>preprocess_parameters<span class="classifier">object</span></dt><dd><p>Returns Box object with procesed parameters.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidPlotter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.</span></span><span class="sig-name descname"><span class="pre">VoidPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidPlotter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC" title="voidfindertk.utils.accabc.AccessorABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></p>
+<p>Plotter: Plotter object that plots the voids.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidPlotter.void_galaxy_corr">
+<span class="sig-name descname"><span class="pre">void_galaxy_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_radius_search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidPlotter.void_galaxy_corr" title="Link to this definition"></a></dt>
+<dd><p>Compute the Void-Galaxy Correlation Function (VGCF) and plot the         result.</p>
+<p>This method calculates the Void-Galaxy Correlation Function (VGCF)
+over a range of radii and plots the result on the provided axis. If no
+axis is provided, it will use the current active axis.</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>max_radius_search<span class="classifier">float</span></dt><dd><p>The maximum radius to search for void-galaxy correlations (in the
+same units as the box dimensions).</p>
+</dd>
+<dt>delta_rad<span class="classifier">float, optional, default: 1</span></dt><dd><p>The radial bin size for calculating the correlation function.</p>
+</dd>
+<dt>n_jobs<span class="classifier">int, optional, default: 1</span></dt><dd><p>The number of parallel jobs to run for the correlation function
+calculation.</p>
+</dd>
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional, default: None</span></dt><dd><p>The axis on which to plot the result. If None, the current active
+axis is used.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h2>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axis with the Void-Galaxy Correlation Function plotted.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidPlotter.void_size_function">
+<span class="sig-name descname"><span class="pre">void_size_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsf_kws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidPlotter.void_size_function" title="Link to this definition"></a></dt>
+<dd><p>Create a plot of the void size function.</p>
+<p>This method generates a plot for the void size function using data
+derived from the voids. It visualizes the relationship between the
+logarithm of the radius and the density of voids.</p>
+<section id="id18">
+<h2>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional</span></dt><dd><p>The axes on which to plot. If None, the current axes are used.</p>
+</dd>
+<dt>vsf_kws<span class="classifier">dict, optional</span></dt><dd><p>Additional keyword arguments passed to the void size function
+calculation.</p>
+</dd>
+<dt><a href="#id19"><span class="problematic" id="id20">**</span></a>kwargs :</dt><dd><p>Additional keyword arguments passed to the seaborn lineplot.</p>
+</dd>
+</dl>
+</section>
+<section id="id21">
+<h2>Returns<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axes with the void size function plot.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>The x-axis is logarithmically scaled, and the y-axis represents
+the density of voids. The plot includes a grid and is titled with
+the density contrast.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.VoidPlotter.vsf">
+<span class="sig-name descname"><span class="pre">vsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsf_kws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.VoidPlotter.vsf" title="Link to this definition"></a></dt>
+<dd><p>Create a plot of the void size function.</p>
+<p>This method generates a plot for the void size function using data
+derived from the voids. It visualizes the relationship between the
+logarithm of the radius and the density of voids.</p>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes, optional</span></dt><dd><p>The axes on which to plot. If None, the current axes are used.</p>
+</dd>
+<dt>vsf_kws<span class="classifier">dict, optional</span></dt><dd><p>Additional keyword arguments passed to the void size function
+calculation.</p>
+</dd>
+<dt><a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs :</dt><dd><p>Additional keyword arguments passed to the seaborn lineplot.</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h2>Returns<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ax<span class="classifier">matplotlib.axes.Axes</span></dt><dd><p>The axes with the void size function plot.</p>
+</dd>
+</dl>
+</section>
+<section id="id26">
+<h2>Notes<a class="headerlink" href="#id26" title="Link to this heading"></a></h2>
+<p>The x-axis is logarithmically scaled, and the y-axis represents
+the density of voids. The plot includes a grid and is titled with
+the density contrast.</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.</span></span><span class="sig-name descname"><span class="pre">Voids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box" title="voidfindertk.core.box.Box"><span class="pre">Box</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers_in_voids_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to represent and manage voids in a system of particles.</p>
+<p>This class provides methods to analyze voids and the particles within them,
+including retrieving the method used to find the voids, accessing the box
+properties, and finding specific voids associated with tracer particles.</p>
+<section id="id27">
+<h2>Parameters<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>method<span class="classifier">str</span></dt><dd><p>The name of the method used to find the voids.</p>
+</dd>
+<dt>box<span class="classifier">Box</span></dt><dd><p>The Box object containing properties of the box.</p>
+</dd>
+<dt>tracers_in_voids<span class="classifier">tuple of numpy.ndarray</span></dt><dd><p>A tuple of arrays, where each array contains the IDs of particles
+inside a void.</p>
+</dd>
+<dt>centers<span class="classifier">array-like</span></dt><dd><p>Coordinates of the centers of the voids.</p>
+</dd>
+<dt>extra<span class="classifier">dict</span></dt><dd><p>Additional results and information of the run.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.box">
+<span class="sig-name descname"><span class="pre">box</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box" title="voidfindertk.core.box.Box"><span class="pre">Box</span></a></em><a class="headerlink" href="#voidfindertk.core.Voids.box" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.centers">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centers</span></span><a class="headerlink" href="#voidfindertk.core.Voids.centers" title="Link to this definition"></a></dt>
+<dd><p>Returns the center/s of void/s.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.centers_">
+<span class="sig-name descname"><span class="pre">centers_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.core.Voids.centers_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.e_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">e_</span></span><a class="headerlink" href="#voidfindertk.core.Voids.e_" title="Link to this definition"></a></dt>
+<dd><p>dict: Holds extra results and information of the run.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.effective_radius">
+<span class="sig-name descname"><span class="pre">effective_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.effective_radius" title="Link to this definition"></a></dt>
+<dd><p>Computes the effective radius of voids using the given method.</p>
+<section id="id28">
+<h3>Parameters<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>method<span class="classifier">{‘density’, ‘extra’, ‘volume’}, default=’density’</span></dt><dd><p>The method used to calculate the effective radius.</p>
+</dd>
+<dt><a href="#id29"><span class="problematic" id="id30">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the method used to calculate
+the effective radius.</p>
+</dd>
+</dl>
+</section>
+<section id="id31">
+<h3>Returns<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array containing the calculated effective radii of the voids.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.extra_">
+<span class="sig-name descname"><span class="pre">extra_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.utils.bunch.html#voidfindertk.utils.bunch.Bunch" title="voidfindertk.utils.bunch.Bunch"><span class="pre">Bunch</span></a></em><a class="headerlink" href="#voidfindertk.core.Voids.extra_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.filter_by_index">
+<span class="sig-name descname"><span class="pre">filter_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.filter_by_index" title="Link to this definition"></a></dt>
+<dd><p>Filters Voids based on Index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.find_centers">
+<span class="sig-name descname"><span class="pre">find_centers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_tracers_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1000]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.find_centers" title="Link to this definition"></a></dt>
+<dd><p>Finds and calculates the centers of voids.</p>
+<p>This method computes the centers of the voids based on a set of tracers
+that are inside voids.</p>
+<section id="id32">
+<h3>Returns<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class with the new centers, the
+tracers inside each void are the same.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.find_radius_and_clean">
+<span class="sig-name descname"><span class="pre">find_radius_and_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleaner_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'overlap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.find_radius_and_clean" title="Link to this definition"></a></dt>
+<dd><p>Finds the radius of voids and cleans them using the specified methods.</p>
+<p>This method calculates the effective radius of voids using the
+specified radius method, applies a cleaning process, and returns a new
+instance of the Voids class with cleaned voids.</p>
+<section id="id33">
+<h3>Parameters<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>cleaner_method<span class="classifier">str, {‘overlap’,’cbl’}, default=’overlap’</span></dt><dd><p>The cleaner method to use.</p>
+</dd>
+<dt>radius_method<span class="classifier">str, {‘density’,’extra’,’volume’}</span></dt><dd><p>The method to use for calculating the effective radius. Default is
+“default”.</p>
+</dd>
+<dt><a href="#id34"><span class="problematic" id="id35">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the effective radius and
+cleaner methods.</p>
+</dd>
+</dl>
+</section>
+<section id="id36">
+<h3>Returns<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class with cleaned voids and calculated
+radii.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.method">
+<span class="sig-name descname"><span class="pre">method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#voidfindertk.core.Voids.method" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.numbers_of_voids_">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">numbers_of_voids_</span></span><a class="headerlink" href="#voidfindertk.core.Voids.numbers_of_voids_" title="Link to this definition"></a></dt>
+<dd><p>int: Number of voids.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter" title="voidfindertk.core.plot_acc.VoidPlotter"><span class="pre">VoidPlotter</span></a></em><a class="headerlink" href="#voidfindertk.core.Voids.plot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.tracers">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tracers</span></span><a class="headerlink" href="#voidfindertk.core.Voids.tracers" title="Link to this definition"></a></dt>
+<dd><p>Returns the tracers that belong to a void.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.tracers_in_voids_">
+<span class="sig-name descname"><span class="pre">tracers_in_voids_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#voidfindertk.core.Voids.tracers_in_voids_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.void_galaxy_corr">
+<span class="sig-name descname"><span class="pre">void_galaxy_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_radius_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.void_galaxy_corr" title="Link to this definition"></a></dt>
+<dd><p>Calculates the void-galaxy cross correlation function.</p>
+<p>The search is performed by calculating the tracers inside of concentric
+spherical shells with width [rad ,rad+delta_rad] up to
+max_radius_search distance around void centers.</p>
+<section id="id37">
+<h3>Parameters<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>max_radius_search<span class="classifier">float</span></dt><dd><p>Maximum radius of the search.</p>
+</dd>
+<dt>delta_rad<span class="classifier">float, default=1</span></dt><dd><p>Width in r of the concentric shells.</p>
+</dd>
+<dt>n_jobs<span class="classifier">int , default=1</span></dt><dd><p>Measure of the number of cores used to perform a parallel search.
+Use -1 to exhaust the cores.</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vgcf<span class="classifier">list</span></dt><dd><p>Values of the vgcf.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.void_of">
+<span class="sig-name descname"><span class="pre">void_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.void_of" title="Link to this definition"></a></dt>
+<dd><p>Returns indices of voids containing a specific tracer particle.</p>
+<section id="id39">
+<h3>Parameters<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tracer<span class="classifier">int</span></dt><dd><p>ID of the tracer particle to search for in voids.</p>
+</dd>
+</dl>
+</section>
+<section id="id40">
+<h3>Returns<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>Array of indices of voids containing the tracer particle.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.void_size_function">
+<span class="sig-name descname"><span class="pre">void_size_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_1_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_2_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.void_size_function" title="Link to this definition"></a></dt>
+<dd><p>Calculate the void size distribution based on the effective radius.</p>
+<p>This function computes the log of radius, count of voids, and delta
+values using the provided parameters for scaling and sampling.</p>
+<section id="id41">
+<h3>Parameters<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
+of tracers (See vsf.void_size_function)</p>
+</dd>
+<dt>n_step2<span class="classifier">int, optional</span></dt><dd><p>Steps for the second scale. Default is 10.</p>
+</dd>
+<dt>scale_1_num_samples<span class="classifier">int, optional</span></dt><dd><p>Number of the first part of bins. Default is 7.</p>
+</dd>
+<dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
+</dd>
+<dt><a href="#id42"><span class="problematic" id="id43">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+method.</p>
+</dd>
+</dl>
+</section>
+<section id="id44">
+<h3>Returns<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<dl>
+<dt>tuple</dt><dd><p>A tuple containing:
+- log_of_radius : array</p>
+<blockquote>
+<div><p>The logarithm of the effective radius values.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>count<span class="classifier">array</span></dt><dd><p>The count of voids corresponding to each radius.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>delta<span class="classifier">array</span></dt><dd><p>The delta values for the void size distribution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.Voids.vsf">
+<span class="sig-name descname"><span class="pre">vsf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_step2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_1_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_2_num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.Voids.vsf" title="Link to this definition"></a></dt>
+<dd><p>Calculate the void size distribution based on the effective radius.</p>
+<p>This function computes the log of radius, count of voids, and delta
+values using the provided parameters for scaling and sampling.</p>
+<section id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
+of tracers (See vsf.void_size_function)</p>
+</dd>
+<dt>n_step2<span class="classifier">int, optional</span></dt><dd><p>Steps for the second scale. Default is 10.</p>
+</dd>
+<dt>scale_1_num_samples<span class="classifier">int, optional</span></dt><dd><p>Number of the first part of bins. Default is 7.</p>
+</dd>
+<dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
+</dd>
+<dt><a href="#id46"><span class="problematic" id="id47">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+method.</p>
+</dd>
+</dl>
+</section>
+<section id="id48">
+<h3>Returns<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<dl>
+<dt>tuple</dt><dd><p>A tuple containing:
+- log_of_radius : array</p>
+<blockquote>
+<div><p>The logarithm of the effective radius values.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>count<span class="classifier">array</span></dt><dd><p>The count of voids corresponding to each radius.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>delta<span class="classifier">array</span></dt><dd><p>The delta values for the void size distribution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.spherical_density_mapping">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.</span></span><span class="sig-name descname"><span class="pre">spherical_density_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cells</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.spherical_density_mapping" title="Link to this definition"></a></dt>
+<dd><p>Compute the effective radius of voids based on nearest neighbor distances    using grispy.</p>
+<p>This function calculates the effective radius of voids by considering
+the distances to the nearest neighbors for each center and comparing
+against a critical density. It returns the effective radius, error,
+tracer particles within the void, and density map for each void.</p>
+<section id="id49">
+<h2>Parameters<a class="headerlink" href="#id49" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>centers<span class="classifier">array-like, shape (n_centers, 3)</span></dt><dd><p>Coordinates of the centers for which the effective radius is to be
+computed.</p>
+</dd>
+<dt>box<span class="classifier">Box</span></dt><dd><p>Box object containing the properties of the spatial domain.</p>
+</dd>
+<dt>delta<span class="classifier">float, optional</span></dt><dd><p>Parameter to adjust the critical density. The critical density is
+calculated as (1 + delta) * (number of tracers / (box volume)^3).
+Default is -0.9.</p>
+</dd>
+<dt>n_neighbors<span class="classifier">int, optional</span></dt><dd><p>Number of nearest neighbors to consider for each center.
+Default is 100.</p>
+</dd>
+<dt>n_cells<span class="classifier">int, optional</span></dt><dd><p>Number of cells used for the spatial grid. Default is 64.</p>
+</dd>
+</dl>
+</section>
+<section id="id50">
+<h2>Returns<a class="headerlink" href="#id50" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>errors<span class="classifier">list of float</span></dt><dd><p>List of errors associated with each void, posble values are:
+0 : No error
+1 : Local overdensity, maybe related to two near underdensities.
+2 : Densitie map over the crital density minima. Probably not a void
+3 : Densitie map under the critical density minima. Increase the
+number of nearest neighbors used to perform the search.</p>
+</dd>
+<dt>radius<span class="classifier">list of float</span></dt><dd><p>List of effective radii for each void.</p>
+</dd>
+<dt>tracers<span class="classifier">tuple of numpy.ndarray</span></dt><dd><p>Tuple where each element is an array containing the IDs of the tracers
+within the corresponding void.</p>
+</dd>
+<dt>densities<span class="classifier">list of float</span></dt><dd><p>List of densities for each void.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.box.html">voidfindertk.core.box module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box"><code class="docutils literal notranslate"><span class="pre">Box</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.arr_"><code class="docutils literal notranslate"><span class="pre">Box.arr_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.copy"><code class="docutils literal notranslate"><span class="pre">Box.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.mass_cutoff"><code class="docutils literal notranslate"><span class="pre">Box.mass_cutoff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.max_"><code class="docutils literal notranslate"><span class="pre">Box.max_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.min_"><code class="docutils literal notranslate"><span class="pre">Box.min_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.size"><code class="docutils literal notranslate"><span class="pre">Box.size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box.to_dict"><code class="docutils literal notranslate"><span class="pre">Box.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.center_finder.html">voidfindertk.core.center_finder module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.center_finder.html#voidfindertk.core.center_finder.center_calculator"><code class="docutils literal notranslate"><span class="pre">center_calculator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.cleaners.html">voidfindertk.core.cleaners module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.cleaners.html#voidfindertk.core.cleaners.get_cleaner"><code class="docutils literal notranslate"><span class="pre">get_cleaner()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.plot_acc.html">voidfindertk.core.plot_acc module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.BoxPlotter"><code class="docutils literal notranslate"><span class="pre">BoxPlotter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.BoxPlotter.hist2d"><code class="docutils literal notranslate"><span class="pre">BoxPlotter.hist2d()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter"><code class="docutils literal notranslate"><span class="pre">VoidPlotter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter.void_galaxy_corr"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.void_galaxy_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter.void_size_function"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.void_size_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.plot_acc.html#voidfindertk.core.plot_acc.VoidPlotter.vsf"><code class="docutils literal notranslate"><span class="pre">VoidPlotter.vsf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.radius_finder.html">voidfindertk.core.radius_finder module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors.EXEED_CRITICAL"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors.EXEED_CRITICAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors.MAYBE_NEAR_ANOTHER_VOID"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors.MAYBE_NEAR_ANOTHER_VOID</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors.NO_ERROR"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors.NO_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.EffectiveRadiusErrors.UNDER_CRITICAL"><code class="docutils literal notranslate"><span class="pre">EffectiveRadiusErrors.UNDER_CRITICAL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.get_radius_searcher"><code class="docutils literal notranslate"><span class="pre">get_radius_searcher()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.radius_finder.html#voidfindertk.core.radius_finder.spherical_density_mapping"><code class="docutils literal notranslate"><span class="pre">spherical_density_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html">voidfindertk.core.vfinder_abc module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC.build_voids"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.build_voids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC.find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC.model_find"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.model_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.vfinder_abc.html#voidfindertk.core.vfinder_abc.VoidFinderABC.preprocess"><code class="docutils literal notranslate"><span class="pre">VoidFinderABC.preprocess()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.vgcf.html">voidfindertk.core.vgcf module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.vgcf.html#voidfindertk.core.vgcf.vgcf_statistic"><code class="docutils literal notranslate"><span class="pre">vgcf_statistic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.voids.html">voidfindertk.core.voids module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids"><code class="docutils literal notranslate"><span class="pre">Voids</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.box"><code class="docutils literal notranslate"><span class="pre">Voids.box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.centers"><code class="docutils literal notranslate"><span class="pre">Voids.centers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.centers_"><code class="docutils literal notranslate"><span class="pre">Voids.centers_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.e_"><code class="docutils literal notranslate"><span class="pre">Voids.e_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.effective_radius"><code class="docutils literal notranslate"><span class="pre">Voids.effective_radius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.extra_"><code class="docutils literal notranslate"><span class="pre">Voids.extra_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.filter_by_index"><code class="docutils literal notranslate"><span class="pre">Voids.filter_by_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.find_centers"><code class="docutils literal notranslate"><span class="pre">Voids.find_centers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.find_radius_and_clean"><code class="docutils literal notranslate"><span class="pre">Voids.find_radius_and_clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.method"><code class="docutils literal notranslate"><span class="pre">Voids.method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.numbers_of_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.numbers_of_voids_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.plot"><code class="docutils literal notranslate"><span class="pre">Voids.plot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.tracers"><code class="docutils literal notranslate"><span class="pre">Voids.tracers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.tracers_in_voids_"><code class="docutils literal notranslate"><span class="pre">Voids.tracers_in_voids_</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.void_galaxy_corr"><code class="docutils literal notranslate"><span class="pre">Voids.void_galaxy_corr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.void_of"><code class="docutils literal notranslate"><span class="pre">Voids.void_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.void_size_function"><code class="docutils literal notranslate"><span class="pre">Voids.void_size_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="voidfindertk.core.voids.html#voidfindertk.core.voids.Voids.vsf"><code class="docutils literal notranslate"><span class="pre">Voids.vsf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="voidfindertk.core.vsf.html">voidfindertk.core.vsf module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voidfindertk.core.vsf.html#voidfindertk.core.vsf.void_size_function"><code class="docutils literal notranslate"><span class="pre">void_size_function()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="voidfindertk.html" class="btn btn-neutral float-left" title="voidfindertk package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="voidfindertk.core.box.html" class="btn btn-neutral float-right" title="voidfindertk.core.box module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Federico Bustillos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

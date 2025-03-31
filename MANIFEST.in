@@ -30,6 +30,7 @@ recursive-exclude voidfindertk *.o
 recursive-exclude draft *
 recursive-exclude examples *
 recursive-exclude tests *
+recursive-exclude docs *
 
 recursive-exclude voidfindertk/svf_popcorn/popcorn_void_finder *
 recursive-exclude voidfindertk/zobov/src *

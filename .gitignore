@@ -22,6 +22,7 @@ voidfindertk/core/*.so
 .coverage*
 
 # Distribution / packaging
+# docs/
 bin/
 build/
 develop-eggs/
@@ -64,7 +65,6 @@ coverage.xml
 *.pot
 
 # Sphinx documentation
-docs/_build/
 
 
 # Other
@@ -78,6 +78,7 @@ local_draft/
 workdir/
 work_directory/
 tmp*/
+myserver.py
 
 
 main.py
