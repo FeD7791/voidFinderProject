@@ -300,7 +300,7 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
 
     This function calculates the effective radius of voids by considering
     the distances to the nearest neighbors for each center and comparing
-    against a critical density. It returns the effective radius, error,
+    against a threshold density. It returns the effective radius, error,
     tracer particles within the void, and density map for each void.
 
     Parameters
@@ -310,14 +310,14 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
         computed.
     box : Box
         Box object containing the properties of the spatial domain.
-    delta : float, optional
-        Parameter to adjust the critical density. The critical density is
+    delta : float,
+        Parameter to adjust the threshold density. The threshold density is
         calculated as (1 + delta) * (number of tracers / (box volume)^3).
         Default is -0.9.
-    n_neighbors : int, optional
+    n_neighbors : int,
         Number of nearest neighbors to consider for each center.
         Default is 100.
-    n_cells : int, optional
+    n_cells : int,
         Number of cells used for the spatial grid. Default is 64.
 
     Returns
@@ -326,8 +326,8 @@ def spherical_density_mapping(centers, box, *, delta, n_neighbors, n_cells):
         List of errors associated with each void, posble values are:
         0 : No error
         1 : Local overdensity, maybe related to two near underdensities.
-        2 : Densitie map over the crital density minima. Probably not a void
-        3 : Densitie map under the critical density minima. Increase the
+        2 : Densitie map over the threshold density minima. Probably not a void
+        3 : Densitie map under the threshold density minima. Increase the
         number of nearest neighbors used to perform the search.
     radius : list of float
         List of effective radii for each void.
@@ -410,14 +410,14 @@ def _spherical_density_radius_mapping(centers, box, **kwargs):
         Array representing the dimensions of the periodic box, typically of
         shape (d,).
 
-    **kwargs : dict, optional
+    **kwargs : dict,
         Additional arguments controlling the density mapping behavior:
 
-        - delta : float, optional, default=-0.9
+        - delta : float, default=-0.9
             Adjustment factor for density calculation.
-        - n_neighbors : int, optional, default=100
+        - n_neighbors : int, default=100
             Number of nearest neighbors to consider in the density calculation.
-        - n_cells : int, optional, default=64
+        - n_cells : int, default=64
             Number of cells for Grispy Grid.
 
     Returns
@@ -459,10 +459,9 @@ def _extra_effective_radius(extra, **kwargs):
 
 
 def _volume_effective_radius(extra, **kwargs):
-    properties = extra.properties
-    if "VoidVol" in list(properties):
-        volume = np.array(properties["VoidVol"])
+    if "volume" in list(extra.keys()):
+        volume = np.array(extra.volume)
     else:
-        ValueError("This method does not admit volume radius search")
+        ValueError("No volume Found in extra, provide it first.")
     radius = ((volume / np.pi) * 0.75) ** (1 / 3)
     return radius

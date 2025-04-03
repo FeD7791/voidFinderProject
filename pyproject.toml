@@ -60,6 +60,9 @@ dependencies = [
     # Multiprocessing
     "joblib",
 
+    # Persisting
+    "pickle",
+
 ]
 
 urls = { Repository = "https://github.com/FeD7791/voidFinderProject.git" }
