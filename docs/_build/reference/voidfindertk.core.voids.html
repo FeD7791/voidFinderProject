@@ -119,6 +119,59 @@ inside a void.</p>
 <dt>extra<span class="classifier">dict</span></dt><dd><p>Additional results and information of the run.</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.voids.Voids._cleaner">
+<span class="sig-name descname"><span class="pre">_cleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleaner_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'overlap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rad_min_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0,</span> <span class="pre">100.0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.voids.Voids._cleaner" title="Link to this definition"></a></dt>
+<dd><p>Cleans voids based on a cleaner method and given radius.</p>
+<p>This method uses the specified cleaner method to clean the voids and
+applies a filtering process based on the given radius.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>centers<span class="classifier">array-like</span></dt><dd><p>The coordinates of the centers of the voids.</p>
+</dd>
+<dt>radius<span class="classifier">array-like</span></dt><dd><p>The radii of the voids.</p>
+</dd>
+<dt>cleaner_method<span class="classifier">{‘overlap’, ‘cbl’}, default=’overlap’</span></dt><dd><p>The method used to clean the voids.</p>
+</dd>
+<dt>rad_min_max<span class="classifier">list, optional</span></dt><dd><p>A list containing the minimum and maximum radius for filtering
+voids. Default is [0.0, 100.0].</p>
+</dd>
+<dt><a href="#id2"><span class="problematic" id="id3">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the cleaner method.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class with cleaned voids.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.core.voids.Voids._create_new_instance">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_create_new_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.voids.Voids._create_new_instance" title="Link to this definition"></a></dt>
+<dd><p>Creates a new instance of the Voids class with the given parameters.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>parameters<span class="classifier">dict</span></dt><dd><p>A dictionary containing the parameters to initialize the new Voids
+object.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Voids</dt><dd><p>A new instance of the Voids class initialized with the given
+parameters.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="voidfindertk.core.voids.Voids.box">
 <span class="sig-name descname"><span class="pre">box</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="voidfindertk.core.box.html#voidfindertk.core.box.Box" title="voidfindertk.core.box.Box"><span class="pre">Box</span></a></em><a class="headerlink" href="#voidfindertk.core.voids.Voids.box" title="Link to this definition"></a></dt>
@@ -145,18 +198,18 @@ inside a void.</p>
 <dt class="sig sig-object py" id="voidfindertk.core.voids.Voids.effective_radius">
 <span class="sig-name descname"><span class="pre">effective_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.voids.Voids.effective_radius" title="Link to this definition"></a></dt>
 <dd><p>Computes the effective radius of voids using the given method.</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>method<span class="classifier">{‘density’, ‘extra’, ‘volume’}, default=’density’</span></dt><dd><p>The method used to calculate the effective radius.</p>
 </dd>
-<dt><a href="#id2"><span class="problematic" id="id3">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the method used to calculate
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the method used to calculate
 the effective radius.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>An array containing the calculated effective radii of the voids.</p>
 </dd>
@@ -181,8 +234,8 @@ the effective radius.</p>
 <dd><p>Finds and calculates the centers of voids.</p>
 <p>This method computes the centers of the voids based on a set of tracers
 that are inside voids.</p>
-<section id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Voids</dt><dd><p>A new instance of the Voids class with the new centers, the
 tracers inside each void are the same.</p>
@@ -198,21 +251,21 @@ tracers inside each void are the same.</p>
 <p>This method calculates the effective radius of voids using the
 specified radius method, applies a cleaning process, and returns a new
 instance of the Voids class with cleaned voids.</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>cleaner_method<span class="classifier">str, {‘overlap’,’cbl’}, default=’overlap’</span></dt><dd><p>The cleaner method to use.</p>
 </dd>
 <dt>radius_method<span class="classifier">str, {‘density’,’extra’,’volume’}</span></dt><dd><p>The method to use for calculating the effective radius. Default is
 “default”.</p>
 </dd>
-<dt><a href="#id6"><span class="problematic" id="id7">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the effective radius and
+<dt><a href="#id12"><span class="problematic" id="id13">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the effective radius and
 cleaner methods.</p>
 </dd>
 </dl>
 </section>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Voids</dt><dd><p>A new instance of the Voids class with cleaned voids and calculated
 radii.</p>
@@ -255,8 +308,8 @@ radii.</p>
 <p>The search is performed by calculating the tracers inside of concentric
 spherical shells with width [rad ,rad+delta_rad] up to
 max_radius_search distance around void centers.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>max_radius_search<span class="classifier">float</span></dt><dd><p>Maximum radius of the search.</p>
 </dd>
@@ -267,8 +320,8 @@ Use -1 to exhaust the cores.</p>
 </dd>
 </dl>
 </section>
-<section id="id10">
-<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>vgcf<span class="classifier">list</span></dt><dd><p>Values of the vgcf.</p>
 </dd>
@@ -280,15 +333,15 @@ Use -1 to exhaust the cores.</p>
 <dt class="sig sig-object py" id="voidfindertk.core.voids.Voids.void_of">
 <span class="sig-name descname"><span class="pre">void_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.voids.Voids.void_of" title="Link to this definition"></a></dt>
 <dd><p>Returns indices of voids containing a specific tracer particle.</p>
-<section id="id11">
-<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tracer<span class="classifier">int</span></dt><dd><p>ID of the tracer particle to search for in voids.</p>
 </dd>
 </dl>
 </section>
-<section id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id18">
+<h3>Returns<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>numpy.ndarray</dt><dd><p>Array of indices of voids containing the tracer particle.</p>
 </dd>
@@ -302,8 +355,8 @@ Use -1 to exhaust the cores.</p>
 <dd><p>Calculate the void size distribution based on the effective radius.</p>
 <p>This function computes the log of radius, count of voids, and delta
 values using the provided parameters for scaling and sampling.</p>
-<section id="id13">
-<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
 of tracers (See vsf.void_size_function)</p>
@@ -314,13 +367,13 @@ of tracers (See vsf.void_size_function)</p>
 </dd>
 <dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
 </dd>
-<dt><a href="#id14"><span class="problematic" id="id15">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+<dt><a href="#id20"><span class="problematic" id="id21">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
 method.</p>
 </dd>
 </dl>
 </section>
-<section id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id22">
+<h3>Returns<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
 <dl>
 <dt>tuple</dt><dd><p>A tuple containing:
 - log_of_radius : array</p>
@@ -350,8 +403,8 @@ method.</p>
 <dd><p>Calculate the void size distribution based on the effective radius.</p>
 <p>This function computes the log of radius, count of voids, and delta
 values using the provided parameters for scaling and sampling.</p>
-<section id="id17">
-<h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<section id="id23">
+<h3>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>n_step1<span class="classifier">int, optional</span></dt><dd><p>Steps for the first scale. Default is 2. The lower the more number
 of tracers (See vsf.void_size_function)</p>
@@ -362,13 +415,13 @@ of tracers (See vsf.void_size_function)</p>
 </dd>
 <dt>scale_2_num_samples<span class="classifier">int, optional</span></dt><dd><p>Numbers of the second part of bins. Default is 2.</p>
 </dd>
-<dt><a href="#id18"><span class="problematic" id="id19">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
+<dt><a href="#id24"><span class="problematic" id="id25">**</span></a>kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>effective_radius</cite>
 method.</p>
 </dd>
 </dl>
 </section>
-<section id="id20">
-<h3>Returns<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<section id="id26">
+<h3>Returns<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
 <dl>
 <dt>tuple</dt><dd><p>A tuple containing:
 - log_of_radius : array</p>

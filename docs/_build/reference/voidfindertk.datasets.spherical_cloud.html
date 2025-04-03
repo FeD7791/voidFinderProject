@@ -97,11 +97,44 @@
 <span id="voidfindertk-datasets-spherical-cloud-module"></span><h1>voidfindertk.datasets.spherical_cloud module<a class="headerlink" href="#module-voidfindertk.datasets.spherical_cloud" title="Link to this heading"></a></h1>
 <p>Cloud with voids builder utility.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.datasets.spherical_cloud._dens_gen">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.datasets.spherical_cloud.</span></span><span class="sig-name descname"><span class="pre">_dens_gen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.datasets.spherical_cloud._dens_gen" title="Link to this definition"></a></dt>
+<dd><p>Generate random points uniformly distributed within a spherical volume.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>seed<span class="classifier">int, optional</span></dt><dd><p>Seed for the random number generator. Default is 2.</p>
+</dd>
+<dt>center<span class="classifier">array_like, shape (3,)</span></dt><dd><p>The x, y, z coordinates of the center of the spherical volume.</p>
+</dd>
+<dt>rad<span class="classifier">float</span></dt><dd><p>The radius of the spherical volume within which the points will be
+generated.</p>
+</dd>
+<dt>n_points<span class="classifier">int</span></dt><dd><p>The number of random points to generate.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>xyz<span class="classifier">ndarray, shape (3, n_points)</span></dt><dd><p>An array of shape (3, n_points) where each column represents the
+x, y, z coordinates of a generated point.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>The generated points are uniformly distributed in a spherical shell with
+the specified radius and centered at the provided coordinates.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="voidfindertk.datasets.spherical_cloud.add_mass_to_cloud">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.datasets.spherical_cloud.</span></span><span class="sig-name descname"><span class="pre">add_mass_to_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloud</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_mass_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_mass_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.datasets.spherical_cloud.add_mass_to_cloud" title="Link to this definition"></a></dt>
 <dd><p>Adds log of mass to a cloud of tracers.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>cloud<span class="classifier">array</span></dt><dd><p>Array of xyz positions of tracers</p>
 </dd>
@@ -113,8 +146,8 @@
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>cloud :</dt><dd><p>Updated cloud with log mass.</p>
 </dd>
@@ -126,8 +159,8 @@
 <dt class="sig sig-object py" id="voidfindertk.datasets.spherical_cloud.build_cloud">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.datasets.spherical_cloud.</span></span><span class="sig-name descname"><span class="pre">build_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.datasets.spherical_cloud.build_cloud" title="Link to this definition"></a></dt>
 <dd><p>Builds a cloud of n_points , where: lmin &lt; x,y,z &lt; lmax.</p>
-<section id="id1">
-<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <blockquote>
 <div><dl class="simple">
 <dt>seed: int</dt><dd><p>Seed for random number generator.</p>
@@ -141,8 +174,8 @@
 </dl>
 </div></blockquote>
 </section>
-<section id="id2">
-<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <blockquote>
 <div><dl class="simple">
 <dt>cloud: array</dt><dd><p>Array of n_points with x,y,z coordinates between lmin and lmax</p>
@@ -156,8 +189,8 @@
 <dt class="sig sig-object py" id="voidfindertk.datasets.spherical_cloud.build_spherical_overdensity">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.datasets.spherical_cloud.</span></span><span class="sig-name descname"><span class="pre">build_spherical_overdensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloud</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.datasets.spherical_cloud.build_spherical_overdensity" title="Link to this definition"></a></dt>
 <dd><p>Build a new point cloud by adding tracers to regions of specified centers     with a desired overdensity.</p>
-<section id="id3">
-<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>delta<span class="classifier">float</span></dt><dd><p>The overdensity factor to apply to the mean density of the cloud.</p>
 </dd>
@@ -172,8 +205,8 @@ where each row corresponds to the x, y, z coordinates of a point.</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id6">
+<h2>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>cloud_with_overdensities<span class="classifier">ndarray, shape (n_points + n_added_points, 3)</span></dt><dd><p>A new array containing the original points in <cite>cloud</cite> along with
 additional tracers added to achieve the specified overdensity in
@@ -181,8 +214,8 @@ the defined spherical regions.</p>
 </dd>
 </dl>
 </section>
-<section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<section id="id7">
+<h2>Notes<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
 <p>This function assumes a periodic boundary condition for the point cloud
 and uses the Grispy library to find neighboring points within the given
 radii.</p>
@@ -193,8 +226,8 @@ radii.</p>
 <dt class="sig sig-object py" id="voidfindertk.datasets.spherical_cloud.build_spherical_void">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.datasets.spherical_cloud.</span></span><span class="sig-name descname"><span class="pre">build_spherical_void</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloud</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.datasets.spherical_cloud.build_spherical_void" title="Link to this definition"></a></dt>
 <dd><p>Takes a cloud of tracers and removes tracers inside an spherical shell     around each void center so that each void has a desired density     density contrast.</p>
-<section id="id5">
-<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <blockquote>
 <div><dl class="simple">
 <dt>delta: float</dt><dd><p>Integrated density contrast of the void. -1 &lt; delta &lt; 0</p>
@@ -209,8 +242,8 @@ te the universe (Box)</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id6">
-<h2>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <blockquote>
 <div><dl class="simple">
 <dt>cloud_with_voids<span class="classifier">array</span></dt><dd><p>Collection of tracers of cloud input, minus some tracers around

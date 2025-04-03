@@ -209,6 +209,71 @@ foud by the method and their properties.</p>
 <h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
 <p>The ZOBOV Void Finder is executed in several steps including VOZINIT,
 VOZSTEP, and JOZOV.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._box_size">
+<span class="sig-name descname"><span class="pre">_box_size</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._box_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._buffer_size">
+<span class="sig-name descname"><span class="pre">_buffer_size</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._buffer_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._center_method">
+<span class="sig-name descname"><span class="pre">_center_method</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._center_method" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._create_run_work_dir">
+<span class="sig-name descname"><span class="pre">_create_run_work_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._create_run_work_dir" title="Link to this definition"></a></dt>
+<dd><p>Create a temporary directory for the current run.</p>
+<p>This method will create a temporal directory inside the working
+directory of the ZobovVF class workdir.</p>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>pathlib.Path</dt><dd><p>Path of the working directory for the current run.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._density_threshold">
+<span class="sig-name descname"><span class="pre">_density_threshold</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._density_threshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._dtype">
+<span class="sig-name descname"><span class="pre">_dtype</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._dtype" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._number_of_divisions">
+<span class="sig-name descname"><span class="pre">_number_of_divisions</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._number_of_divisions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._workdir">
+<span class="sig-name descname"><span class="pre">_workdir</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._workdir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._workdir_clean">
+<span class="sig-name descname"><span class="pre">_workdir_clean</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._workdir_clean" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF._zobov_path">
+<span class="sig-name descname"><span class="pre">_zobov_path</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF._zobov_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="voidfindertk.zobov.ZobovVF.box_size">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">box_size</span></span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF.box_size" title="Link to this definition"></a></dt>
@@ -241,8 +306,8 @@ information.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tuple</dt><dd><p>A tuple containing:
 - tracers_in_voids: List of particles in each void.
@@ -278,8 +343,8 @@ information.</p>
 <p>The execution of ZOBOV involves: write box data into raw files, run
 VOZINIT —&gt; run VOZSTEP —&gt; run JOZOV.For a detailed explanation of
 each step see: _wrapper.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>box<span class="classifier">object</span></dt><dd><p>Box object containing the data box to be analyzed.</p>
 </dd>
@@ -298,15 +363,15 @@ each step see: _wrapper.</p>
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.zobov.ZobovVF.preprocess" title="Link to this definition"></a></dt>
 <dd><p>Preprocess the data contained in the Box object.</p>
 <p>Placeholder method for data preprocessing.</p>
-<section id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>box<span class="classifier">object</span></dt><dd><p>Box object containing data to be preprocessed.</p>
 </dd>
 </dl>
 </section>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>object</dt><dd><p>Preprocessed data.</p>
 </dd>
@@ -339,8 +404,8 @@ each step see: _wrapper.</p>
 <dt class="sig sig-object py" id="voidfindertk.zobov.parse_tracers_in_zones_output">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.zobov.</span></span><span class="sig-name descname"><span class="pre">parse_tracers_in_zones_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.zobov.parse_tracers_in_zones_output" title="Link to this definition"></a></dt>
 <dd><p>Parse tracers in zones output using a C library.</p>
-<section id="id6">
-<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>executable_path<span class="classifier">str</span></dt><dd><p>Path to the C library executable.</p>
 </dd>
@@ -350,8 +415,8 @@ each step see: _wrapper.</p>
 </dd>
 </dl>
 </section>
-<section id="id7">
-<h2>Notes<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id8">
+<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <p>Uses ctypes to call a C function for parsing tracers in zones output.</p>
 </section>
 </dd></dl>
@@ -360,8 +425,8 @@ each step see: _wrapper.</p>
 <dt class="sig sig-object py" id="voidfindertk.zobov.parse_zones_in_void_output">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.zobov.</span></span><span class="sig-name descname"><span class="pre">parse_zones_in_void_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.zobov.parse_zones_in_void_output" title="Link to this definition"></a></dt>
 <dd><p>Parse tracers in zones output using a C library.</p>
-<section id="id8">
-<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>executable_path<span class="classifier">str</span></dt><dd><p>Path to the C library executable.</p>
 </dd>
@@ -371,8 +436,8 @@ each step see: _wrapper.</p>
 </dd>
 </dl>
 </section>
-<section id="id9">
-<h2>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<section id="id10">
+<h2>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <p>Uses ctypes to call a C function for parsing tracers in zones output.</p>
 </section>
 </dd></dl>

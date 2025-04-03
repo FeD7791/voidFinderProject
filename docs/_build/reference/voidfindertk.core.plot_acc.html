@@ -101,6 +101,17 @@
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.plot_acc.</span></span><span class="sig-name descname"><span class="pre">BoxPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC" title="voidfindertk.utils.accabc.AccessorABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></p>
 <p>Plotter: Plotter object that plots the boxes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.BoxPlotter._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.BoxPlotter._default_kind">
+<span class="sig-name descname"><span class="pre">_default_kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'hist2d'</span></em><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter._default_kind" title="Link to this definition"></a></dt>
+<dd><p>Default method to execute.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="voidfindertk.core.plot_acc.BoxPlotter.hist2d">
 <span class="sig-name descname"><span class="pre">hist2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.BoxPlotter.hist2d" title="Link to this definition"></a></dt>
@@ -142,6 +153,17 @@ for labeling the axes correctly.</p>
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.plot_acc.</span></span><span class="sig-name descname"><span class="pre">VoidPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="voidfindertk.utils.accabc.html#voidfindertk.utils.accabc.AccessorABC" title="voidfindertk.utils.accabc.AccessorABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessorABC</span></code></a></p>
 <p>Plotter: Plotter object that plots the voids.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter._default_kind">
+<span class="sig-name descname"><span class="pre">_default_kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'void_size_function'</span></em><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter._default_kind" title="Link to this definition"></a></dt>
+<dd><p>Default method to execute.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="voidfindertk.core.plot_acc.VoidPlotter.void_galaxy_corr">
 <span class="sig-name descname"><span class="pre">void_galaxy_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_radius_search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.plot_acc.VoidPlotter.void_galaxy_corr" title="Link to this definition"></a></dt>

@@ -209,6 +209,69 @@
 this interface. This way all the masses in the input file are considered.
 In order to constrain the mass of the input please use the box method:
 box.mass_cutoff(mass_threshold=&lt;threshold&gt;).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._auxfiles">
+<span class="sig-name descname"><span class="pre">_auxfiles</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._auxfiles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._boxsize">
+<span class="sig-name descname"><span class="pre">_boxsize</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._boxsize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._cores">
+<span class="sig-name descname"><span class="pre">_cores</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._cores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._create_run_work_dir">
+<span class="sig-name descname"><span class="pre">_create_run_work_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._create_run_work_dir" title="Link to this definition"></a></dt>
+<dd><p>Creates and returns a temporary working directory.</p>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>pathlib.Path</dt><dd><p>The path to the created working directory.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._densth">
+<span class="sig-name descname"><span class="pre">_densth</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._densth" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._maxradius">
+<span class="sig-name descname"><span class="pre">_maxradius</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._maxradius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._minradius">
+<span class="sig-name descname"><span class="pre">_minradius</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._minradius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._svf_path">
+<span class="sig-name descname"><span class="pre">_svf_path</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._svf_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._workdir">
+<span class="sig-name descname"><span class="pre">_workdir</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._workdir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn._workdir_clean">
+<span class="sig-name descname"><span class="pre">_workdir_clean</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn._workdir_clean" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.auxfiles">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">auxfiles</span></span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.auxfiles" title="Link to this definition"></a></dt>
@@ -237,8 +300,8 @@ this method.</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>tracers_in_voids<span class="classifier">tuple</span></dt><dd><p>List of indexes of tracers (relative to the Box object index)
@@ -285,8 +348,8 @@ directory paths.</p>
 <p>Runs the POPCORN void finder by creating the input file and the
 vars.conf parameter file and then running the binary using command line
 instructions.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>box<span class="classifier">Object</span></dt><dd><p>Box object that holds the tracer properties.</p>
@@ -294,8 +357,8 @@ instructions.</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Dictionary with two parameters:</dt><dd><ul class="simple">
@@ -306,8 +369,8 @@ instructions.</p>
 </dl>
 </div></blockquote>
 </section>
-<section id="id5">
-<h3>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Notes<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <p>To run the POPCORN void finder, an input tracer and a configuration
 file are needed. The input tracer file is built using the Box Object.
 The configuration file is built using the parameters of the class.</p>
@@ -318,15 +381,15 @@ The configuration file is built using the parameters of the class.</p>
 <dt class="sig sig-object py" id="voidfindertk.svf_popcorn.SVFPopCorn.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.svf_popcorn.SVFPopCorn.preprocess" title="Link to this definition"></a></dt>
 <dd><p>Placeholder for preprocessing the box object.</p>
-<section id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>box<span class="classifier">Object</span></dt><dd><p>The box object to preprocess.</p>
 </dd>
 </dl>
 </section>
-<section id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Object</dt><dd><p>The processed box object.</p>
 </dd>

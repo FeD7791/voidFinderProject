@@ -97,13 +97,45 @@
 <span id="voidfindertk-core-vgcf-module"></span><h1>voidfindertk.core.vgcf module<a class="headerlink" href="#module-voidfindertk.core.vgcf" title="Link to this heading"></a></h1>
 <p>Void-Galaxy Correlation Function Module.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.vgcf._single_vgcf">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.vgcf.</span></span><span class="sig-name descname"><span class="pre">_single_vgcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">grispy_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.vgcf._single_vgcf" title="Link to this definition"></a></dt>
+<dd><p>Calculate the number density within a spherical shell of radius <cite>r_in</cite>     and <cite>r_out</cite> for a given set of centers.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>centers<span class="classifier">array_like, shape (N, 3)</span></dt><dd><p>An array of 3D coordinates representing the positions of tracer
+particles. Each row represents a tracer’s position in the form
+(x, y, z).</p>
+</dd>
+<dt>r_in<span class="classifier">float</span></dt><dd><p>The inner radius of the shell. Should be smaller than <cite>r_out</cite>.</p>
+</dd>
+<dt>r_out<span class="classifier">float</span></dt><dd><p>The outer radius of the shell. Should be larger than <cite>r_in</cite>.</p>
+</dd>
+<dt>box<span class="classifier">object</span></dt><dd><p>A box object with periodic boundary conditions containing tracers
+properties.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>grispy_kwargs<span class="classifier">keyword arguments</span></dt><dd><p>Additional keyword arguments passed to the <cite>get_grispy_grid_from_box</cite>
+function for grid construction.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>np.ndarray, shape (M,)</dt><dd><p>The number density of tracers per unit volume for each shell.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="voidfindertk.core.vgcf.vgcf_statistic">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.core.vgcf.</span></span><span class="sig-name descname"><span class="pre">vgcf_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.vgcf.vgcf_statistic" title="Link to this definition"></a></dt>
 <dd><p>Calculates the Void-Galaxy Correlation Function.</p>
 <p>The correlation function is obtained as: vgcf = DD/RR - 1. The calculation
 is performed in concentric rings centered on void pre calculated centers.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>centers<span class="classifier">array_like, shape (N, 3)</span></dt><dd><p>(x,y,z) coordinates of void centers.</p>
 </dd>
@@ -118,8 +150,8 @@ properties.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>vgcf<span class="classifier">list</span></dt><dd><p>Values of the vgcf.</p>
 </dd>

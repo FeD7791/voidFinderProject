@@ -146,12 +146,179 @@ parameter should be increased to find the right radius of the void.</p>
 </section>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">_EffectiveRadius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">densities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></p>
+<p>A dataclass representing the effective radius calculation results.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>delta<span class="classifier">float</span></dt><dd><p>The density contrast parameter.</p>
+</dd>
+<dt>n_neighbors<span class="classifier">int</span></dt><dd><p>The number of neighbors considered in the calculation.</p>
+</dd>
+<dt>n_cells<span class="classifier">int</span></dt><dd><p>The number of cells used in the spatial grid.</p>
+</dd>
+<dt>errors<span class="classifier">np.ndarray</span></dt><dd><p>Array of error codes for each calculation.</p>
+</dd>
+<dt>radius<span class="classifier">np.ndarray</span></dt><dd><p>Array of calculated effective radii.</p>
+</dd>
+<dt>tracers<span class="classifier">np.ndarray</span></dt><dd><p>Array of tracer particles for each void.</p>
+</dd>
+<dt>densities<span class="classifier">np.ndarray</span></dt><dd><p>Array of density values for each void.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.argerrors">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">argerrors</span></span><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.argerrors" title="Link to this definition"></a></dt>
+<dd><p>Return a boolean array indicating which calculations resulted in         errors.</p>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>np.ndarray</dt><dd><p>Boolean array where True indicates an error occurred.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.delta">
+<span class="sig-name descname"><span class="pre">delta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.delta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.densities">
+<span class="sig-name descname"><span class="pre">densities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.densities" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.errors">
+<span class="sig-name descname"><span class="pre">errors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.errors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.n_cells">
+<span class="sig-name descname"><span class="pre">n_cells</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.n_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.n_neighbors">
+<span class="sig-name descname"><span class="pre">n_neighbors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.n_neighbors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.radius">
+<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.radius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._EffectiveRadius.tracers">
+<span class="sig-name descname"><span class="pre">tracers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#voidfindertk.core.radius_finder._EffectiveRadius.tracers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._extra_effective_radius">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">_extra_effective_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder._extra_effective_radius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._sigle_void_eradius">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">_sigle_void_eradius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crit_density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder._sigle_void_eradius" title="Link to this definition"></a></dt>
+<dd><p>Calculate the effective radius for a single void.</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>idx<span class="classifier">int</span></dt><dd><p>Index of the void center.</p>
+</dd>
+<dt>n_neighbors<span class="classifier">int</span></dt><dd><p>Number of neighbors to consider.</p>
+</dd>
+<dt>crit_density<span class="classifier">float</span></dt><dd><p>Critical density threshold.</p>
+</dd>
+<dt>distance<span class="classifier">np.ndarray</span></dt><dd><p>Array of distances to neighboring particles.</p>
+</dd>
+<dt>nn<span class="classifier">np.ndarray</span></dt><dd><p>Array of nearest neighbor indices.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing:
+(error_code, effective_radius, void_tracers, void_density).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._spherical_density_radius_mapping">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">_spherical_density_radius_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder._spherical_density_radius_mapping" title="Link to this definition"></a></dt>
+<dd><p>Wrapper for the <cite>spherical_density_mapping</cite> function. Restricts the     keyword arguments to “delta”, “n_neighbors”, and “n_cells”.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>centers<span class="classifier">array-like</span></dt><dd><p>Array of shape (n, d) representing the coordinates of the centers,
+where ‘n’ is the number of points and ‘d’ is the dimensionality.</p>
+</dd>
+<dt>box<span class="classifier">array-like</span></dt><dd><p>Array representing the dimensions of the periodic box, typically of
+shape (d,).</p>
+</dd>
+<dt><a href="#id4"><span class="problematic" id="id5">**</span></a>kwargs<span class="classifier">dict,</span></dt><dd><p>Additional arguments controlling the density mapping behavior:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>delta<span class="classifier">float, default=-0.9</span></dt><dd><p>Adjustment factor for density calculation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>n_neighbors<span class="classifier">int, default=100</span></dt><dd><p>Number of nearest neighbors to consider in the density calculation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>n_cells<span class="classifier">int, default=64</span></dt><dd><p>Number of cells for Grispy Grid.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h2>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>array</dt><dd><p>Array of void radius elements.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>This interface is necesary to deal with several other kwargs arguments that
+are part of some other process while using the Void class. So this
+interface will filter the necesary kwargs arguments.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.radius_finder._volume_effective_radius">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">_volume_effective_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder._volume_effective_radius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="voidfindertk.core.radius_finder.get_radius_searcher">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.core.radius_finder.</span></span><span class="sig-name descname"><span class="pre">get_radius_searcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.radius_finder.get_radius_searcher" title="Link to this definition"></a></dt>
 <dd><p>Return the appropriate radius search function based on the specified     method.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>method<span class="classifier">str</span></dt><dd><p>The radius search method to use. Must be one of:
 - <cite>“default”</cite>: Uses <cite>_spherical_density_radius_mapping</cite>.
@@ -160,8 +327,8 @@ parameter should be increased to find the right radius of the void.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>function</dt><dd><p>The corresponding radius search function.</p>
 </dd>
@@ -182,35 +349,35 @@ parameter should be increased to find the right radius of the void.</p>
 <dd><p>Compute the effective radius of voids based on nearest neighbor distances    using grispy.</p>
 <p>This function calculates the effective radius of voids by considering
 the distances to the nearest neighbors for each center and comparing
-against a critical density. It returns the effective radius, error,
+against a threshold density. It returns the effective radius, error,
 tracer particles within the void, and density map for each void.</p>
-<section id="id1">
-<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>centers<span class="classifier">array-like, shape (n_centers, 3)</span></dt><dd><p>Coordinates of the centers for which the effective radius is to be
 computed.</p>
 </dd>
 <dt>box<span class="classifier">Box</span></dt><dd><p>Box object containing the properties of the spatial domain.</p>
 </dd>
-<dt>delta<span class="classifier">float, optional</span></dt><dd><p>Parameter to adjust the critical density. The critical density is
+<dt>delta<span class="classifier">float,</span></dt><dd><p>Parameter to adjust the threshold density. The threshold density is
 calculated as (1 + delta) * (number of tracers / (box volume)^3).
 Default is -0.9.</p>
 </dd>
-<dt>n_neighbors<span class="classifier">int, optional</span></dt><dd><p>Number of nearest neighbors to consider for each center.
+<dt>n_neighbors<span class="classifier">int,</span></dt><dd><p>Number of nearest neighbors to consider for each center.
 Default is 100.</p>
 </dd>
-<dt>n_cells<span class="classifier">int, optional</span></dt><dd><p>Number of cells used for the spatial grid. Default is 64.</p>
+<dt>n_cells<span class="classifier">int,</span></dt><dd><p>Number of cells used for the spatial grid. Default is 64.</p>
 </dd>
 </dl>
 </section>
-<section id="id2">
-<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id10">
+<h2>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>errors<span class="classifier">list of float</span></dt><dd><p>List of errors associated with each void, posble values are:
 0 : No error
 1 : Local overdensity, maybe related to two near underdensities.
-2 : Densitie map over the crital density minima. Probably not a void
-3 : Densitie map under the critical density minima. Increase the
+2 : Densitie map over the threshold density minima. Probably not a void
+3 : Densitie map under the threshold density minima. Increase the
 number of nearest neighbors used to perform the search.</p>
 </dd>
 <dt>radius<span class="classifier">list of float</span></dt><dd><p>List of effective radii for each void.</p>

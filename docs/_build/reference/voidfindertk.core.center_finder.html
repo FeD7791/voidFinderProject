@@ -97,6 +97,28 @@
 <span id="voidfindertk-core-center-finder-module"></span><h1>voidfindertk.core.center_finder module<a class="headerlink" href="#module-voidfindertk.core.center_finder" title="Link to this heading"></a></h1>
 <p>Module to perform center calculatios based on tracers.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.center_finder._get_xyz_tracers_from_indx">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.center_finder.</span></span><span class="sig-name descname"><span class="pre">_get_xyz_tracers_from_indx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers_idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.center_finder._get_xyz_tracers_from_indx" title="Link to this definition"></a></dt>
+<dd><p>Find the (x,y,z) coordinates of tracer based on an index and the Box.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<blockquote>
+<div><dl class="simple">
+<dt>box<span class="classifier">Box</span></dt><dd><p>Object with tracer properties.</p>
+</dd>
+<dt>tracers_idx<span class="classifier">list</span></dt><dd><p>Iterable with the indexes of the tracers</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.center_finder._single_center_search">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.center_finder.</span></span><span class="sig-name descname"><span class="pre">_single_center_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.center_finder._single_center_search" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="voidfindertk.core.center_finder.center_calculator">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.core.center_finder.</span></span><span class="sig-name descname"><span class="pre">center_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers_in_voids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.center_finder.center_calculator" title="Link to this definition"></a></dt>
 <dd><p>Calculate the center of mass for multiple voids in parallel.</p>
@@ -104,8 +126,8 @@
 tracers, using a density-weighted approach and accounting for periodic
 boundary conditions. The calculation is performed in parallel batches for
 efficiency.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>box<span class="classifier">Box</span></dt><dd><p>Simulation box object containing tracer positions and size information.
 Must have <cite>arr_.x</cite>, <cite>arr_.y</cite>, <cite>arr_.z</cite> attributes and <cite>size()</cite> method.</p>

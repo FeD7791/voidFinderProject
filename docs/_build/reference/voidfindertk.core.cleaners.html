@@ -97,11 +97,301 @@
 <span id="voidfindertk-core-cleaners-module"></span><h1>voidfindertk.core.cleaners module<a class="headerlink" href="#module-voidfindertk.core.cleaners" title="Link to this heading"></a></h1>
 <p>Module for performing void cleaning.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._cbl_cleaner">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_cbl_cleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporal_dir_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_r_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_r_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ol_crit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'density_contrast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkoverlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._cbl_cleaner" title="Link to this definition"></a></dt>
+<dd><p>Sets working directories and input files to perform the CBL cleaning     using the function _cbl_cleaner_interface.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>center<span class="classifier">array_like</span></dt><dd><p>An array of shape (n, 3), where n is the number of void centers,
+containing the (x, y, z) positions of the void centers.</p>
+</dd>
+<dt>radius<span class="classifier">array_like</span></dt><dd><p>An array of shape (n,), where n is the number of void centers,
+containing the radius of the voids.</p>
+</dd>
+<dt>box<span class="classifier">object</span></dt><dd><p>An object representing the box that contains properties of tracers.
+The structure of this object is assumed to be specific to the
+implementation and is passed to other functions for saving tracers and
+centers.</p>
+</dd>
+<dt>temporal_dir_path<span class="classifier">str, optional</span></dt><dd><p>The path to the temporary directory where files will be stored during
+the process. Default is the current directory (<cite>‘.’</cite>).</p>
+</dd>
+<dt>clean_directory<span class="classifier">bool, optional</span></dt><dd><p>If True, the temporary directory and files will be removed after the
+function completes. Default is True.</p>
+</dd>
+<dt>ratio<span class="classifier">float, optional</span></dt><dd><p>The ratio parameter passed to the CBL cleaning interface. Controls how
+the cleaning is performed. Default is 1.5.</p>
+</dd>
+<dt>initial_radius<span class="classifier">bool, optional</span></dt><dd><p>If True, the initial radius will be considered during the cleaning
+process. Default is True.</p>
+</dd>
+<dt>delta_r_min<span class="classifier">float, optional</span></dt><dd><p>Minimum delta radius for void cleaning.
+Default is 10.0.</p>
+</dd>
+<dt>delta_r_max<span class="classifier">float, optional</span></dt><dd><p>Maximum delta radius for void cleaning.
+Default is 100.0.</p>
+</dd>
+<dt>threshold<span class="classifier">float, optional</span></dt><dd><p>A threshold parameter controlling the cleaning procedure.
+Default is 0.2.</p>
+</dd>
+<dt>ol_crit<span class="classifier">str</span></dt><dd><p>Criterion for the overlap step. Valid values are:
+[density_contrast, central_density]
+Default is density_contrast.</p>
+</dd>
+<dt>rescale<span class="classifier">bool, optional</span></dt><dd><p>If True, rescaling is applied during the cleaning process.
+Default is True.</p>
+</dd>
+<dt>checkoverlap<span class="classifier">bool, optional</span></dt><dd><p>If True, overlap checks will be performed during the cleaning.
+Default is True.</p>
+</dd>
+<dt>kwargs<span class="classifier">keyword arguments, optional</span></dt><dd><p>Additional parameters passed to other functions in the workflow,
+typically to control additional options in the cleaning process. The
+exact parameters depend on the implementation of the specific cleaning
+functions.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tuple of (ndarray, ndarray)</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>centers<span class="classifier">ndarray</span></dt><dd><p>The cleaned (x, y, z) positions of the void centers, sorted by the
+norm of their positions.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>radius<span class="classifier">ndarray</span></dt><dd><p>The cleaned radius values of the voids, sorted in the same order
+as the centers.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>This function creates a temporary working directory, where it saves input
+files and calls the CBL cleaning interface to process the void centers and
+radii. After the cleaning is completed, the function reads the cleaned
+catalogue, removes the temporary directory (if requested), and returns the
+cleaned and sorted void centers and radii.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._cbl_cleaner_interface">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_cbl_cleaner_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_voids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_tracers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_r_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_r_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ol_crit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkoverlap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._cbl_cleaner_interface" title="Link to this definition"></a></dt>
+<dd><p>Performs the CBL cleaning over a void catalogue.</p>
+<p>The cleaning is done by providing radius and center coordinates of a
+void catalogue provided by a void finder method.</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>file_voids : str
+Path to the file that holds a void catalogue. By default
+the first 4 columns are going to be considered as inputs for
+x,y,z,r_eff where x,y,z are the barycentre of the void (see
+get_center_and_radii).</p>
+<p>file_tracers : str
+Path to the file that holds the input tracers. By default the first 3
+columns of the file are considered as inputs x,y,z refering to the
+positions of each tracer.</p>
+<p>ratio : float (0 &lt; ratio &lt; 1)
+Distance from the void centre at which the density contrast is
+evaluated in units of the void radius. Ex: ratio = 0.1
+=&gt;  10% of the void radius lenght</p>
+<p>initial_radius : bool
+If true erase voids with effective radii outside a given range delta_r.</p>
+<p>delta_r : list
+Interval of accepted radii. Voids whose effective radius do not belong
+to a selected range delta_r = delta_r = r_max - r_min for [r_min,r_max]
+are erased.</p>
+<p>threshold : float
+Erase voids with underdensities higher than a given threshold.</p>
+<p>output_path : str
+Path to the output cleaned catalogue.</p>
+<p>ol_crit : bool
+The criterion for the overlap step.</p>
+<blockquote>
+<div><p>True : The void with the lower density constrast is rejected.
+False : The void with the higher central density is rejected.</p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>Notes<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>This function calculates the central density and the density contrast
+automatically using the ratio input variable.</p>
+<p>The central density (in units of the average density) is
+computed as the density of a sphere centred in the void centre and
+with radius R = ratio * R_eff.</p>
+<p>The density contrast is the ratio between the central density and the
+density within the sphere centred in the void centre and with radius:
+R = R_eff</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._overlap_cleaner">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_overlap_cleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._overlap_cleaner" title="Link to this definition"></a></dt>
+<dd><p>Removes overlapping voids based on their centers and radii by     comparing the distances between void centers and their combined radii.</p>
+<p>This function identifies pairs of voids that overlap (based on the sum of
+their radii) and removes the void with the smaller radius from each
+overlapping pair. If there are multiple overlaps, only the largest void is
+retained in each pair.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>center<span class="classifier">array_like, shape (n, 3)</span></dt><dd><p>A 2D array containing the (x, y, z) coordinates of the centers of the
+voids. <cite>n</cite> represents the number of void centers.</p>
+</dd>
+<dt>radius<span class="classifier">array_like, shape (n,)</span></dt><dd><p>A 1D array containing the radii of the voids. Each entry corresponds
+to the radius of the void with the same index in the <cite>center</cite> array.</p>
+</dd>
+<dt>kwargs<span class="classifier">keyword arguments, optional</span></dt><dd><p>Additional parameters that can be passed for further customization.
+These are not currently used within the function, but they allow for
+future extensions.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tuple of (ndarray, ndarray)</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>center<span class="classifier">ndarray, shape (m, 3)</span></dt><dd><p>The coordinates of the void centers that do not overlap, where <cite>m</cite>
+is the number of non-overlapping voids.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>radius<span class="classifier">ndarray, shape (m,)</span></dt><dd><p>The radii of the voids that do not overlap, corresponding to the
+void centers returned.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Warning</dt><dd><p>If all voids overlap and have the same radius, a warning is raised
+stating that all voids overlap and none are retained.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h2>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>This function computes a distance matrix between all pairs of void centers
+and checks for overlaps by comparing the distance between the centers with
+the sum of their radii. Voids with smaller radii in overlapping pairs are
+removed from the results.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._read_cleaned_catalogue">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_read_cleaned_catalogue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleaned_catalogue_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._read_cleaned_catalogue" title="Link to this definition"></a></dt>
+<dd><p>Reads a void cleaned catalogue located in cleaned_catalogue_path and     returns the asociated center and radius.</p>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<blockquote>
+<div><dl class="simple">
+<dt>cleaned_catalogue_path<span class="classifier">str</span></dt><dd><p>Path to te location of the catalgue file.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="id7">
+<h2>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>center, radius : tuple
+center : array of (x,y,z) positions of centers of voids
+radius : array of radius of voids.</p>
+</div></blockquote>
+</section>
+<section id="id8">
+<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>param value in names is one of : [DensityContrast, CentralDensity]
+and this depends on ol_crit selected in parameters
+_cbl_cleaner_interface</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._save_r_eff_center">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_save_r_eff_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._save_r_eff_center" title="Link to this definition"></a></dt>
+<dd><p>Save centers and effective radii to a tab-separated values file.</p>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>centers<span class="classifier">array-like, shape (n_samples, 3)</span></dt><dd><p>An array or list of coordinates representing the centers. Each entry
+should be a sequence of three values, corresponding to x, y, and z
+coordinates.</p>
+</dd>
+<dt>r_eff<span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>An array or list of effective radii, where each value corresponds to
+the effective radius for the respective center.</p>
+</dd>
+<dt>path<span class="classifier">str</span></dt><dd><p>The file path where the tab-separated values file will be saved.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h2>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>None</dt><dd><p>This function does not return any value.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h2>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<p>The output file will have columns for x, y, z coordinates and r_eff,
+separated by tabs. The file will not include an index or header row.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voidfindertk.core.cleaners._save_xyz_tracers">
+<span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">_save_xyz_tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners._save_xyz_tracers" title="Link to this definition"></a></dt>
+<dd><p>Save x,y,z coordinates from box into a file.</p>
+<p>Save x, y, and z coordinates from a box object to a tab-separated values
+file.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>box<span class="classifier">object</span></dt><dd><p>An object with attributes <cite>x</cite>, <cite>y</cite>, and <cite>z</cite>, each of which should have
+a <cite>value</cite> attribute that is an array-like sequence of coordinates.</p>
+</dd>
+<dt>path<span class="classifier">str</span></dt><dd><p>The file path where the tab-separated values file will be saved.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>None</dt><dd><p>This function does not return any value.</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h2>Notes<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<p>The output file will have columns for x, y, and z coordinates, separated
+by tabs. The file will not include an index or header row.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="voidfindertk.core.cleaners.get_cleaner">
 <span class="sig-prename descclassname"><span class="pre">voidfindertk.core.cleaners.</span></span><span class="sig-name descname"><span class="pre">get_cleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleaner_method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voidfindertk.core.cleaners.get_cleaner" title="Link to this definition"></a></dt>
 <dd><p>Returns the appropriate cleaner function based on the specified method.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<section id="id15">
+<h2>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>cleaner_method<span class="classifier">str</span></dt><dd><p>The cleaning method to use. Must be one of:
 - <cite>“overlap”</cite>: Uses <cite>_overlap_cleaner</cite>.
@@ -109,15 +399,15 @@
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<section id="id16">
+<h2>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>function</dt><dd><p>The corresponding cleaner function.</p>
 </dd>
 </dl>
 </section>
-<section id="raises">
-<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
+<section id="id17">
+<h2>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>ValueError</dt><dd><p>If an invalid <cite>cleaner_method</cite> is provided.</p>
 </dd>
