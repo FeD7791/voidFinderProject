@@ -2,6 +2,7 @@ include LICENSE.txt
 include README.md
 include dependencies.md
 include pyproject.toml
+include .readthedocs.yml
 
 
 graft voidfindertk/datasets
